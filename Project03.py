@@ -116,6 +116,10 @@ class Read_GEDCOM:
         for ID, fam in self.family.items():
             self.family_ptable.add_row([ID, fam.marriage, fam.divorce, fam.husband, self.individuals[fam.husband].name, fam.wife, self.individuals[fam.wife].name, fam.children])   
         print(self.family_ptable)
+        #append families table to output file
+        with open("Project03output.txt", "a") as f:
+            print("Families", file=f)
+            print(self.family_ptable, file=f)
 
 class Individual:
     '''This class will hold all the information for each individual according to their IndiID. This includes their name, sex, birthday, age, whether they are alive, death date, and their children and spouses.'''

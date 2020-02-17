@@ -1,33 +1,23 @@
 Individuals
-+-----+-------------------------+--------+------------+-----+-------+------------+-------+--------------+
-|  ID |           Name          | Gender |  Birthday  | Age | Alive |   Death    | Child |    Spouse    |
-+-----+-------------------------+--------+------------+-----+-------+------------+-------+--------------+
-|  I1 |     Michael /Bluth/     |   M    | 1967-12-14 |  53 |  True |    None    |   F3  | {'F1', 'F2'} |
-|  I2 |     Tracey /Clooney/    |   F    | 1970-06-08 |  31 | False | 2001-03-16 |   NA  |    {'F2'}    |
-|  I3 |  George Michael /Bluth/ |   M    | 1990-03-03 |  30 |  True |    None    |   F2  |      NA      |
-|  I4 |    Lucille /Jenkins/    |   F    | 1948-11-28 |  72 |  True |    None    |   NA  |    {'F3'}    |
-|  I5 |   George Oscar /Bluth/  |   M    | 1947-09-15 |  73 |  True |    None    |   F4  |    {'F3'}    |
-|  I6 | George Oscar II /Bluth/ |   M    | 1965-09-15 |  55 |  True |    None    |   F3  |    {'F5'}    |
-|  I7 |      Byron /Bluth/      |   M    | 1971-01-08 |  49 |  True |    None    |   F3  |      NA      |
-|  I8 |     Lindsey /Bluth/     |   F    | 1967-12-14 |  53 |  True |    None    |   F3  |    {'F6'}    |
-|  I9 |      Tobias /Funke/     |   M    | 1962-04-30 |  58 |  True |    None    |   NA  |    {'F6'}    |
-| I10 |       Mae /Funke/       |   F    | 1990-09-22 |  30 |  True |    None    |   F6  |      NA      |
-| I11 |        Eve /Holt/       |   F    | 1965-12-20 |  55 |  True |    None    |   NA  |    {'F5'}    |
-| I12 |       Steve /Holt/      |   M    | 1990-03-10 |  30 |  True |    None    |   F5  |      NA      |
-| I13 |     Sally /Sitwell/     |   F    | 1968-02-17 |  52 |  True |    None    |   F7  |    {'F1'}    |
-| I14 |      James /Bluth/      |   M    | 2007-11-27 |  13 |  True |    None    |   F1  |      NA      |
-| I15 |     Samantha /Bluth/    |   F    | 2009-03-11 |  11 |  True |    None    |   F1  |      NA      |
-| I16 |      Stan /Sitwell/     |   M    | 1945-02-03 |  75 |  True |    None    |   NA  |    {'F7'}    |
-| I17 |      Nellie /Smith/     |   F    | 1945-04-19 |  75 |  True |    None    |   NA  |    {'F7'}    |
-+-----+-------------------------+--------+------------+-----+-------+------------+-------+--------------+
++-----+----------------------+--------+------------+------+-------+------------+-------+--------------+
+|  ID |         Name         | Gender |  Birthday  | Age  | Alive |   Death    | Child |    Spouse    |
++-----+----------------------+--------+------------+------+-------+------------+-------+--------------+
+|  I1 |      Jon /Snow/      |   M    | 0283-03-07 | 1737 |  True |    None    |   F1  |      NA      |
+|  I2 | Rhaegar /Targaryen/  |   M    | 0259-05-04 |  24  | False | 0283-11-17 |   F3  | {'F2', 'F1'} |
+|  I3 |    Lyanna /Stark/    |   F    | 0266-04-03 |  17  | False | 0283-11-07 |   NA  |    {'F1'}    |
+|  I4 |    Elia /Martell/    |   F    | 0256-05-06 |  25  | False | 0281-10-12 |   NA  |    {'F2'}    |
+|  I5 | Rhaenys /Targaryen/  |   F    | 0280-08-10 |  3   | False | 0283-10-03 |   F2  |      NA      |
+|  I6 |  Aegon /Targaryen/   |   M    | 0282-07-05 |  1   | False | 0283-11-23 |   F2  |      NA      |
+|  I7 |  Aerys /Targaryen/   |   M    | 0244-02-04 |  39  | False | 0283-07-07 |   NA  |    {'F3'}    |
+|  I8 | Rhaella /Targaryen/  |   F    | 0254-05-22 |  30  | False | 0284-06-30 |   NA  |    {'F3'}    |
+|  I9 | Viserys /Targaryen/  |   M    | 0276-09-06 |  22  | False | 0298-10-19 |   F3  |      NA      |
+| I10 | Daenerys /Targaryen/ |   F    | 0284-08-17 |  18  | False | 0302-06-14 |   F3  |      NA      |
++-----+----------------------+--------+------------+------+-------+------------+-------+--------------+
 Families
-+----+------------+----------+------------+-------------------------+---------+-------------------+--------------------------+
-| ID |  Married   | Divorced | Husband ID |       Husband Name      | Wife ID |     Wife Name     |         Children         |
-+----+------------+----------+------------+-------------------------+---------+-------------------+--------------------------+
-| F1 | 2006-04-18 |    NA    |     I1     |     Michael /Bluth/     |   I13   |  Sally /Sitwell/  |      {'I14', 'I15'}      |
-| F2 | 1989-07-18 |    NA    |     I1     |     Michael /Bluth/     |    I2   |  Tracey /Clooney/ |          {'I3'}          |
-| F3 | 1986-05-12 |    NA    |     I5     |   George Oscar /Bluth/  |    I4   | Lucille /Jenkins/ | {'I6', 'I1', 'I8', 'I7'} |
-| F4 |     NA     |    NA    |     I6     | George Oscar II /Bluth/ |   I11   |     Eve /Holt/    |         {'I12'}          |
-| F5 | 1988-08-14 |    NA    |     I9     |      Tobias /Funke/     |    I8   |  Lindsey /Bluth/  |         {'I10'}          |
-| F6 | 1966-01-21 |    NA    |    I16     |      Stan /Sitwell/     |   I17   |   Nellie /Smith/  |         {'I13'}          |
-+----+------------+----------+------------+-------------------------+---------+-------------------+--------------------------+
++----+------------+----------+------------+---------------------+---------+---------------------+---------------------+
+| ID |  Married   | Divorced | Husband ID |     Husband Name    | Wife ID |      Wife Name      |       Children      |
++----+------------+----------+------------+---------------------+---------+---------------------+---------------------+
+| F1 | 0283-04-08 |    NA    |     I2     | Rhaegar /Targaryen/ |    I3   |    Lyanna /Stark/   |        {'I1'}       |
+| F2 | 0281-06-12 |    NA    |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   |     {'I5', 'I6'}    |
+| F3 | 0260-06-06 |    NA    |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I10', 'I2', 'I9'} |
++----+------------+----------+------------+---------------------+---------+---------------------+---------------------+

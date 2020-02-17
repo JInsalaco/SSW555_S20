@@ -155,7 +155,7 @@ class Family:
 
 def main():
     '''This runs the program.'''
-    path = 'GEDCOM_Test.ged'
+    path = 'AldenRadoncic-TargaryenFamily-Test2ForProject03.ged'
     Read_GEDCOM(path)
     
 

@@ -105,6 +105,10 @@ class Read_GEDCOM:
                 individual.fams = "NA"
             self.individuals_ptable.add_row([ID, individual.name, individual.sex, individual.birth, individual.age, individual.alive, individual.death, individual.famc, individual.fams])
         print(self.individuals_ptable)
+        #write individuals table to output file
+        with open("Project03output.txt", "w") as f:
+            print("Individuals", file=f)
+            print(self.individuals_ptable, file=f)
 
     def create_fam_ptable(self):
         '''This creates a Pretty Table that is a Family summary of each family's ID, when they were married, when they got divorced, the Husband ID, the Husband Name, the Wife ID, the Wife Name, and their children.'''

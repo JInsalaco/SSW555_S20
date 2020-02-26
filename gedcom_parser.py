@@ -113,15 +113,16 @@ class Read_GEDCOM:
             for ind in self.individuals:
                 birthDate = self.individuals[ind].birth
                 famSet = self.individuals[ind].fams
-                for fam in famSet:
-                    marriageDate = self.family[fam].marriage
-                    if birthDate > marriageDate:
-                        if self.individuals[ind].sex == "M":
-                            sex = "Husband's"
-                        else:
-                            sex = "Wife's"
-                        print(f"ERROR: FAMILY: {fam} US02: {sex} ({ind}) birthday {birthDate} occurs after marriage {marriageDate}", file=f)
-                        idList.append(ind)
+                if famSet != "NA":
+                    for fam in famSet:
+                        marriageDate = self.family[fam].marriage
+                        if birthDate > marriageDate:
+                            if self.individuals[ind].sex == "M":
+                                sex = "Husband's"
+                            else:
+                                sex = "Wife's"
+                            print(f"ERROR: FAMILY: {fam} US02: {sex} ({ind}) birthday {birthDate} occurs after marriage {marriageDate}", file=f)
+                            idList.append(ind)
         return idList
 
     def file_reading_gen(self, path, sep = "\t"):

@@ -18,6 +18,6 @@ Families
 | ID |  Married   | Divorced | Husband ID |     Husband Name    | Wife ID |      Wife Name      |       Children      |
 +----+------------+----------+------------+---------------------+---------+---------------------+---------------------+
 | F1 | 0283-04-08 |    NA    |     I2     | Rhaegar /Targaryen/ |    I3   |    Lyanna /Stark/   |        {'I1'}       |
-| F2 | 0281-06-12 |    NA    |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   |     {'I6', 'I5'}    |
+| F2 | 0281-06-12 |    NA    |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   |     {'I5', 'I6'}    |
 | F3 | 0260-06-06 |    NA    |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I2', 'I10', 'I9'} |
 +----+------------+----------+------------+---------------------+---------+---------------------+---------------------+

@@ -1,5 +1,6 @@
-import gedcom_parser
+from ..gedcom_parser import gedcom_parser
 import unittest
+import datetime
 
 class TestUserStories(unittest.TestCase):
     def test_unittest(self): #this is a test unit test

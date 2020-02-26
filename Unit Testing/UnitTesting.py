@@ -1,4 +1,4 @@
-import parser
+import gedcom_parser
 import unittest
 
 class TestUserStories(unittest.TestCase):

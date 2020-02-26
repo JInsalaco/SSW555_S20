@@ -3,7 +3,7 @@ Individuals
 |  ID |         Name         | Gender |  Birthday  | Age  | Alive |   Death    | Child |    Spouse    |
 +-----+----------------------+--------+------------+------+-------+------------+-------+--------------+
 |  I1 |      Jon /Snow/      |   M    | 0283-03-07 | 1737 |  True |    None    |   F1  |      NA      |
-|  I2 | Rhaegar /Targaryen/  |   M    | 0259-05-04 |  24  | False | 0283-11-17 |   F3  | {'F2', 'F1'} |
+|  I2 | Rhaegar /Targaryen/  |   M    | 0259-05-04 |  24  | False | 0283-11-17 |   F3  | {'F1', 'F2'} |
 |  I3 |    Lyanna /Stark/    |   F    | 0266-04-03 |  17  | False | 0283-11-07 |   NA  |    {'F1'}    |
 |  I4 |    Elia /Martell/    |   F    | 0256-05-06 |  25  | False | 0281-10-12 |   NA  |    {'F2'}    |
 |  I5 | Rhaenys /Targaryen/  |   F    | 0280-08-10 |  3   | False | 0283-10-03 |   F2  |      NA      |
@@ -18,6 +18,6 @@ Families
 | ID |  Married   | Divorced | Husband ID |     Husband Name    | Wife ID |      Wife Name      |       Children      |
 +----+------------+----------+------------+---------------------+---------+---------------------+---------------------+
 | F1 | 0283-04-08 |    NA    |     I2     | Rhaegar /Targaryen/ |    I3   |    Lyanna /Stark/   |        {'I1'}       |
-| F2 | 0281-06-12 |    NA    |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   |     {'I5', 'I6'}    |
-| F3 | 0260-06-06 |    NA    |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I10', 'I2', 'I9'} |
+| F2 | 0281-06-12 |    NA    |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   |     {'I6', 'I5'}    |
+| F3 | 0260-06-06 |    NA    |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I2', 'I10', 'I9'} |
 +----+------------+----------+------------+---------------------+---------+---------------------+---------------------+

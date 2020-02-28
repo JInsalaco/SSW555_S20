@@ -20,7 +20,9 @@ class Read_GEDCOM:
             self.create_indi_ptable()
             self.create_fam_ptable()
         self.checkDatesAfterToday()
-        self.checkBirthAfterMarriage()
+        # self.checkBirthAfterMarriage()
+        self.noMarriagesToChildren()
+        self.listMultipleBirths()
 
     def analyze_GEDCOM(self):
         '''The purpose of this function is to read the GEDCOM file line by line and evaluate if a new instance of Family or Individual needs to be made. Each line is further evaluated using the parse_info function that is defined below.'''
@@ -124,6 +126,40 @@ class Read_GEDCOM:
                         idList.append(ind)
         return idList
 
+    #Function for US17's unittest. No Marrriage to Children. Returns an error if in the family,
+    #the husband id or wife id is also in the children's list.
+    def noMarriagesToChildren(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for ind in self.individuals:
+                famSet = self.individuals[ind].fams
+                if famSet != "NA":
+                    for fam in famSet:
+                        childrenSet = self.family[fam].children
+                        for child in childrenSet:
+                            if self.individuals[ind].sex == "M" and child == self.family[fam].wife:
+                                print(f"ERROR: INDIVIDUAL: {ind}. US17: No Marriage to Children; {self.individuals[ind].name} has a wife: {self.family[fam].wife} who is also a child: {self.family[fam].wife}", file=f)
+                                idList.append(ind)
+                            elif self.individuals[ind].sex == "F" and child == self.family[fam].husband:
+                                print(f"ERROR: INDIVIDUAL: {ind}. US17: No Marriage to Children; {self.individuals[ind].name} has a husband: {self.family[fam].husband} who is also a child: {self.family[fam].husband}", file=f)
+                                idList.append(ind)
+        return idList
+    
+    
+    #Function for US32's unittest. List all multiple births in a GEDCOM file.
+    #Finding twins, triplets, etc.
+    def listMultipleBirths(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for ind in self.individuals:
+                for ind2 in self.individuals:
+                    if self.individuals[ind].famc == self.individuals[ind2].famc and self.individuals[ind].name != self.individuals[ind2].name:
+                        if self.individuals[ind].birth == self.individuals[ind2].birth:
+                            print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US32: List all multiple Births; {self.individuals[ind].name} has the same birthday as: {self.individuals[ind2].name}", file=f)
+                            idList.append(ind)
+        return idList
+
+
     def file_reading_gen(self, path, sep = "\t"):
         '''This is a file reading generator that reads the GEDCOM function line by line. The function will first check for bad inputs and raise an error if it detects any.'''
         try: #This tries to open the file and returns an error if it can not open the file. The code continues if opening the file is successful
@@ -135,6 +171,7 @@ class Read_GEDCOM:
                 for line in fp:
                     separate_line = line.strip().split(sep, 2) #Each line is stripped and seperated by the indicated seperator which in this case is a space. Each seperate line is yielded on each call to next()
                     yield separate_line
+    
 
     def create_indi_ptable(self):
         '''This creates a Pretty Table that is an Individual summary of each individuals ID, Name, Gender, Birthday, Age, whether they are alive or not, death date, children, and spouses.'''
@@ -195,7 +232,7 @@ class Family:
 
 def main():
     '''This runs the program.'''
-    path = 'AldenRadoncic-TargaryenFamily-Test2ForProject03.ged'
+    path = 'Family-3-27-Feb-2020-849.ged'
     Read_GEDCOM(path)
     
 

@@ -19,7 +19,7 @@ class Read_GEDCOM:
         if ptables: #Makes pretty tables for the data
             self.create_indi_ptable()
             self.create_fam_ptable()
-
+        self.fewerThan15Siblings()
     
     def analyze_GEDCOM(self):
         '''The purpose of this function is to read the GEDCOM file line by line and evaluate if a new instance of Family or Individual needs to be made. Each line is further evaluated using the parse_info function that is defined below.'''
@@ -82,7 +82,19 @@ class Read_GEDCOM:
                         elif date_identifier_tag == "DIV":
                             self.family[fam].divorce = arguments
 
-
+    # User Story #15 implemented by Alden Radoncic
+    def fewerThan15Siblings(self):
+        '''
+        Loops through all families in the output and checks if each family has less than 15 siblings.
+        If a family has greater than 15 siblings, an error is thrown.
+        '''
+        idList = []
+        with open("SprintOutput.txt", "a") as f:
+            for fam in self.family:
+                if len(self.family[fam].children) >= 15:
+                    idList.append(fam)
+                    print(f"ERROR: FAMILY: {fam} US15: More than 15 siblings", file = f)
+        return idList
 
     def file_reading_gen(self, path, sep = "\t"):
         '''This is a file reading generator that reads the GEDCOM function line by line. The function will first check for bad inputs and raise an error if it detects any.'''
@@ -123,26 +135,36 @@ class Read_GEDCOM:
 
 class Individual:
     '''This class will hold all the information for each individual according to their IndiID. This includes their name, sex, birthday, age, whether they are alive, death date, and their children and spouses.'''
-    def __init__(self):
-        self.name = "NA"
-        self.sex = "NA"
-        self.birth = None
-        self.age = "NA"
-        self.alive = True 
-        self.death = None 
-        self.famc = "NA"
-        self.fams = set()
+    def __init__(self, name = "NA", sex = "NA", birth = None, age = "NA", alive = None, death = None, famc = "NA", fams = set()):
+        self.name = name
+        self.sex = sex
+        self.birth = birth
+        self.age = age
+        self.alive = alive 
+        self.death = death
+        self.famc = famc
+        self.fams = fams
 
     def check_alive(self):
-        '''The purpose of this function is to check whether a person is alive or not and what their age is.'''
+        '''The purpose of this function is to check whether a person is alive or not and sets the individuals age based on calling the calculateAge function'''
         self.alive = (self.death == None) #Returns true if self.death == None because that means the person is not dead.
         try:
-            if (self.alive): #If the person is alive then this will calculate their birthday based on the current year
-                self.age = (datetime.datetime.today().year - self.birth.year)
-            else: #If the person is dead this will calculate their age when they died
-                self.age = (self.death.year - self.birth.year)
+            self.calculateAge()
         except:
-            raise ValueError("The birth or death records appear to be messed up! Check them for errors!")   
+            raise ValueError("The birth or death records appear to be messed up! Check them for errors!")
+    
+    # User Story #25 implemented by Alden Radoncic
+    def calculateAge(self):
+        '''Calculates the age of an individual'''
+        # Check if alive in order to determine whether to calculate age with death date or today's date
+        if (self.alive):
+            lastDate = datetime.datetime.today()
+        else:
+            lastDate = self.death
+        # Tuple comparision at the end compares month and day to check whether their birthday has passed or is happening in the current year or not
+        # in order to handle the 1 year difference in age between if one's birthday has passed or not in the current year
+        self.age = lastDate.year - self.birth.year - int((lastDate.month, lastDate.day) < (self.birth.month, self.birth.day))
+        return self.age
 
 class Family:
     '''This class will hold all of the information for each family according to their FamID. This includes the marriage date, divorce date, husband ID, wife ID, and a set of the children.'''
@@ -155,7 +177,7 @@ class Family:
 
 def main():
     '''This runs the program.'''
-    path = 'AldenRadoncic-TargaryenFamily-Test2ForProject03.ged'
+    path = input("Insert path of GEDCOM file (if in the same directory, enter name of GEDCOM file):")
     Read_GEDCOM(path)
     
 

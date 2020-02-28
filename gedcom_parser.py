@@ -187,7 +187,6 @@ class UserStories:
         self.add_errors = error_list
         self.birth_before_death()
         self.marriage_before_divorce()
-
         if print_all_errors == True:
             self.print_user_story_errors()
 

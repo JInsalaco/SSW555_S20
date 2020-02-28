@@ -107,6 +107,11 @@ class Read_GEDCOM:
                 individual.fams = "NA"
             self.individuals_ptable.add_row([ID, individual.name, individual.sex, individual.birth, individual.age, individual.alive, individual.death, individual.famc, individual.fams])
         print(self.individuals_ptable)
+        #write individuals table to output file
+        with open("Project03output.txt", "w") as f:
+            print("Individuals", file=f)
+            print(self.individuals_ptable, file=f)
+
 
     def create_fam_ptable(self):
         '''This creates a Pretty Table that is a Family summary of each family's ID, when they were married, when they got divorced, the Husband ID, the Husband Name, the Wife ID, the Wife Name, and their children.'''
@@ -114,6 +119,10 @@ class Read_GEDCOM:
         for ID, fam in self.family.items():
             self.family_ptable.add_row([ID, fam.marriage, fam.divorce, fam.husband, self.individuals[fam.husband].name, fam.wife, self.individuals[fam.wife].name, fam.children])   
         print(self.family_ptable)
+        #append families table to output file
+        with open("Project03output.txt", "a") as f:
+            print("Families", file=f)
+            print(self.family_ptable, file=f)
 
 class Individual:
     '''This class will hold all the information for each individual according to their IndiID. This includes their name, sex, birthday, age, whether they are alive, death date, and their children and spouses.'''
@@ -177,6 +186,8 @@ class UserStories:
             print("This GEDCOM file is perfect and without any errors!")
         else:
             for GEDCOM_error in sorted(self.add_errors):
+                with open("Project03output.txt", "a") as f:
+                    print(GEDCOM_error, file=f)
                 print(GEDCOM_error)
 def main():
     '''This runs the program.'''

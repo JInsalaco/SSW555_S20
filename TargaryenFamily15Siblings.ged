@@ -1,0 +1,429 @@
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE My Family
+1 DATE 28 FEB 2020
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME blah blah
+1 SUBN
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Jon /Snow/
+2 GIVN Jon
+2 SURN Snow
+1 SEX M
+1 BIRT
+2 DATE 7 MAR 0283
+1 FAMC @F1@
+0 @I2@ INDI
+1 NAME Rhaegar /Targaryen/
+2 GIVN Rhaegar
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 4 MAY 0259
+1 DEAT Y
+2 DATE 17 NOV 0283
+1 FAMS @F1@
+1 FAMS @F2@
+1 FAMC @F3@
+0 @I3@ INDI
+1 NAME Lyanna /Stark/
+2 GIVN Lyanna
+2 SURN Stark
+1 SEX F
+1 BIRT
+2 DATE 3 APR 0266
+1 DEAT Y
+2 DATE 7 NOV 0283
+1 FAMS @F1@
+0 @I4@ INDI
+1 NAME Elia /Martell/
+2 GIVN Elia
+2 SURN Martell
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 6 MAY 0256
+1 DEAT Y
+2 DATE 12 OCT 0281
+1 FAMS @F2@
+0 @I5@ INDI
+1 NAME Rhaenys /Targaryen/
+2 GIVN Rhaenys
+2 SURN Targaryen
+1 SEX F
+1 BIRT
+2 DATE 10 AUG 0280
+1 DEAT Y
+2 DATE 3 OCT 0283
+1 FAMC @F2@
+0 @I6@ INDI
+1 NAME Aegon /Targaryen/
+2 GIVN Aegon
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 5 JUL 0282
+1 DEAT Y
+2 DATE 23 NOV 0283
+1 FAMC @F2@
+0 @I7@ INDI
+1 NAME Aerys /Targaryen/
+2 GIVN Aerys
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 4 FEB 0244
+1 DEAT Y
+2 DATE 7 JUL 0283
+1 FAMS @F3@
+0 @I8@ INDI
+1 NAME Rhaella /Targaryen/
+2 GIVN Rhaella
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 22 MAY 0254
+1 DEAT Y
+2 DATE 30 JUN 0284
+1 FAMS @F3@
+0 @I9@ INDI
+1 NAME Viserys /Targaryen/
+2 GIVN Viserys
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 6 SEP 0276
+1 DEAT Y
+2 DATE 19 OCT 0298
+1 FAMC @F3@
+0 @I10@ INDI
+1 NAME Daenerys /Targaryen/
+2 GIVN Daenerys
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 17 AUG 0284
+1 DEAT Y
+2 DATE 14 JUN 0302
+1 FAMC @F3@
+0 @I11@ INDI
+1 NAME Fling /Targaryen/
+2 GIVN Fling
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 6 MAY 0285
+1 DEAT Y
+2 DATE 3 MAY 0286
+1 FAMC @F3@
+0 @I12@ INDI
+1 NAME Lopa /Targaryen/
+2 GIVN Lopa
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 6 JUN 0284
+1 DEAT Y
+2 DATE 12 AUG 0284
+1 FAMC @F3@
+0 @I13@ INDI
+1 NAME Porpa /Targaryen/
+2 GIVN Porpa
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 13 OCT 0285
+1 DEAT Y
+2 DATE 12 AUG 0295
+1 FAMC @F3@
+0 @I14@ INDI
+1 NAME Upa /Targaryen/
+2 GIVN Upa
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 9 SEP 0287
+1 DEAT Y
+2 DATE 7 NOV 0306
+1 FAMC @F3@
+0 @I15@ INDI
+1 NAME Tot /Targaryen/
+2 GIVN Tot
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 12 JUL 0282
+1 DEAT Y
+2 DATE 4 DEC 0320
+1 FAMC @F3@
+0 @I16@ INDI
+1 NAME Repo /Targaryen/
+2 GIVN Repo
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 1 MAY 0280
+1 DEAT Y
+2 DATE 10 NOV 0342
+1 FAMC @F3@
+0 @I17@ INDI
+1 NAME Klod /Targaryen/
+2 GIVN Klod
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 3 JAN 0283
+1 DEAT Y
+2 DATE 13 NOV 0290
+1 FAMC @F3@
+0 @I18@ INDI
+1 NAME Uy /Targaryen/
+2 GIVN Uy
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 2 MAY 0285
+1 DEAT Y
+2 DATE 9 NOV 0307
+1 FAMC @F3@
+0 @I19@ INDI
+1 NAME Apo /Targaryen/
+2 GIVN Apo
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 3 OCT 0288
+1 DEAT Y
+2 DATE 7 MAY 0300
+1 FAMC @F3@
+0 @I20@ INDI
+1 NAME Po /Targaryen/
+2 GIVN Po
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 1 APR 0283
+1 FAMC @F3@
+0 @I21@ INDI
+1 NAME Yu /Targaryen/
+2 GIVN Yu
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 6 JUN 0282
+1 FAMC @F3@
+0 @I22@ INDI
+1 NAME Wi /Targaryen/
+2 GIVN Wi
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 12 SEP 0282
+1 FAMC @F3@
+0 @I23@ INDI
+1 NAME Puq /Targaryen/
+2 GIVN Puq
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 20 AUG 0298
+1 FAMC @F3@
+0 @I24@ INDI
+1 NAME Pomp /Targaryen/
+2 GIVN Pomp
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 27 SEP 0340
+1 FAMC @F2@
+0 @I25@ INDI
+1 NAME Ya /Targaryen/
+2 GIVN Ya
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 21 JUL 0320
+1 FAMC @F2@
+0 @I26@ INDI
+1 NAME Tut /Targaryen/
+2 GIVN Tut
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 28 NOV 0310
+1 FAMC @F2@
+0 @I27@ INDI
+1 NAME Donaldo /Targaryen/
+2 GIVN Donaldo
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 19 NOV 0315
+1 FAMC @F2@
+0 @I28@ INDI
+1 NAME Lyanna /Targaryen/
+2 GIVN Lyanna
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 26 JUN 0322
+1 FAMC @F2@
+0 @I29@ INDI
+1 NAME Propa /Targaryen/
+2 GIVN Propa
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 10 AUG 0330
+1 DEAT Y
+2 DATE 2 JUN 0340
+1 FAMC @F2@
+0 @I30@ INDI
+1 NAME Siobhan /Targaryen/
+2 GIVN Siobhan
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 10 JUN 0333
+1 FAMC @F2@
+0 @I31@ INDI
+1 NAME Johnny /Targaryen/
+2 GIVN Johnny
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 13 SEP 0323
+1 FAMC @F2@
+0 @I32@ INDI
+1 NAME Bobby /Targaryen/
+2 GIVN Bobby
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 14 NOV 0321
+1 FAMC @F2@
+0 @I33@ INDI
+1 NAME Yo /Targaryen/
+2 GIVN Yo
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 7 SEP 0299
+1 FAMC @F2@
+0 @I34@ INDI
+1 NAME Rob /Targaryen/
+2 GIVN Rob
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 18 NOV 0311
+1 FAMC @F2@
+0 @I35@ INDI
+1 NAME Jon /Targaryen/
+2 GIVN Jon
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX M
+1 BIRT
+2 DATE 20 OCT 0322
+1 FAMC @F2@
+0 @I36@ INDI
+1 NAME Bra /Targaryen/
+2 GIVN Bra
+2 SURN Targaryen
+2 _MARNM Targaryen
+1 SEX F
+1 BIRT
+2 DATE 12 DEC 0333
+1 DEAT Y
+2 DATE 11 DEC 0370
+1 FAMC @F2@
+0 @F1@ FAM
+1 HUSB @I2@
+1 WIFE @I3@
+1 CHIL @I1@
+1 MARR
+2 DATE 8 APR 0283
+1 _CURRENT Y
+0 @F2@ FAM
+1 HUSB @I2@
+1 WIFE @I4@
+1 CHIL @I5@
+1 CHIL @I6@
+1 CHIL @I24@
+1 CHIL @I25@
+1 CHIL @I26@
+1 CHIL @I27@
+1 CHIL @I28@
+1 CHIL @I29@
+1 CHIL @I30@
+1 CHIL @I31@
+1 CHIL @I32@
+1 CHIL @I33@
+1 CHIL @I34@
+1 CHIL @I35@
+1 CHIL @I36@
+1 MARR
+2 DATE 12 JUN 0281
+1 EVEN
+2 TYPE Ending
+1 _CURRENT N
+0 @F3@ FAM
+1 HUSB @I7@
+1 WIFE @I8@
+1 CHIL @I2@
+1 CHIL @I9@
+1 CHIL @I10@
+1 CHIL @I11@
+1 CHIL @I12@
+1 CHIL @I13@
+1 CHIL @I14@
+1 CHIL @I15@
+1 CHIL @I16@
+1 CHIL @I17@
+1 CHIL @I18@
+1 CHIL @I19@
+1 CHIL @I20@
+1 CHIL @I21@
+1 CHIL @I22@
+1 CHIL @I23@
+1 MARR
+2 DATE 6 JUN 0260
+1 _CURRENT Y
+0 TRLR

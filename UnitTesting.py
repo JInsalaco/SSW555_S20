@@ -22,5 +22,14 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertEqual(['F2', 'F3'], obj.fewerThan15Siblings())
 
+    def test_noMarriagesToChildren(self): # for when a parent is married to a child
+        obj = gedcom_parser.Read_GEDCOM("jackLiTest.ged")
+        self.assertEqual(['I2', 'I3'],obj.noMarriagesToChildren())
+
+    def test_listMultipleBirths(self): # for checking when someone is born on the same day
+        obj = gedcom_parser.Read_GEDCOM("jackLiTest.ged")
+        self.assertEqual(['I1', 'I11'],obj.listMultipleBirthds())
+
+
 if __name__ == '__main__':
     unittest.main()

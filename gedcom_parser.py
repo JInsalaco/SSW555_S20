@@ -108,7 +108,7 @@ class Read_GEDCOM:
             self.individuals_ptable.add_row([ID, individual.name, individual.sex, individual.birth, individual.age, individual.alive, individual.death, individual.famc, individual.fams])
         print(self.individuals_ptable)
         #write individuals table to output file
-        with open("Project03output.txt", "w") as f:
+        with open("Sprintoutput.txt", "w") as f:
             print("Individuals", file=f)
             print(self.individuals_ptable, file=f)
 
@@ -120,7 +120,7 @@ class Read_GEDCOM:
             self.family_ptable.add_row([ID, fam.marriage, fam.divorce, fam.husband, self.individuals[fam.husband].name, fam.wife, self.individuals[fam.wife].name, fam.children])   
         print(self.family_ptable)
         #append families table to output file
-        with open("Project03output.txt", "a") as f:
+        with open("Sprintoutput.txt", "a") as f:
             print("Families", file=f)
             print(self.family_ptable, file=f)
 
@@ -186,7 +186,7 @@ class UserStories:
             print("This GEDCOM file is perfect and without any errors!")
         else:
             for GEDCOM_error in sorted(self.add_errors):
-                with open("Project03output.txt", "a") as f:
+                with open("Sprintoutput.txt", "a") as f:
                     print(GEDCOM_error, file=f)
                 print(GEDCOM_error)
 def main():

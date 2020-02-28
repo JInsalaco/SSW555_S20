@@ -9,10 +9,11 @@ import datetime
 
 class Read_GEDCOM:
     '''This class will read and analyze the GEDCOM file so that it can sort the data into the Individual and Family classes.'''
-    def __init__(self, path, ptables = True):
+    def __init__(self, path, ptables = True, print_all_errors = True):
         self.path = path
         self.family = dict() #The key is the FamID and the value is the instance for the Family class object for that specific FamID
         self.individuals = dict() #The key is the IndiID and the value is the instance for the Individual class object for that specific IndiID
+        self.error_list = []
         self.family_ptable = PrettyTable(field_names = ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
         self.individuals_ptable = PrettyTable(field_names = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
         self.analyze_GEDCOM() 
@@ -20,6 +21,8 @@ class Read_GEDCOM:
             self.create_indi_ptable()
             self.create_fam_ptable()
         self.fewerThan15Siblings()
+        self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors
+
     
     def analyze_GEDCOM(self):
         '''The purpose of this function is to read the GEDCOM file line by line and evaluate if a new instance of Family or Individual needs to be made. Each line is further evaluated using the parse_info function that is defined below.'''
@@ -118,9 +121,10 @@ class Read_GEDCOM:
             self.individuals_ptable.add_row([ID, individual.name, individual.sex, individual.birth, individual.age, individual.alive, individual.death, individual.famc, individual.fams])
         print(self.individuals_ptable)
         #write individuals table to output file
-        with open("Project03output.txt", "w") as f:
+        with open("Sprintoutput.txt", "w") as f:
             print("Individuals", file=f)
             print(self.individuals_ptable, file=f)
+
 
     def create_fam_ptable(self):
         '''This creates a Pretty Table that is a Family summary of each family's ID, when they were married, when they got divorced, the Husband ID, the Husband Name, the Wife ID, the Wife Name, and their children.'''
@@ -129,7 +133,7 @@ class Read_GEDCOM:
             self.family_ptable.add_row([ID, fam.marriage, fam.divorce, fam.husband, self.individuals[fam.husband].name, fam.wife, self.individuals[fam.wife].name, fam.children])   
         print(self.family_ptable)
         #append families table to output file
-        with open("Project03output.txt", "a") as f:
+        with open("Sprintoutput.txt", "a") as f:
             print("Families", file=f)
             print(self.family_ptable, file=f)
 
@@ -175,6 +179,39 @@ class Family:
         self.wife = "NA"
         self.children = set()
 
+class UserStories:
+
+    def __init__(self, family_dict, individual_dict, error_list, print_all_errors):
+        self.family = family_dict
+        self.individuals = individual_dict
+        self.add_errors = error_list
+        self.birth_before_death()
+        self.marriage_before_divorce()
+
+        if print_all_errors == True:
+            self.print_user_story_errors()
+
+
+    def birth_before_death(self):
+        "US03 Birth Before Death: Birth should occur before death of an individual"
+        for individual in self.individuals.values():
+            if individual.death != None and (individual.death - individual.birth).days < 0:
+                self.add_errors += [f"ERROR: INDIVIDUAL: US03: {individual.name}'s death occurs on {individual.death} which is before their birth on {individual.birth}"]
+    
+    def marriage_before_divorce(self):
+        "US04 Marriage Before Divorce: Marriage should occur before divorce of spouses, and divorce can only occur after marriage"
+        for families in self.family.values():
+            if families.divorce != "NA" and (families.divorce - families.marriage).days < 0:
+                self.add_errors += [f"ERROR: FAMILY: US04: {self.individuals[families.husband].name} and {self.individuals[families.wife].name} divorce occurs on {families.divorce} which is before their marriage on {families.marriage}"]
+
+    def print_user_story_errors(self):
+        if len(self.add_errors) == 0:
+            print("This GEDCOM file is perfect and without any errors!")
+        else:
+            for GEDCOM_error in sorted(self.add_errors):
+                with open("Sprintoutput.txt", "a") as f:
+                    print(GEDCOM_error, file=f)
+                print(GEDCOM_error)
 def main():
     '''This runs the program.'''
     path = input("Insert path of GEDCOM file (if in the same directory, enter name of GEDCOM file):")

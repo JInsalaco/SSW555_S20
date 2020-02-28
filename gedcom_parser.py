@@ -89,7 +89,7 @@ class Read_GEDCOM:
                         elif date_identifier_tag == "DIV":
                             self.family[fam].divorce = arguments
 
-    #Function for US01's unittest. Returns a list of id's (ind or fam) that
+    #Function for US01's unittest: Returns a list of id's (ind or fam) that
     #have dates after the current date
     def checkDatesAfterToday(self):
         with open("Sprintoutput.txt", "a") as f:
@@ -111,7 +111,7 @@ class Read_GEDCOM:
                     idList.append(fam)
         return idList
 
-    #Function for US02's unittest. Returns a list of individual id's that
+    #Function for US02's unittest: Returns a list of individual id's that
     #have birth dates after their marriage dates
     def checkBirthAfterMarriage(self):
         with open("Sprintoutput.txt", "a") as f:

@@ -95,17 +95,17 @@ class Read_GEDCOM:
             idList = []
             for ind in self.individuals:
                 if self.individuals[ind].birth > currentDate:
-                    print("ERROR: INDIVIDUAL: " + ind + " US01: Birthday " + self.individuals[ind].birth + " occurs in the future", file=f)
+                    print(f"ERROR: INDIVIDUAL: {ind} US01: Birthday {self.individuals[ind].birth} occurs in the future", file=f)
                     idList.append(ind)
                 if self.individuals[ind].death != None and self.individuals[ind].death > currentDate:
-                    print("ERROR: INDIVIDUAL: " + ind + " US01: Death " + self.individuals[ind].death + " occurs in the future", file=f)
+                    print(f"ERROR: INDIVIDUAL: {ind} US01: Death {self.individuals[ind].death} occurs in the future", file=f)
                     idList.append(ind)
             for fam in self.family:
                 if self.family[fam].marriage > currentDate:
-                    print("ERROR: FAMILY: " + fam + " US01: Marriage " + self.family[fam].marriage + " occurs in the future", file=f)
+                    print(f"ERROR: FAMILY: {fam} US01: Marriage {self.family[fam].marriage} occurs in the future", file=f)
                     idList.append(fam)
                 if self.family[fam].divorce != "NA" and self.family[fam].divorce > currentDate:
-                    print("ERROR: FAMILY: " + fam + " US01: Divorce " + self.family[fam].divorce + " occurs in the future", file=f)
+                    print(f"ERROR: FAMILY: {fam} US01: Divorce {self.family[fam].divorce} occurs in the future", file=f)
                     idList.append(fam)
         return idList
 
@@ -117,15 +117,16 @@ class Read_GEDCOM:
             for ind in self.individuals:
                 birthDate = self.individuals[ind].birth
                 famSet = self.individuals[ind].fams
-                for fam in famSet:
-                    marriageDate = self.family[fam].marriage
-                    if birthDate > marriageDate:
-                        if self.individuals[ind].sex == "M":
-                            sex = "Husband's"
-                        else:
-                            sex = "Wife's"
-                        print(f"ERROR: FAMILY: {fam} US02: {sex} ({ind}) birthday {birthDate} occurs after marriage {marriageDate}", file=f)
-                        idList.append(ind)
+                if famSet != "NA":
+                    for fam in famSet:
+                        marriageDate = self.family[fam].marriage
+                        if birthDate > marriageDate:
+                            if self.individuals[ind].sex == "M":
+                                sex = "Husband's"
+                            else:
+                                sex = "Wife's"
+                            print(f"ERROR: FAMILY: {fam} US02: {sex} ({ind}) birthday {birthDate} occurs after marriage {marriageDate}", file=f)
+                            idList.append(ind)
         return idList
 
     # User Story #15 implemented by Alden Radoncic

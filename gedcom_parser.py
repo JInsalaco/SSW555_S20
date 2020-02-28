@@ -92,7 +92,7 @@ class Read_GEDCOM:
         If a family has greater than 15 siblings, an error is thrown.
         '''
         idList = []
-        with open("SprintOutput.txt", "a") as f:
+        with open("Sprintoutput.txt", "a") as f:
             for fam in self.family:
                 if len(self.family[fam].children) >= 15:
                     idList.append(fam)

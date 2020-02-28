@@ -18,9 +18,17 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("AldenRadoncic-TargaryenFamily-Test2ForProject03.ged")
         self.assertEqual([], obj.fewerThan15Siblings())
     
-    def test_fewerThan15Siblings1(self): # for when no family has greater than 15 children
+    def test_fewerThan15Siblings2(self): # for when no family has greater than 15 children
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertEqual(['F2', 'F3'], obj.fewerThan15Siblings())
+
+    def test_dates_after_today(self): # tests US01: dates cannot be in the future
+        obj = gedcom_parser.Read_GEDCOM("SkywalkerFamilyErrors.ged")
+        self.assertEqual(['I1', 'I4', 'F3'], obj.checkDatesAfterToday())
+
+    def test_birth_after_marriage(self): # tests US02: birth cannot occur after marriage
+        obj = gedcom_parser.Read_GEDCOM("SkywalkerFamilyErrors.ged")
+        self.assertEqual(['I2', 'I3', 'I9'], obj.checkBirthAfterMarriage())
 
 if __name__ == '__main__':
     unittest.main()

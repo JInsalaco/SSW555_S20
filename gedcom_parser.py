@@ -139,7 +139,7 @@ class Read_GEDCOM:
 
 class Individual:
     '''This class will hold all the information for each individual according to their IndiID. This includes their name, sex, birthday, age, whether they are alive, death date, and their children and spouses.'''
-    def __init__(self, name = "NA", sex = "NA", birth = None, age = "NA", alive = None, death = None, famc = "NA", fams = set()):
+    def __init__(self, name = "NA", sex = "NA", birth = None, age = "NA", alive = True, death = None, famc = "NA"):
         self.name = name
         self.sex = sex
         self.birth = birth
@@ -147,7 +147,7 @@ class Individual:
         self.alive = alive 
         self.death = death
         self.famc = famc
-        self.fams = fams
+        self.fams = set()
 
     def check_alive(self):
         '''The purpose of this function is to check whether a person is alive or not and sets the individuals age based on calling the calculateAge function'''

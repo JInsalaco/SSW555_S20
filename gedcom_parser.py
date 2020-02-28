@@ -9,19 +9,20 @@ import datetime
 
 class Read_GEDCOM:
     '''This class will read and analyze the GEDCOM file so that it can sort the data into the Individual and Family classes.'''
-    def __init__(self, path, ptables = True):
+    def __init__(self, path, ptables = True, print_all_errors = True):
         self.path = path
         self.family = dict() #The key is the FamID and the value is the instance for the Family class object for that specific FamID
         self.individuals = dict() #The key is the IndiID and the value is the instance for the Individual class object for that specific IndiID
+        self.error_list = []
         self.family_ptable = PrettyTable(field_names = ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
         self.individuals_ptable = PrettyTable(field_names = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
         self.analyze_GEDCOM() 
         if ptables: #Makes pretty tables for the data
             self.create_indi_ptable()
             self.create_fam_ptable()
-        self.checkDatesAfterToday()
-        self.checkBirthAfterMarriage()
+        self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors
 
+    
     def analyze_GEDCOM(self):
         '''The purpose of this function is to read the GEDCOM file line by line and evaluate if a new instance of Family or Individual needs to be made. Each line is further evaluated using the parse_info function that is defined below.'''
         ind, fam, date_identifier_line, indiv_or_fam = "", "", [], "NA" #The lines are analyzed to see if they are for an individuals information or the family's information. Each line is marked accordingly and analyzed appropriately
@@ -83,47 +84,7 @@ class Read_GEDCOM:
                         elif date_identifier_tag == "DIV":
                             self.family[fam].divorce = arguments
 
-    #Function for US01's unittest. Returns a list of id's (ind or fam) that
-    #have dates after the current date
-    def checkDatesAfterToday(self):
-        with open("SprintOutput.txt", "a") as f:
-            currentDate  = datetime.date.today()
-            idList = []
-            for ind in self.individuals:
-                if self.individuals[ind].birth > currentDate:
-                    print(f"ERROR: INDIVIDUAL: {ind} US01: Birthday {self.individuals[ind].birth} occurs in the future", file=f)
-                    idList.append(ind)
-                if self.individuals[ind].death != None and self.individuals[ind].death > currentDate:
-                    print(f"ERROR: INDIVIDUAL: {ind} US01: Death {self.individuals[ind].death} occurs in the future", file=f)
-                    idList.append(ind)
-            for fam in self.family:
-                if self.family[fam].marriage > currentDate:
-                    print(f"ERROR: FAMILY: {fam} US01: Marriage {self.family[fam].marriage} occurs in the future", file=f)
-                    idList.append(fam)
-                if self.family[fam].divorce != "NA" and self.family[fam].divorce > currentDate:
-                    print(f"ERROR: FAMILY: {fam} US01: Divorce {self.family[fam].divorce} occurs in the future", file=f)
-                    idList.append(fam)
-        return idList
 
-    #Function for US02's unittest. Returns a list of individual id's that
-    #have birth dates after their marriage dates
-    def checkBirthAfterMarriage(self):
-        with open("SprintOutput.txt", "a") as f:
-            idList = []
-            for ind in self.individuals:
-                birthDate = self.individuals[ind].birth
-                famSet = self.individuals[ind].fams
-                if famSet != "NA":
-                    for fam in famSet:
-                        marriageDate = self.family[fam].marriage
-                        if birthDate > marriageDate:
-                            if self.individuals[ind].sex == "M":
-                                sex = "Husband's"
-                            else:
-                                sex = "Wife's"
-                            print(f"ERROR: FAMILY: {fam} US02: {sex} ({ind}) birthday {birthDate} occurs after marriage {marriageDate}", file=f)
-                            idList.append(ind)
-        return idList
 
     def file_reading_gen(self, path, sep = "\t"):
         '''This is a file reading generator that reads the GEDCOM function line by line. The function will first check for bad inputs and raise an error if it detects any.'''
@@ -146,10 +107,6 @@ class Read_GEDCOM:
                 individual.fams = "NA"
             self.individuals_ptable.add_row([ID, individual.name, individual.sex, individual.birth, individual.age, individual.alive, individual.death, individual.famc, individual.fams])
         print(self.individuals_ptable)
-        #write individuals table to output file
-        with open("Project03output.txt", "w") as f:
-            print("Individuals", file=f)
-            print(self.individuals_ptable, file=f)
 
     def create_fam_ptable(self):
         '''This creates a Pretty Table that is a Family summary of each family's ID, when they were married, when they got divorced, the Husband ID, the Husband Name, the Wife ID, the Wife Name, and their children.'''
@@ -157,10 +114,6 @@ class Read_GEDCOM:
         for ID, fam in self.family.items():
             self.family_ptable.add_row([ID, fam.marriage, fam.divorce, fam.husband, self.individuals[fam.husband].name, fam.wife, self.individuals[fam.wife].name, fam.children])   
         print(self.family_ptable)
-        #append families table to output file
-        with open("Project03output.txt", "a") as f:
-            print("Families", file=f)
-            print(self.family_ptable, file=f)
 
 class Individual:
     '''This class will hold all the information for each individual according to their IndiID. This includes their name, sex, birthday, age, whether they are alive, death date, and their children and spouses.'''
@@ -194,9 +147,40 @@ class Family:
         self.wife = "NA"
         self.children = set()
 
+class UserStories:
+
+    def __init__(self, family_dict, individual_dict, error_list, print_all_errors):
+        self.family = family_dict
+        self.individuals = individual_dict
+        self.add_errors = error_list
+        self.birth_before_death()
+        self.marriage_before_divorce()
+
+        if print_all_errors == True:
+            self.print_user_story_errors()
+
+
+    def birth_before_death(self):
+        "US03 Birth Before Death: Birth should occur before death of an individual"
+        for individual in self.individuals.values():
+            if individual.death != None and (individual.death - individual.birth).days < 0:
+                self.add_errors += [f"ERROR: INDIVIDUAL: US03: {individual.name}'s death occurs on {individual.death} which is before their birth on {individual.birth}"]
+    
+    def marriage_before_divorce(self):
+        "US04 Marriage Before Divorce: Marriage should occur before divorce of spouses, and divorce can only occur after marriage"
+        for families in self.family.values():
+            if families.divorce != "NA" and (families.divorce - families.marriage).days < 0:
+                self.add_errors += [f"ERROR: FAMILY: US04: {self.individuals[families.husband].name} and {self.individuals[families.wife].name} divorce occurs on {families.divorce} which is before their marriage on {families.marriage}"]
+
+    def print_user_story_errors(self):
+        if len(self.add_errors) == 0:
+            print("This GEDCOM file is perfect and without any errors!")
+        else:
+            for GEDCOM_error in sorted(self.add_errors):
+                print(GEDCOM_error)
 def main():
     '''This runs the program.'''
-    path = 'AldenRadoncic-TargaryenFamily-Test2ForProject03.ged'
+    path = 'filetester.ged'
     Read_GEDCOM(path)
     
 

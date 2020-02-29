@@ -23,6 +23,8 @@ class Read_GEDCOM:
         self.fewerThan15Siblings()
         self.checkDatesAfterToday()
         self.checkBirthAfterMarriage()
+        self.noMarriagesToChildren()
+        self.listMultipleBirths()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors
 
     
@@ -126,6 +128,39 @@ class Read_GEDCOM:
                             else:
                                 sex = "Wife's"
                             print(f"ERROR: FAMILY: {fam} US02: {sex} ({ind}) birthday {birthDate} occurs after marriage {marriageDate}", file=f)
+                            idList.append(ind)
+        return idList
+    
+    #Function for US17's unittest. No Marrriage to Children. Returns an error if in the family,
+    #the husband id or wife id is also in the children's list.
+    def noMarriagesToChildren(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for ind in self.individuals:
+                famSet = self.individuals[ind].fams
+                if famSet != "NA":
+                    for fam in famSet:
+                        childrenSet = self.family[fam].children
+                        for child in childrenSet:
+                            if self.individuals[ind].sex == "M" and child == self.family[fam].wife:
+                                print(f"ERROR: INDIVIDUAL: {ind}. US17: No Marriage to Children; {self.individuals[ind].name} has a wife: {self.family[fam].wife} who is also a child: {self.family[fam].wife}", file=f)
+                                idList.append(ind)
+                            elif self.individuals[ind].sex == "F" and child == self.family[fam].husband:
+                                print(f"ERROR: INDIVIDUAL: {ind}. US17: No Marriage to Children; {self.individuals[ind].name} has a husband: {self.family[fam].husband} who is also a child: {self.family[fam].husband}", file=f)
+                                idList.append(ind)
+        return idList
+    
+    
+    #Function for US32's unittest. List all multiple births in a GEDCOM file.
+    #Finding twins, triplets, etc.
+    def listMultipleBirths(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for ind in self.individuals:
+                for ind2 in self.individuals:
+                    if self.individuals[ind].famc == self.individuals[ind2].famc and self.individuals[ind].name != self.individuals[ind2].name:
+                        if self.individuals[ind].birth == self.individuals[ind2].birth:
+                            print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US32: List all multiple Births; {self.individuals[ind].name} has the same birthday as: {self.individuals[ind2].name}", file=f)
                             idList.append(ind)
         return idList
 

@@ -30,5 +30,14 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("SkywalkerFamilyErrors.ged")
         self.assertEqual(['I2', 'I3', 'I9'], obj.checkBirthAfterMarriage())
 
+    def test_noMarriagesToChildren(self): # for when a parent is married to a child
+        obj = gedcom_parser.Read_GEDCOM("jackLiTest.ged")
+        self.assertEqual(['I2'],obj.noMarriagesToChildren())
+
+    def test_listMultipleBirths(self): # for checking when someone is born on the same day
+        obj = gedcom_parser.Read_GEDCOM("jackLiTest.ged")
+        self.assertEqual(['I1', 'I11'],obj.listMultipleBirths())
+
+
 if __name__ == '__main__':
     unittest.main()

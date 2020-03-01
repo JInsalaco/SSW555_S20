@@ -39,12 +39,12 @@ class TestUserStories(unittest.TestCase):
         self.assertEqual(['I2', 'I8'], obj.checkBirthAfterMarriage())
 
     def test_noMarriagesToChildren(self): # for when a parent is married to a child
-        obj = gedcom_parser.Read_GEDCOM("jackLiTest.ged")
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertEqual(['I2'],obj.noMarriagesToChildren())
 
-    def test_listMultipleBirths(self): # for checking when someone is born on the same day
-        obj = gedcom_parser.Read_GEDCOM("jackLiTest.ged")
-        self.assertEqual(['I1', 'I11'],obj.listMultipleBirths())
+    def test_listMultipleBirths(self): # for checking when someone in the same family is born on the same day
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['I27', 'I33'],obj.listMultipleBirths())
 
 
 if __name__ == '__main__':

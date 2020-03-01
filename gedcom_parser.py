@@ -164,7 +164,7 @@ class Read_GEDCOM:
                             idList.append(ind)
         return idList
 
-    # User Story #15 implemented by Alden Radoncic
+    # Function for US15's unittest. No more than five siblings should be born at the same time
     def fewerThan15Siblings(self):
         '''
         Loops through all families in the output and checks if each family has less than 15 siblings.
@@ -175,7 +175,7 @@ class Read_GEDCOM:
             for fam in self.family:
                 if len(self.family[fam].children) >= 15:
                     idList.append(fam)
-                    print(f"ERROR: FAMILY: {fam} US15: More than 15 siblings", file = f)
+                    print(f"ERROR: FAMILY: US15: {fam}: More than 15 siblings are in this family", file = f)
         return idList
 
     def file_reading_gen(self, path, sep = "\t"):
@@ -236,17 +236,14 @@ class Individual:
         except:
             raise ValueError("The birth or death records appear to be messed up! Check them for errors!")
     
-    # User Story #25 implemented by Alden Radoncic
+    # Function for US25's unittest. Include person's current age when listing individuals
     def calculateAge(self):
         '''Calculates the age of an individual'''
-        # Check if alive in order to determine whether to calculate age with death date or today's date
-        if (self.alive):
+        if (self.alive): # Check if alive to see whether to use today's date or death date for age calculation
             lastDate = datetime.datetime.today()
         else:
             lastDate = self.death
-        # Tuple comparision at the end compares month and day to check whether their birthday has passed or is happening in the current year or not
-        # in order to handle the 1 year difference in age between if one's birthday has passed or not in the current year
-        self.age = lastDate.year - self.birth.year - int((lastDate.month, lastDate.day) < (self.birth.month, self.birth.day))
+        self.age = lastDate.year - self.birth.year - int((lastDate.month, lastDate.day) < (self.birth.month, self.birth.day)) # Tuple comparison to check if today's date is before or after current/death date
         return self.age
 
 class Family:

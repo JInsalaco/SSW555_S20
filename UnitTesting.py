@@ -6,19 +6,19 @@ class TestUserStories(unittest.TestCase):
     def test_unittest(self): #this is a test unit test
         self.assertEqual('test'.upper(), 'TEST')
 
-    def test_calculateAge1(self): # for testing an alive individual
+    def test_calculateAge(self): # tests US27: include individual ages
         ind_alive = gedcom_parser.Individual(alive = True, birth = datetime.datetime(2017, 2, 25))
         self.assertEqual(ind_alive.calculateAge(), 3)
 
-    def test_calculateAge2(self): # for testing a dead individual
+    def test_calculateAge2(self): # tests US27: include individual ages
         ind_alive = gedcom_parser.Individual(alive = False, birth = datetime.datetime(1960, 4, 1), death = datetime.datetime(2004, 2, 2))
         self.assertEqual(ind_alive.calculateAge(), 43)
 
-    def test_fewerThan15Siblings1(self): # for when no family has greater than 15 children
+    def test_fewerThan15Siblings(self): # tests US15: There should be fewer than 15 siblings in a family
         obj = gedcom_parser.Read_GEDCOM("AldenRadoncic-TargaryenFamily-Test2ForProject03.ged")
         self.assertEqual([], obj.fewerThan15Siblings())
     
-    def test_fewerThan15Siblings2(self): # for when no family has greater than 15 children
+    def test_fewerThan15Siblings2(self): # tests US15: There should be fewer than 15 siblings in a family
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertEqual(['F2', 'F3'], obj.fewerThan15Siblings())
 

@@ -30,6 +30,14 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("SkywalkerFamilyErrors.ged")
         self.assertEqual(['I2', 'I3', 'I9'], obj.checkBirthAfterMarriage())
 
+    def test_dates_after_today2(self): # tests US01: dates cannot be in the future
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['I9','I10', 'F1'], obj.checkDatesAfterToday())
+
+    def test_birth_after_marriage2(self): # tests US02: birth cannot occur after marriage
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['I2', 'I8'], obj.checkBirthAfterMarriage())
+
     def test_noMarriagesToChildren(self): # for when a parent is married to a child
         obj = gedcom_parser.Read_GEDCOM("jackLiTest.ged")
         self.assertEqual(['I2'],obj.noMarriagesToChildren())

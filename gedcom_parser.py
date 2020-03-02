@@ -175,7 +175,7 @@ class Read_GEDCOM:
             for fam in self.family:
                 if len(self.family[fam].children) >= 15:
                     idList.append(fam)
-                    print(f"ERROR: FAMILY: US15: {fam}: More than 15 siblings are in this family", file = f)
+                    print(f"WARNING: FAMILY: US15: {fam}: More than 15 siblings are in this family", file = f)
         return idList
 
     def file_reading_gen(self, path, sep = "\t"):

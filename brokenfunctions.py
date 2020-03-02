@@ -7,6 +7,7 @@ from prettytable import PrettyTable
 from collections import defaultdict
 import datetime
 
+
 death_list = []
 
 

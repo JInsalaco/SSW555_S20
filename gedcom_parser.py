@@ -16,7 +16,9 @@ class Read_GEDCOM:
         self.error_list = [] #This is a list of errors that will be evaluated for testing purposes
         self.family_ptable = PrettyTable(field_names = ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
         self.individuals_ptable = PrettyTable(field_names = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
-        self.analyze_GEDCOM() 
+        self.recentDeathTable = PrettyTable(field_names=["ID", "Name", "Death"])  # create a ptable for recent deaths
+        self.recentSurvivorTable = PrettyTable(field_names=["Death ID", "Survivor Of", "Survivor Spouse", "Surviving Children"])
+        self.analyze_GEDCOM()
         if ptables: #Makes pretty tables for the data
             self.create_indi_ptable()
             self.create_fam_ptable()

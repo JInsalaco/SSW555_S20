@@ -3,7 +3,7 @@ Individuals
 |  ID |         Name         | Gender |  Birthday  |  Age  | Alive |   Death    | Child |    Spouse    |
 +-----+----------------------+--------+------------+-------+-------+------------+-------+--------------+
 |  I1 |      Jon /Snow/      |   M    | 0283-03-07 |  1736 |  True |    None    |   F1  |      NA      |
-|  I2 | Rhaegar /Targaryen/  |   M    | 0284-05-04 |   -1  | False | 0283-11-17 |   F3  | {'F2', 'F1'} |
+|  I2 | Rhaegar /Targaryen/  |   M    | 0284-05-04 |   -1  | False | 0283-11-17 |   F3  | {'F1', 'F2'} |
 |  I3 |    Lyanna /Stark/    |   F    | 0266-04-03 |   17  | False | 0283-11-07 |   NA  |    {'F1'}    |
 |  I4 |    Elia /Martell/    |   F    | 0256-05-06 |   25  | False | 0281-10-12 |   NA  |    {'F2'}    |
 |  I5 | Rhaenys /Targaryen/  |   F    | 0280-08-10 |   3   | False | 0283-10-03 |   F2  |      NA      |
@@ -44,8 +44,8 @@ Families
 | ID |  Married   |  Divorced  | Husband ID |     Husband Name    | Wife ID |      Wife Name      |                                                    Children                                                    |
 +----+------------+------------+------------+---------------------+---------+---------------------+----------------------------------------------------------------------------------------------------------------+
 | F1 | 2023-04-08 |     NA     |     I2     | Rhaegar /Targaryen/ |    I3   |    Lyanna /Stark/   |                                                     {'I1'}                                                     |
-| F2 | 0281-06-12 |     NA     |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   | {'I26', 'I29', 'I33', 'I36', 'I34', 'I27', 'I25', 'I6', 'I4', 'I35', 'I5', 'I28', 'I31', 'I32', 'I30', 'I24'}  |
-| F3 | 0260-06-06 | 0260-06-01 |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I22', 'I21', 'I18', 'I23', 'I16', 'I14', 'I13', 'I11', 'I2', 'I17', 'I20', 'I9', 'I19', 'I12', 'I10', 'I15'} |
+| F2 | 0281-06-12 |     NA     |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   | {'I26', 'I24', 'I34', 'I32', 'I25', 'I35', 'I6', 'I28', 'I27', 'I31', 'I30', 'I36', 'I29', 'I4', 'I33', 'I5'}  |
+| F3 | 0260-06-06 | 0260-06-01 |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I10', 'I18', 'I13', 'I22', 'I19', 'I23', 'I15', 'I17', 'I14', 'I2', 'I21', 'I11', 'I12', 'I9', 'I16', 'I20'} |
 +----+------------+------------+------------+---------------------+---------+---------------------+----------------------------------------------------------------------------------------------------------------+
 ERROR: FAMILY: US15: F2: More than 15 siblings are in this family
 ERROR: FAMILY: US15: F3: More than 15 siblings are in this family
@@ -60,4 +60,3 @@ ERROR: INDIVIDUALS: I33 and I27. US32: List all multiple Births; Yo /Targaryen/ 
 ERROR: FAMILY: US04: Aerys /Targaryen/ and Rhaella /Targaryen/ divorce occurs on 0260-06-01 which is before their marriage on 0260-06-06
 ERROR: INDIVIDUAL: US03: Rhaegar /Targaryen/'s death occurs on 0283-11-17 which is before their birth on 0284-05-04
 ERROR: INDIVIDUAL: US03: Viserys /Targaryen/'s death occurs on 0298-10-19 which is before their birth on 2021-09-06
-ERROR: INDIVIDUAL: I2. US17: No Marriage to Children; Rhaegar /Targaryen/ has a wife: I4 who is also a child: I4

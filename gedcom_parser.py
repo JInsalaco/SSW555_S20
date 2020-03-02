@@ -27,6 +27,7 @@ class Read_GEDCOM:
         self.checkBirthAfterMarriage()
         self.noMarriagesToChildren()
         self.listMultipleBirths()
+        self.listRecentDeaths()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -112,6 +113,21 @@ class Read_GEDCOM:
                     print(f"ERROR: FAMILY: {fam} US01: Divorce {self.family[fam].divorce} occurs in the future", file=f)
                     idList.append(fam)
         return idList
+
+    #Function for US36's unittest: Returns a list of id's that have death dates within the past 30 days.
+    def listRecentDeaths(self):
+        ''' Lists the individuals with death dates within the past 30 days of today's date'''
+        with open("Sprintoutput.txt", "a") as f:
+            idList = []
+            today = datetime.date.today()
+            dateFrom30DaysAgo = datetime.date.today() - datetime.timedelta(30)
+            for ind in self.individuals:
+                if self.individuals[ind].death is not None and self.individuals[ind].death >= dateFrom30DaysAgo and self.individuals[ind].death < today:
+                    self.recentDeathTable.add_row([ind, self.individuals[ind].name, self.individuals[ind].death])
+                    idList.append(ind)
+            print("US36: Recent Deaths:", file=f)
+            print(self.recentDeathTable, file=f)
+            return idList
 
     #Function for US02's unittest: Returns a list of individual id's that
     #have birth dates after their marriage dates

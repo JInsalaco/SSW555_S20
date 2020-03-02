@@ -21,7 +21,7 @@ Individuals
 | I17 |   Klod /Targaryen/   |   M    | 0283-01-03 |   7   | False | 0290-11-13 |   F3  |      NA      |
 | I18 |    Uy /Targaryen/    |   M    | 0285-05-02 |   22  | False | 0307-11-09 |   F3  |      NA      |
 | I19 |   Apo /Targaryen/    |   M    | 0288-10-03 |   11  | False | 0300-05-07 |   F3  |      NA      |
-| I20 |    Po /Targaryen/    |   F    | 0283-04-01 |  1736 |  True |    None    |   F3  |      NA      |
+| I20 |    Po /Targaryen/    |   F    | 0283-04-01 |  1736 | False | 2020-02-20 |   F3  |      NA      |
 | I21 |    Yu /Targaryen/    |   F    | 0282-06-06 |  1737 |  True |    None    |   F3  |      NA      |
 | I22 |    Wi /Targaryen/    |   M    | 0282-09-12 |  1737 |  True |    None    |   F3  |      NA      |
 | I23 |   Puq /Targaryen/    |   M    | 0298-08-20 |  1721 |  True |    None    |   F3  |      NA      |
@@ -44,11 +44,11 @@ Families
 | ID |  Married   |  Divorced  | Husband ID |     Husband Name    | Wife ID |      Wife Name      |                                                    Children                                                    |
 +----+------------+------------+------------+---------------------+---------+---------------------+----------------------------------------------------------------------------------------------------------------+
 | F1 | 2023-04-08 |     NA     |     I2     | Rhaegar /Targaryen/ |    I3   |    Lyanna /Stark/   |                                                     {'I1'}                                                     |
-| F2 | 0281-06-12 |     NA     |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   | {'I26', 'I24', 'I34', 'I32', 'I25', 'I35', 'I6', 'I28', 'I27', 'I31', 'I30', 'I36', 'I29', 'I4', 'I33', 'I5'}  |
-| F3 | 0260-06-06 | 0260-06-01 |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I10', 'I18', 'I13', 'I22', 'I19', 'I23', 'I15', 'I17', 'I14', 'I2', 'I21', 'I11', 'I12', 'I9', 'I16', 'I20'} |
+| F2 | 0281-06-12 |     NA     |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   | {'I24', 'I35', 'I4', 'I32', 'I34', 'I25', 'I5', 'I36', 'I31', 'I6', 'I26', 'I28', 'I33', 'I27', 'I30', 'I29'}  |
+| F3 | 0260-06-06 | 0260-06-01 |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I17', 'I20', 'I10', 'I15', 'I16', 'I2', 'I11', 'I12', 'I18', 'I14', 'I21', 'I22', 'I9', 'I19', 'I13', 'I23'} |
 +----+------------+------------+------------+---------------------+---------+---------------------+----------------------------------------------------------------------------------------------------------------+
-ERROR: FAMILY: US15: F2: More than 15 siblings are in this family
-ERROR: FAMILY: US15: F3: More than 15 siblings are in this family
+WARNING: FAMILY: US15: F2: More than 15 siblings are in this family
+WARNING: FAMILY: US15: F3: More than 15 siblings are in this family
 ERROR: INDIVIDUAL: I9 US01: Birthday 2021-09-06 occurs in the future
 ERROR: INDIVIDUAL: I10 US01: Death 3000-06-14 occurs in the future
 ERROR: FAMILY: F1 US01: Marriage 2023-04-08 occurs in the future
@@ -57,6 +57,12 @@ ERROR: FAMILY: F3 US02: Wife's (I8) birthday 0261-05-22 occurs after marriage 02
 ERROR: INDIVIDUAL: I2. US17: No Marriage to Children; Rhaegar /Targaryen/ has a wife: I4 who is also a child: I4
 ERROR: INDIVIDUALS: I27 and I33. US32: List all multiple Births; Donaldo /Targaryen/ has the same birthday as: Yo /Targaryen/
 ERROR: INDIVIDUALS: I33 and I27. US32: List all multiple Births; Yo /Targaryen/ has the same birthday as: Donaldo /Targaryen/
+US36: Recent Deaths:
++-----+----------------+------------+
+|  ID |      Name      |   Death    |
++-----+----------------+------------+
+| I20 | Po /Targaryen/ | 2020-02-20 |
++-----+----------------+------------+
 ERROR: FAMILY: US04: Aerys /Targaryen/ and Rhaella /Targaryen/ divorce occurs on 0260-06-01 which is before their marriage on 0260-06-06
 ERROR: INDIVIDUAL: US03: Rhaegar /Targaryen/'s death occurs on 0283-11-17 which is before their birth on 0284-05-04
 ERROR: INDIVIDUAL: US03: Viserys /Targaryen/'s death occurs on 0298-10-19 which is before their birth on 2021-09-06

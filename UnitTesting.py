@@ -58,6 +58,13 @@ class TestUserStories(unittest.TestCase):
         for error in GEDCOM_file_errors:
             self.assertIn(error, gedcom_parser.Read_GEDCOM('TargaryenFamily15Siblings.ged', False, False).user_story_errors)
 
+    def test_recent_deaths(self): #unit test for u36
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['I33', 'I39'], obj.recent_deaths())
+
+    def test_recent_survivors(self):
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['I37', 'I38', 'I40', 'I41'], obj.recent_survivors())
 
 if __name__ == '__main__':
     unittest.main()

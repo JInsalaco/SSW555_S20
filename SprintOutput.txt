@@ -1,63 +1,61 @@
 Individuals
-+-----+----------------------+--------+------------+-------+-------+------------+-------+--------------+
-|  ID |         Name         | Gender |  Birthday  |  Age  | Alive |   Death    | Child |    Spouse    |
-+-----+----------------------+--------+------------+-------+-------+------------+-------+--------------+
-|  I1 |      Jon /Snow/      |   M    | 0283-03-07 |  1736 |  True |    None    |   F1  |      NA      |
-|  I2 | Rhaegar /Targaryen/  |   M    | 0284-05-04 |   -1  | False | 0283-11-17 |   F3  | {'F2', 'F1'} |
-|  I3 |    Lyanna /Stark/    |   F    | 0266-04-03 |   17  | False | 0283-11-07 |   NA  |    {'F1'}    |
-|  I4 |    Elia /Martell/    |   F    | 0256-05-06 |   25  | False | 0281-10-12 |   NA  |    {'F2'}    |
-|  I5 | Rhaenys /Targaryen/  |   F    | 0280-08-10 |   3   | False | 0283-10-03 |   F2  |      NA      |
-|  I6 |  Aegon /Targaryen/   |   M    | 0282-07-05 |   1   | False | 0283-11-23 |   F2  |      NA      |
-|  I7 |  Aerys /Targaryen/   |   M    | 0244-02-04 |   39  | False | 0283-07-07 |   NA  |    {'F3'}    |
-|  I8 | Rhaella /Targaryen/  |   F    | 0261-05-22 |   23  | False | 0284-06-30 |   NA  |    {'F3'}    |
-|  I9 | Viserys /Targaryen/  |   M    | 2021-09-06 | -1723 | False | 0298-10-19 |   F3  |      NA      |
-| I10 | Daenerys /Targaryen/ |   F    | 0284-08-17 |  2715 | False | 3000-06-14 |   F3  |      NA      |
-| I11 |  Fling /Targaryen/   |   M    | 0285-05-06 |   0   | False | 0286-05-03 |   F3  |      NA      |
-| I12 |   Lopa /Targaryen/   |   F    | 0284-06-06 |   0   | False | 0284-08-12 |   F3  |      NA      |
-| I13 |  Porpa /Targaryen/   |   M    | 0285-10-13 |   9   | False | 0295-08-12 |   F3  |      NA      |
-| I14 |   Upa /Targaryen/    |   M    | 0287-09-09 |   19  | False | 0306-11-07 |   F3  |      NA      |
-| I15 |   Tot /Targaryen/    |   M    | 0282-07-12 |   38  | False | 0320-12-04 |   F3  |      NA      |
-| I16 |   Repo /Targaryen/   |   M    | 0280-05-01 |   62  | False | 0342-11-10 |   F3  |      NA      |
-| I17 |   Klod /Targaryen/   |   M    | 0283-01-03 |   7   | False | 0290-11-13 |   F3  |      NA      |
-| I18 |    Uy /Targaryen/    |   M    | 0285-05-02 |   22  | False | 0307-11-09 |   F3  |      NA      |
-| I19 |   Apo /Targaryen/    |   M    | 0288-10-03 |   11  | False | 0300-05-07 |   F3  |      NA      |
-| I20 |    Po /Targaryen/    |   F    | 0283-04-01 |  1736 |  True |    None    |   F3  |      NA      |
-| I21 |    Yu /Targaryen/    |   F    | 0282-06-06 |  1737 |  True |    None    |   F3  |      NA      |
-| I22 |    Wi /Targaryen/    |   M    | 0282-09-12 |  1737 |  True |    None    |   F3  |      NA      |
-| I23 |   Puq /Targaryen/    |   M    | 0298-08-20 |  1721 |  True |    None    |   F3  |      NA      |
-| I24 |   Pomp /Targaryen/   |   F    | 0340-09-27 |  1679 |  True |    None    |   F2  |      NA      |
-| I25 |    Ya /Targaryen/    |   F    | 0320-07-21 |  1699 |  True |    None    |   F2  |      NA      |
-| I26 |   Tut /Targaryen/    |   F    | 0310-11-28 |  1709 |  True |    None    |   F2  |      NA      |
-| I27 | Donaldo /Targaryen/  |   M    | 0315-11-19 |  1704 |  True |    None    |   F2  |      NA      |
-| I28 |  Lyanna /Targaryen/  |   F    | 0322-06-26 |  1697 |  True |    None    |   F2  |      NA      |
-| I29 |  Propa /Targaryen/   |   F    | 0330-08-10 |   9   | False | 0340-06-02 |   F2  |      NA      |
-| I30 | Siobhan /Targaryen/  |   F    | 0333-06-10 |  1686 |  True |    None    |   F2  |      NA      |
-| I31 |  Johnny /Targaryen/  |   F    | 0323-09-13 |  1696 |  True |    None    |   F2  |      NA      |
-| I32 |  Bobby /Targaryen/   |   M    | 0321-11-14 |  1698 |  True |    None    |   F2  |      NA      |
-| I33 |    Yo /Targaryen/    |   M    | 0315-11-19 |  1704 |  True |    None    |   F2  |      NA      |
-| I34 |   Rob /Targaryen/    |   M    | 0311-11-18 |  1708 |  True |    None    |   F2  |      NA      |
-| I35 |   Jon /Targaryen/    |   M    | 0322-10-20 |  1697 |  True |    None    |   F2  |      NA      |
-| I36 |   Bra /Targaryen/    |   F    | 0333-12-12 |   36  | False | 0370-12-11 |   F2  |      NA      |
-+-----+----------------------+--------+------------+-------+-------+------------+-------+--------------+
++-----+-----------------------------+--------+------------+------+-------+------------+-------+--------------+
+|  ID |             Name            | Gender |  Birthday  | Age  | Alive |   Death    | Child |    Spouse    |
++-----+-----------------------------+--------+------------+------+-------+------------+-------+--------------+
+|  I1 |          Jon /Snow/         |   M    | 0283-03-07 | 1736 |  True |    None    |   F1  |      NA      |
+|  I2 |     Rhaegar /Targaryen/     |   M    | 0259-05-04 |  24  | False | 0283-11-17 |   F3  | {'F1', 'F2'} |
+|  I3 |        Lyanna /Stark/       |   F    | 0266-04-03 |  17  | False | 0283-11-07 |   NA  |    {'F1'}    |
+|  I4 |        Elia /Martell/       |   F    | 0256-05-06 |  25  | False | 0281-10-12 |   NA  |    {'F2'}    |
+|  I5 |     Rhaenys /Targaryen/     |   F    | 0280-08-10 |  3   | False | 0283-10-03 |   F2  |      NA      |
+|  I6 |      Aegon /Targaryen/      |   M    | 0282-07-05 |  1   | False | 0283-11-23 |   F2  |      NA      |
+|  I7 |      Aerys /Targaryen/      |   M    | 0244-02-04 |  39  | False | 0283-07-07 |   NA  |    {'F3'}    |
+|  I8 |     Rhaella /Targaryen/     |   F    | 0254-05-22 |  30  | False | 0284-06-30 |   NA  |    {'F3'}    |
+|  I9 |     Viserys /Targaryen/     |   M    | 0276-09-06 |  22  | False | 0298-10-19 |   F3  |      NA      |
+| I10 |     Daenerys /Targaryen/    |   F    | 0284-08-17 |  17  | False | 0302-06-14 |   F3  |      NA      |
+| I11 |      Fling /Targaryen/      |   M    | 0285-05-06 |  0   | False | 0286-05-03 |   F3  |      NA      |
+| I12 |       Lopa /Targaryen/      |   F    | 0284-06-06 |  0   | False | 0284-08-12 |   F3  |      NA      |
+| I13 |      Porpa /Targaryen/      |   M    | 0285-10-13 |  9   | False | 0295-08-12 |   F3  |      NA      |
+| I14 |       Upa /Targaryen/       |   M    | 0287-09-09 |  19  | False | 0306-11-07 |   F3  |      NA      |
+| I15 |       Tot /Targaryen/       |   M    | 0282-07-12 |  38  | False | 0320-12-04 |   F3  |      NA      |
+| I16 |       Repo /Targaryen/      |   M    | 0280-05-01 |  62  | False | 0342-11-10 |   F3  |      NA      |
+| I17 |       Klod /Targaryen/      |   M    | 0283-01-03 |  7   | False | 0290-11-13 |   F3  |      NA      |
+| I18 |        Uy /Targaryen/       |   M    | 0285-05-02 |  22  | False | 0307-11-09 |   F3  |      NA      |
+| I19 |       Apo /Targaryen/       |   M    | 0288-10-03 |  11  | False | 0300-05-07 |   F3  |      NA      |
+| I20 |        Po /Targaryen/       |   F    | 0283-04-01 | 1736 |  True |    None    |   F3  |      NA      |
+| I21 |        Yu /Targaryen/       |   F    | 0282-06-06 | 1737 |  True |    None    |   F3  |      NA      |
+| I22 |        Wi /Targaryen/       |   M    | 0282-09-12 | 1737 |  True |    None    |   F3  |      NA      |
+| I23 |       Puq /Targaryen/       |   M    | 0298-08-20 | 1721 |  True |    None    |   F3  |      NA      |
+| I24 |       Pomp /Targaryen/      |   F    | 0340-09-27 | 1679 |  True |    None    |   F2  |      NA      |
+| I25 |        Ya /Targaryen/       |   F    | 0320-07-21 | 1699 |  True |    None    |   F2  |      NA      |
+| I26 |       Tut /Targaryen/       |   F    | 0310-11-28 | 1709 |  True |    None    |   F2  |      NA      |
+| I27 |     Donaldo /Targaryen/     |   M    | 0315-11-19 | 1704 |  True |    None    |   F2  |      NA      |
+| I28 |      Lyanna /Targaryen/     |   F    | 0322-06-26 | 1697 |  True |    None    |   F2  |      NA      |
+| I29 |      Propa /Targaryen/      |   F    | 0330-08-10 |  9   | False | 0340-06-02 |   F2  |      NA      |
+| I30 |     Siobhan /Targaryen/     |   F    | 0333-06-10 | 1686 |  True |    None    |   F2  |      NA      |
+| I31 |      Johnny /Targaryen/     |   F    | 0323-09-13 | 1696 |  True |    None    |   F2  |      NA      |
+| I32 |      Bobby /Targaryen/      |   M    | 0321-11-14 | 1698 |  True |    None    |   F2  |      NA      |
+| I33 |        Yo /Targaryen/       |   M    | 0299-09-07 | 1720 | False | 2020-02-26 |   F2  |    {'F4'}    |
+| I34 |       Rob /Targaryen/       |   M    | 0311-11-18 | 1708 |  True |    None    |   F2  |      NA      |
+| I35 |       Jon /Targaryen/       |   M    | 0322-10-20 | 1697 |  True |    None    |   F2  |      NA      |
+| I36 |       Bra /Targaryen/       |   F    | 0333-12-12 |  36  | False | 0370-12-11 |   F2  |      NA      |
+| I37 |   LivingSpouse /Targaryen/  |   F    | 1900-01-05 | 120  |  True |    None    |   NA  |    {'F4'}    |
+| I38 |   LivingChild /Targaryen/   |   F    | 2012-05-04 |  7   |  True |    None    |   F4  |      NA      |
+| I39 |    DeadChild /Targaryen/    |   F    | 1999-03-01 |  20  | False | 2020-02-10 |   F4  |    {'F5'}    |
+| I40 |     DEADWIFE /Targaryen/    |   M    | 1901-01-01 | 119  |  True |    None    |   NA  |    {'F5'}    |
+| I41 | DEAD-WIFE-CHILD /Targaryen/ |   M    | 2020-01-01 |  0   |  True |    None    |   F5  |      NA      |
++-----+-----------------------------+--------+------------+------+-------+------------+-------+--------------+
 Families
-+----+------------+------------+------------+---------------------+---------+---------------------+----------------------------------------------------------------------------------------------------------------+
-| ID |  Married   |  Divorced  | Husband ID |     Husband Name    | Wife ID |      Wife Name      |                                                    Children                                                    |
-+----+------------+------------+------------+---------------------+---------+---------------------+----------------------------------------------------------------------------------------------------------------+
-| F1 | 2023-04-08 |     NA     |     I2     | Rhaegar /Targaryen/ |    I3   |    Lyanna /Stark/   |                                                     {'I1'}                                                     |
-| F2 | 0281-06-12 |     NA     |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   | {'I26', 'I29', 'I33', 'I36', 'I34', 'I27', 'I25', 'I6', 'I4', 'I35', 'I5', 'I28', 'I31', 'I32', 'I30', 'I24'}  |
-| F3 | 0260-06-06 | 0260-06-01 |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I22', 'I21', 'I18', 'I23', 'I16', 'I14', 'I13', 'I11', 'I2', 'I17', 'I20', 'I9', 'I19', 'I12', 'I10', 'I15'} |
-+----+------------+------------+------------+---------------------+---------+---------------------+----------------------------------------------------------------------------------------------------------------+
++----+------------+----------+------------+----------------------+---------+--------------------------+----------------------------------------------------------------------------------------------------------------+
+| ID |  Married   | Divorced | Husband ID |     Husband Name     | Wife ID |        Wife Name         |                                                    Children                                                    |
++----+------------+----------+------------+----------------------+---------+--------------------------+----------------------------------------------------------------------------------------------------------------+
+| F1 | 0283-04-08 |    NA    |     I2     | Rhaegar /Targaryen/  |    I3   |      Lyanna /Stark/      |                                                     {'I1'}                                                     |
+| F2 | 0281-06-12 |    NA    |     I2     | Rhaegar /Targaryen/  |    I4   |      Elia /Martell/      |    {'I29', 'I6', 'I5', 'I28', 'I32', 'I26', 'I33', 'I31', 'I25', 'I35', 'I36', 'I34', 'I24', 'I30', 'I27'}     |
+| F3 | 0260-06-06 |    NA    |     I7     |  Aerys /Targaryen/   |    I8   |   Rhaella /Targaryen/    | {'I16', 'I2', 'I11', 'I15', 'I10', 'I23', 'I12', 'I18', 'I21', 'I19', 'I20', 'I13', 'I9', 'I22', 'I17', 'I14'} |
+| F4 | 0298-03-01 |    NA    |    I33     |    Yo /Targaryen/    |   I37   | LivingSpouse /Targaryen/ |                                                 {'I39', 'I38'}                                                 |
+| F5 | 1945-01-01 |    NA    |    I40     | DEADWIFE /Targaryen/ |   I39   |  DeadChild /Targaryen/   |                                                    {'I41'}                                                     |
++----+------------+----------+------------+----------------------+---------+--------------------------+----------------------------------------------------------------------------------------------------------------+
 ERROR: FAMILY: US15: F2: More than 15 siblings are in this family
 ERROR: FAMILY: US15: F3: More than 15 siblings are in this family
-ERROR: INDIVIDUAL: I9 US01: Birthday 2021-09-06 occurs in the future
-ERROR: INDIVIDUAL: I10 US01: Death 3000-06-14 occurs in the future
-ERROR: FAMILY: F1 US01: Marriage 2023-04-08 occurs in the future
-ERROR: FAMILY: F2 US02: Husband's (I2) birthday 0284-05-04 occurs after marriage 0281-06-12
-ERROR: FAMILY: F3 US02: Wife's (I8) birthday 0261-05-22 occurs after marriage 0260-06-06
-ERROR: INDIVIDUAL: I2. US17: No Marriage to Children; Rhaegar /Targaryen/ has a wife: I4 who is also a child: I4
-ERROR: INDIVIDUALS: I27 and I33. US32: List all multiple Births; Donaldo /Targaryen/ has the same birthday as: Yo /Targaryen/
-ERROR: INDIVIDUALS: I33 and I27. US32: List all multiple Births; Yo /Targaryen/ has the same birthday as: Donaldo /Targaryen/
-ERROR: FAMILY: US04: Aerys /Targaryen/ and Rhaella /Targaryen/ divorce occurs on 0260-06-01 which is before their marriage on 0260-06-06
-ERROR: INDIVIDUAL: US03: Rhaegar /Targaryen/'s death occurs on 0283-11-17 which is before their birth on 0284-05-04
-ERROR: INDIVIDUAL: US03: Viserys /Targaryen/'s death occurs on 0298-10-19 which is before their birth on 2021-09-06
-ERROR: INDIVIDUAL: I2. US17: No Marriage to Children; Rhaegar /Targaryen/ has a wife: I4 who is also a child: I4
+ERROR: FAMILY: F4 US02: Husband's (I33) birthday 0299-09-07 occurs after marriage 0298-03-01
+ERROR: FAMILY: F4 US02: Wife's (I37) birthday 1900-01-05 occurs after marriage 0298-03-01
+ERROR: FAMILY: F5 US02: Wife's (I39) birthday 1999-03-01 occurs after marriage 1945-01-01

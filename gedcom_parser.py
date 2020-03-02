@@ -13,10 +13,12 @@ class Read_GEDCOM:
         self.path = path
         self.family = dict() #The key is the FamID and the value is the instance for the Family class object for that specific FamID
         self.individuals = dict() #The key is the IndiID and the value is the instance for the Individual class object for that specific IndiID
-        self.error_list = []
+        self.error_list = [] #This is a list of errors that will be evaluated for testing purposes
         self.family_ptable = PrettyTable(field_names = ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
         self.individuals_ptable = PrettyTable(field_names = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
-        self.analyze_GEDCOM() 
+        self.recentDeathTable = PrettyTable(field_names=["ID", "Name", "Death"])  # create a ptable for recent deaths
+        self.recentSurvivorTable = PrettyTable(field_names=["Death ID", "Survivor Of", "Survivor Spouse", "Surviving Children"])
+        self.analyze_GEDCOM()
         if ptables: #Makes pretty tables for the data
             self.create_indi_ptable()
             self.create_fam_ptable()
@@ -25,7 +27,7 @@ class Read_GEDCOM:
         self.checkBirthAfterMarriage()
         self.noMarriagesToChildren()
         self.listMultipleBirths()
-        self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors
+        self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
     def analyze_GEDCOM(self):
@@ -256,7 +258,7 @@ class Family:
         self.children = set()
 
 class UserStories:
-
+    '''This class is meant to store functions for testing errors in user stories'''
     def __init__(self, family_dict, individual_dict, error_list, print_all_errors):
         self.family = family_dict
         self.individuals = individual_dict
@@ -280,13 +282,11 @@ class UserStories:
                 self.add_errors += [f"ERROR: FAMILY: US04: {self.individuals[families.husband].name} and {self.individuals[families.wife].name} divorce occurs on {families.divorce} which is before their marriage on {families.marriage}"]
 
     def print_user_story_errors(self):
-        if len(self.add_errors) == 0:
-            print("This GEDCOM file is perfect and without any errors!")
-        else:
-            for GEDCOM_error in sorted(self.add_errors):
-                with open("Sprintoutput.txt", "a") as f:
-                    print(GEDCOM_error, file=f)
-                print(GEDCOM_error)
+        '''This function will print all the errors that have been compiled into the list of errors'''
+        for GEDCOM_error in sorted(self.add_errors):
+            with open("Sprintoutput.txt", "a") as f:
+                print(GEDCOM_error, file=f)
+            print(GEDCOM_error)
 def main():
     '''This runs the program.'''
     path = input("Insert path of GEDCOM file (if in the same directory, enter name of GEDCOM file):")

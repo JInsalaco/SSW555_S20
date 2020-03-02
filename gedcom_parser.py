@@ -7,8 +7,6 @@ from prettytable import PrettyTable
 from collections import defaultdict
 import datetime
 
-death_list = []
-
 class Read_GEDCOM:
     '''This class will read and analyze the GEDCOM file so that it can sort the data into the Individual and Family classes.'''
     def __init__(self, path, ptables = True, print_all_errors = True):
@@ -18,10 +16,7 @@ class Read_GEDCOM:
         self.error_list = [] #This is a list of errors that will be evaluated for testing purposes
         self.family_ptable = PrettyTable(field_names = ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
         self.individuals_ptable = PrettyTable(field_names = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
-        self.recentDeathTable = PrettyTable(field_names=["ID", "Name", "Death"])  # create a ptable for recent deaths
-        self.recentSurvivorTable = PrettyTable(field_names=["Death ID", "Survivor Of", "Survivor Spouse", "Surviving Children"])
-
-        self.analyze_GEDCOM()
+        self.analyze_GEDCOM() 
         if ptables: #Makes pretty tables for the data
             self.create_indi_ptable()
             self.create_fam_ptable()
@@ -30,8 +25,6 @@ class Read_GEDCOM:
         self.checkBirthAfterMarriage()
         self.noMarriagesToChildren()
         self.listMultipleBirths()
-        self.recent_deaths()
-        self.recent_survivors()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -184,59 +177,6 @@ class Read_GEDCOM:
                     idList.append(fam)
                     print(f"ERROR: FAMILY: US15: {fam}: More than 15 siblings are in this family", file = f)
         return idList
-
-    def recent_deaths(self):  # us36
-        with open("SprintOutput.txt", "a") as f:
-            recent = datetime.date.today() + datetime.timedelta(days=-30)  # 30 days ago from today
-            print("Recent Death Table")
-            for ID, individual in self.individuals.items():
-                if individual.death is not None:  # checks if they are dead
-                    if recent <= individual.death:
-                        self.recentDeathTable.add_row([ID, individual.name, individual.death])
-                        death_list.append(ID)
-            print(self.recentDeathTable)
-        print(death_list)
-        return death_list[:]
-        # write death table to output file
-        #with open("SprintOutput.txt", "a") as f:
-        #    print("Recent Deaths", file=f)
-        #    print(self.recentDeathTable, file=f)
-
-    def recent_survivors(self):  # us37
-        with open("SprintOutput.txt", "a") as f:
-            print("Surviving Family")
-            survivor_list = []
-            for ID, fam in self.family.items():
-                if fam.husband in death_list:
-                    living_spouse = []
-                    living_children = []
-                    if self.individuals[fam.wife].check_alive:
-                        living_spouse.append(self.individuals[fam.wife].name)
-                        survivor_list.append(fam.wife)
-                    for ID in fam.children:
-                        if self.individuals[ID].death is None:
-                            living_children.append(ID)
-                            survivor_list.append(ID)
-                    self.recentSurvivorTable.add_row([fam.husband, self.individuals[fam.husband].name, "".join(living_spouse), "".join(living_children)])
-                elif fam.wife in death_list:
-                    living_spouse = []
-                    living_children = []
-                    if self.individuals[fam.husband].check_alive:
-                        living_spouse.append(self.individuals[fam.husband].name)
-                        survivor_list.append(fam.husband)
-                    for ID in fam.children:
-                        if self.individuals[ID].death is None:
-                            living_children.append(ID)
-                            survivor_list.append(ID)
-                    self.recentSurvivorTable.add_row([fam.wife, self.individuals[fam.wife].name, "".join(living_spouse), " , ".join(living_children)])
-            print(self.recentSurvivorTable)
-        print(survivor_list)
-        return survivor_list
-        #with open("SprintOutput.txt", "a") as f:
-        #    print("Recent Survivors", file=f)
-        #    print(self.recentSurvivorTable, file=f)
-
-
 
     def file_reading_gen(self, path, sep = "\t"):
         '''This is a file reading generator that reads the GEDCOM function line by line. The function will first check for bad inputs and raise an error if it detects any.'''

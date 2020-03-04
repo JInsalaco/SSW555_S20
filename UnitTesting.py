@@ -52,7 +52,7 @@ class TestUserStories(unittest.TestCase):
     
     def test_birth_before_death(self):
         '''US03: Unit Test: This is a test to see if the parser will catch instances of a persons death occuring before their birth.'''
-        GEDCOM_file_errors = ["ERROR: INDIVIDUAL: US03: Rhaegar /Targaryen/'s death occurs on 0283-11-17 which is before their birth on 0284-05-04", "ERROR: INDIVIDUAL: US03: Viserys /Targaryen/'s death occurs on 0298-10-19 which is before their birth on 2021-09-06"]
+        GEDCOM_file_errors = ["ERROR: INDIVIDUAL: US03: Viserys /Targaryen/'s death occurs on 0298-10-19 which is before their birth on 2021-09-06"]
         for error in GEDCOM_file_errors:
             self.assertIn(error, gedcom_parser.Read_GEDCOM('TargaryenFamily15Siblings.ged', False, False).user_story_errors)
     
@@ -61,6 +61,10 @@ class TestUserStories(unittest.TestCase):
         GEDCOM_file_errors = ["ERROR: FAMILY: US04: Aerys /Targaryen/ and Rhaella /Targaryen/ divorce occurs on 0260-06-01 which is before their marriage on 0260-06-06"]
         for error in GEDCOM_file_errors:
             self.assertIn(error, gedcom_parser.Read_GEDCOM('TargaryenFamily15Siblings.ged', False, False).user_story_errors)
+
+    def test_listRecentSurvivors(self): # tests US15: There should be fewer than 15 siblings in a family
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['I2', 'I1', 'I37', 'I39', 'I40', 'I41'], obj.listRecentSurvivors())
 
 
 if __name__ == '__main__':

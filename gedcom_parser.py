@@ -30,7 +30,7 @@ class Read_GEDCOM:
         self.noMarriagesToChildren()
         self.listMultipleBirths()
         self.listRecentSurvivors()
-        self.marriageAfter14()
+        # self.marriageAfter14()
         # self.birthBeforeMarriageOfParents()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 

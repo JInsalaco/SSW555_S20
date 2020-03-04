@@ -48,7 +48,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_listRecentDeaths(self): # tests US15: There should be fewer than 15 siblings in a family
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['I20'], obj.listRecentDeaths())
+        self.assertEqual(['I3', 'I6', 'I20'], obj.listRecentDeaths())
     
     def test_birth_before_death(self):
         '''US03: Unit Test: This is a test to see if the parser will catch instances of a persons death occuring before their birth.'''

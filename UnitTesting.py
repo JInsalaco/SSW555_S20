@@ -64,7 +64,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_listRecentSurvivors(self): # tests US15: There should be fewer than 15 siblings in a family
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['I2', 'I1', 'I37', 'I39', 'I40', 'I41'], obj.listRecentSurvivors())
+        self.assertCountEqual(['I2', 'I1', 'I37', 'I39', 'I40', 'I41'], obj.listRecentSurvivors())
 
 
 if __name__ == '__main__':

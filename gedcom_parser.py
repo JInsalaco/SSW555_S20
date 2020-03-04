@@ -6,6 +6,8 @@ Then, for each family, print the unique identifiers and names of the husbands an
 from prettytable import PrettyTable
 from collections import defaultdict
 import datetime
+from dateutil.relativedelta import *
+import sys
 
 class Read_GEDCOM:
     '''This class will read and analyze the GEDCOM file so that it can sort the data into the Individual and Family classes.'''
@@ -17,7 +19,7 @@ class Read_GEDCOM:
         self.family_ptable = PrettyTable(field_names = ["ID", "Married", "Divorced", "Husband ID", "Husband Name", "Wife ID", "Wife Name", "Children"])
         self.individuals_ptable = PrettyTable(field_names = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
         self.recentDeathTable = PrettyTable(field_names=["ID", "Name", "Death"])  # create a ptable for recent deaths
-        self.recentSurvivorTable = PrettyTable(field_names=["Death ID", "Survivor Of", "Survivor Spouse", "Surviving Children"])
+        self.recentSurvivorTable = PrettyTable(field_names=["Dead Relative ID", "Dead Relative Name", "Survivor ID", "Survivor Name", "Relation"])
         self.analyze_GEDCOM()
         if ptables: #Makes pretty tables for the data
             self.create_indi_ptable()
@@ -27,7 +29,9 @@ class Read_GEDCOM:
         self.checkBirthAfterMarriage()
         self.noMarriagesToChildren()
         self.listMultipleBirths()
-        self.listRecentDeaths()
+        self.listRecentSurvivors()
+        self.marriageAfter14()
+        # self.birthBeforeMarriageOfParents()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -125,7 +129,7 @@ class Read_GEDCOM:
                 if self.individuals[ind].death is not None and self.individuals[ind].death >= dateFrom30DaysAgo and self.individuals[ind].death < today:
                     self.recentDeathTable.add_row([ind, self.individuals[ind].name, self.individuals[ind].death])
                     idList.append(ind)
-            print("US36: Recent Deaths:", file=f)
+            print("LIST: US36: Recent Deaths:", file=f)
             print(self.recentDeathTable, file=f)
             return idList
 
@@ -222,6 +226,51 @@ class Read_GEDCOM:
             print("Individuals", file=f)
             print(self.individuals_ptable, file=f)
 
+    # US10 implemented by Alden Radoncic
+    def marriageAfter14(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for famID, fam in self.family.items():
+                if self.individuals[fam.husband].calculateAge(fam.marriage) < 14 or self.individuals[fam.wife].calculateAge(fam.marriage) < 14:
+                    idList.append(famID)
+                    print(f"WARNING: FAMILY: US10: {famID}: One or both spouses were less than 14 years old at the time of marriage.", file = f)
+            return idList
+
+    # def birthBeforeMarriageOfParents(self):
+    #     with open("SprintOutput.txt", "a") as f:
+    #         idList = []
+    #         for famID, fam in self.family.items():
+    #             for child in fam.children:
+    #                 childBirth = self.individuals[child].birth
+    #                 totalDivorceChildDiff = relativedelta.relativedelta(childBirth, fam.divorce).month if fam.divorce != "NA" else sys.maxsize
+    #                 if childBirth < fam.marriage and fam.divorce == "NA" or childBirth > fam.divorce or childBirth < fam.divorce and totalDivorceChildDiff.month + (12 * totalDivorceChildDiff.years) > 9:
+    #                     idList.append((famID, child))
+    #                     print(f"WARNING: FAMILY: US08: {famID}: Child {child} is born before the marriage of their parents.", file = f)
+    #         return idList
+             
+    def listRecentSurvivors(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            individualDeaths = self.listRecentDeaths()
+            for ind in individualDeaths:
+                individual = self.individuals[ind]
+                individualFamilies = individual.fams
+                if individualFamilies != "NA":
+                    for fam in individualFamilies:
+                        family = self.family[fam]
+                        if individual.sex == "M" and self.individuals[family.wife].death is None:
+                            idList.append(family.wife)
+                            self.recentSurvivorTable.add_row([ind, individual.name, family.wife, self.individuals[family.wife].name, "Spouse"])
+                        elif individual.sex == "F" and self.individuals[family.husband].death is None:
+                            idList.append(family.husband)
+                            self.recentSurvivorTable.add_row([ind, individual.name, family.husband, self.individuals[family.husband].name, "Spouse"])
+                        for child in family.children:
+                            if self.individuals[child].death is None:
+                                idList.append(child)
+                                self.recentSurvivorTable.add_row([ind, individual.name, child, self.individuals[child].name, "Child"])
+            print("LIST: US37: Recent Survivors:", file=f)
+            print(self.recentSurvivorTable, file = f)
+            return idList
 
     def create_fam_ptable(self):
         '''This creates a Pretty Table that is a Family summary of each family's ID, when they were married, when they got divorced, the Husband ID, the Husband Name, the Wife ID, the Wife Name, and their children.'''
@@ -255,9 +304,11 @@ class Individual:
             raise ValueError("The birth or death records appear to be messed up! Check them for errors!")
     
     # Function for US25's unittest. Include person's current age when listing individuals
-    def calculateAge(self):
+    def calculateAge(self, customDate = "NA"):
         '''Calculates the age of an individual'''
-        if (self.alive): # Check if alive to see whether to use today's date or death date for age calculation
+        if (customDate != "NA"):
+            lastDate = customDate
+        elif (self.alive): # Check if alive to see whether to use today's date or death date for age calculation
             lastDate = datetime.datetime.today()
         else:
             lastDate = self.death

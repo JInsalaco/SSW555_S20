@@ -6,7 +6,7 @@ Then, for each family, print the unique identifiers and names of the husbands an
 from prettytable import PrettyTable
 from collections import defaultdict
 import datetime
-from dateutil.relativedelta import *
+#from dateutil.relativedelta import *
 import sys
 
 class Read_GEDCOM:

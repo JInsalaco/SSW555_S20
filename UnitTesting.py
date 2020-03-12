@@ -66,6 +66,14 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(['I2', 'I1', 'I37', 'I39', 'I40', 'I41'], obj.listRecentSurvivors())
 
+    def test_birthsLessThanFive(self): # tests US17: No more than five siblings should be born at the same time
+        obj = gedcom_parser.Read_GEDCOM("US14T.ged")
+        self.assertEqual(['F1', 'F1'],obj.birthsLessThanFive())
+        
+    def test_uniqueFirstNameInFamily(self): # tests US25: Unique first names in families
+        obj = gedcom_parser.Read_GEDCOM("US14T.ged")
+        self.assertEqual(['I1', 'I11'],obj.uniqueFirstNameInFamily())
+
 
 if __name__ == '__main__':
     unittest.main()

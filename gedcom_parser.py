@@ -7,7 +7,6 @@ from prettytable import PrettyTable
 from collections import defaultdict
 import datetime
 from dateutil.relativedelta import *
-import sys
 
 class Read_GEDCOM:
     '''This class will read and analyze the GEDCOM file so that it can sort the data into the Individual and Family classes.'''
@@ -31,7 +30,9 @@ class Read_GEDCOM:
         self.listMultipleBirths()
         self.listRecentSurvivors()
         self.marriageAfter14()
-        # self.birthBeforeMarriageOfParents()
+        self.birthBeforeMarriageOfParents()
+        self.birthsLessThanFive()
+        self.uniqueFirstNameInFamily()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -184,6 +185,40 @@ class Read_GEDCOM:
                         if self.individuals[ind].birth == self.individuals[ind2].birth:
                             print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US32: List all multiple Births; {self.individuals[ind].name} has the same birthday as: {self.individuals[ind2].name}", file=f)
                             idList.append(ind)
+        return idList
+    
+    #Function for US14's unittest. No more than five siblings should be born at the same time
+    def birthsLessThanFive(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for ind in self.individuals:
+                famSet = self.individuals[ind].fams
+                if famSet != "NA":
+                    for fam in famSet:
+                        birthday_list = list()
+                        childrenSet = self.family[fam].children
+                        for child in childrenSet:
+                            birthday_list.append(self.individuals[ind].birth)
+                        count_dict = dict((i, birthday_list.count(i)) for i in birthday_list)
+                        list_birthdays = count_dict.values()
+                        if max(list_birthdays) <= 5:
+                            continue
+                        else:
+                            print(f"ERROR: FAMILY: {fam}. US14: Number of children born in a single birth should not be greater than 5", file=f)
+                            idList.append(fam)
+        return idList
+
+    #Function for US25's unittest. Unique first names in families
+    def uniqueFirstNameInFamily(self):
+        idList = []
+        with open("SprintOutput.txt", "a") as f:
+            for ind in self.individuals:
+                for ind2 in self.individuals:
+                    if ind != ind2:
+                        if self.individuals[ind].name == self.individuals[ind2].name:
+                            if self.individuals[ind].birth == self.individuals[ind2].birth and self.individuals[ind].famc == self.individuals[ind2].famc:
+                                print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US25: No more than one child with the same name and birth date should appear in a family", file=f)
+                                idList.append(ind)
         return idList
 
     # Function for US15's unittest. No more than five siblings should be born at the same time

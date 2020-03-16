@@ -42,9 +42,9 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertEqual(['I2'],obj.noMarriagesToChildren())
 
-    def test_listMultipleBirths(self): # for checking when someone in the same family is born on the same day
+    def test_listMultipleBirths(self): # tests US32 for checking when someone in the same family is born on the same day
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['I27', 'I33'],obj.listMultipleBirths())
+        self.assertEqual(['I30', 'I31', 'I32', 'I33', 'I34', 'I35'],obj.listMultipleBirths())
 
     def test_listRecentDeaths(self): # tests US15: There should be fewer than 15 siblings in a family
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -67,12 +67,12 @@ class TestUserStories(unittest.TestCase):
         self.assertCountEqual(['I2', 'I1', 'I37', 'I39', 'I40', 'I41'], obj.listRecentSurvivors())
 
     def test_birthsLessThanFive(self): # tests US17: No more than five siblings should be born at the same time
-        obj = gedcom_parser.Read_GEDCOM("US14T.ged")
-        self.assertEqual(['F1', 'F1'],obj.birthsLessThanFive())
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['F2', 'F2', 'F3', 'F3'],obj.birthsLessThanFive())
         
     def test_uniqueFirstNameInFamily(self): # tests US25: Unique first names in families
-        obj = gedcom_parser.Read_GEDCOM("US14T.ged")
-        self.assertEqual(['I1', 'I11'],obj.uniqueFirstNameInFamily())
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['I17', 'I18'],obj.uniqueFirstNameInFamily())
 
 
 if __name__ == '__main__':

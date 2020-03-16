@@ -184,7 +184,10 @@ class Read_GEDCOM:
                     if self.individuals[ind].famc == self.individuals[ind2].famc and self.individuals[ind].name != self.individuals[ind2].name:
                         if self.individuals[ind].birth == self.individuals[ind2].birth:
                             print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US32: List all multiple Births; {self.individuals[ind].name} has the same birthday as: {self.individuals[ind2].name}", file=f)
-                            idList.append(ind)
+                            if (ind in idList):
+                                continue
+                            else:
+                                idList.append(ind)
         return idList
     
     #Function for US14's unittest. No more than five siblings should be born at the same time

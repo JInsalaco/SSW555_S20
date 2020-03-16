@@ -29,10 +29,11 @@ class Read_GEDCOM:
         self.noMarriagesToChildren()
         self.listMultipleBirths()
         self.listRecentSurvivors()
-        self.marriageAfter14()
-        self.birthBeforeMarriageOfParents()
+        # self.marriageAfter14()
+        # self.birthBeforeMarriageOfParents()
         self.birthsLessThanFive()
         self.uniqueFirstNameInFamily()
+        self.correctGenderForRole()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -237,6 +238,23 @@ class Read_GEDCOM:
                     idList.append(fam)
                     print(f"WARNING: FAMILY: US15: {fam}: More than 15 siblings are in this family", file = f)
         return idList
+
+    # Function for US21's unittest. Husbands must be males and wives must be females.
+    def correctGenderForRole(self):
+        with open("Sprintoutput.txt", "a") as f:
+            indIDList = [] #return id's of individuals who do not have the correct role gender
+            individualsDict = self.individuals
+            familyDict = self.family
+            for famID in familyDict:
+                husbandID = familyDict[famID].husband
+                wifeID = familyDict[famID].wife
+                if individualsDict[husbandID].sex != "M":
+                    print(f"ERROR: FAMILY: {famID} US21: Husband ({husbandID}) does not have the correct gender for role", file=f)
+                    indIDList.append(husbandID)
+                elif individualsDict[wifeID].sex != "F":
+                    print(f"ERROR: FAMILY: {famID} US21: Wife ({wifeID}) does not have the correct gender for role", file=f)
+                    indIDList.append(wifeID)
+        return indIDList
 
     def file_reading_gen(self, path, sep = "\t"):
         '''This is a file reading generator that reads the GEDCOM function line by line. The function will first check for bad inputs and raise an error if it detects any.'''

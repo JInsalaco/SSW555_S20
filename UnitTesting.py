@@ -74,6 +74,9 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertEqual(['I17', 'I18'],obj.uniqueFirstNameInFamily())
 
+    def test_correctGenderForRole(self):
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['I7', 'I39'], obj.correctGenderForRole())
 
 if __name__ == '__main__':
     unittest.main()

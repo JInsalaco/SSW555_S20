@@ -393,17 +393,47 @@ class UserStories:
 
 
     def birth_before_death(self):
-        "US03 Birth Before Death: Birth should occur before death of an individual"
+        '''US03 Birth Before Death: Birth should occur before death of an individual'''
         for individual in self.individuals.values():
             if individual.death != None and (individual.death - individual.birth).days < 0:
                 self.add_errors += [f"ERROR: INDIVIDUAL: US03: {individual.name}'s death occurs on {individual.death} which is before their birth on {individual.birth}"]
     
     def marriage_before_divorce(self):
-        "US04 Marriage Before Divorce: Marriage should occur before divorce of spouses, and divorce can only occur after marriage"
+        '''US04 Marriage Before Divorce: Marriage should occur before divorce of spouses, and divorce can only occur after marriage'''
         for families in self.family.values():
             if families.divorce != "NA" and (families.divorce - families.marriage).days < 0:
                 self.add_errors += [f"ERROR: FAMILY: US04: {self.individuals[families.husband].name} and {self.individuals[families.wife].name} divorce occurs on {families.divorce} which is before their marriage on {families.marriage}"]
-
+    
+    def marriage_before_death(self):
+        '''US05 Marriage should occur before death of either spouse'''
+        for families in self.family.values():
+            husband_death = self.individuals[families.husband].death
+            wife_death = self.individuals[families.wife].death
+            marriage_date = families.marriage
+            if husband_death == None and wife_death == None: #If the wife and husband are still alive there is no further analysis needed
+                break
+            if husband_death != None: #Checks if the husband was dead before he and wife married and then checks if wife was dead before she and husband married
+                if (husband_death - marriage_date).days < 0:
+                    self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
+            else:
+                if (wife_death - marriage_date).days < 0:
+                    self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
+              
+    def divorce_before_death(self):
+        '''US06 Divorce can only occur before death of both spouses'''
+        for families in self.family.values():
+            husband_death = self.individuals[families.husband].death
+            wife_death = self.individuals[families.wife].death
+            divorce_date = families.divorce
+            if husband_death == None and wife_death == None: #If the wife and husband are still alive there is no further analysis needed
+                break
+            elif divorce_date != None: #Checks if the husband was dead before he and wife divorced and then checks if wife was dead before she and husband divorced
+                if husband_death != None:
+                    if (husband_death - divorce_date).days < 0:
+                        self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
+                else:
+                    if (wife_death - divorce_date).days < 0:
+                        self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
     def print_user_story_errors(self):
         '''This function will print all the errors that have been compiled into the list of errors'''
         for GEDCOM_error in sorted(self.add_errors):

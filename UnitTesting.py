@@ -90,5 +90,13 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertEqual(['I7', 'I39'], obj.correctGenderForRole())
 
+    def test_maleLastNames(self): # tests US16: Males in family must have the same last name
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['I1'],obj.maleLastNames())
+
+    def test_siblingSpacing(self):  # tests US13: Siblings must be more than 8 months or less than a day apart
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(['I33', 'I36', 'I31', 'I34', 'I32', 'I35', 'I30', 'I17', 'I22', 'I21', 'I20', 'I15', 'I18', 'I2', 'I10', 'I12', 'I11', 'I13'], obj.siblingSpacing())
+
 if __name__ == '__main__':
     unittest.main()

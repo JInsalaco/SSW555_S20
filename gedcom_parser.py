@@ -34,6 +34,8 @@ class Read_GEDCOM:
         self.birthsLessThanFive()
         self.uniqueFirstNameInFamily()
         self.correctGenderForRole()
+        self.maleLastNames()
+        self.siblingSpacing()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -255,6 +257,41 @@ class Read_GEDCOM:
                     print(f"ERROR: FAMILY: {famID} US21: Wife ({wifeID}) does not have the correct gender for role", file=f)
                     indIDList.append(wifeID)
         return indIDList
+
+    #function for US16's unittest. Males in the same family should have the same last name.
+    def maleLastNames(self):  # us16
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for fam in self.family:
+                family = self.family[fam]
+                father_name = self.individuals[family.husband].name.split('/')
+                for child in family.children:
+                    if self.individuals[child].sex == "M":
+                        child_name = self.individuals[child].name.split('/')
+                        if child_name[1] != father_name[1]:
+                            idList.append(child)
+                            print(f"WARNING: US16: {self.individuals[family.husband].name} and {self.individuals[child].name} have different last names.",file=f)
+            return idList
+
+    #Function for US13's unittest. Birth dates of siblings should be more than 8 months apart or less than 2 days apart
+    def siblingSpacing(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for fam in self.family:
+                family = self.family[fam]
+                for child in family.children:
+                    currBirthday = self.individuals[child].birth #first child's birthday
+                    for children in family.children:
+                        sibBirthday = self.individuals[children].birth #one siblings birthday
+                        diff = abs(currBirthday - sibBirthday)
+                        if(diff > datetime.timedelta(days=2) and diff < datetime.timedelta(days=243)):
+                            idList.append(child)
+                            idList.append(children)
+                            print(f"ERROR: US13: {self.individuals[child].name } and {self.individuals[children].name} have birthdays too close together", file=f)
+            idList = list(dict.fromkeys(idList))
+            print(idList)
+            return idList
+
 
     def file_reading_gen(self, path, sep = "\t"):
         '''This is a file reading generator that reads the GEDCOM function line by line. The function will first check for bad inputs and raise an error if it detects any.'''

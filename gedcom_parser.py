@@ -32,8 +32,6 @@ class Read_GEDCOM:
         self.listRecentSurvivors()
         self.marriageAfter14()
         self.birthBeforeMarriageOfParents()
-        self.marriageAfter14()
-        self.birthBeforeMarriageOfParents()
         self.birthsLessThanFive()
         self.uniqueFirstNameInFamily()
         self.correctGenderForRole()

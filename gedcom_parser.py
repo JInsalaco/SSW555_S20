@@ -6,7 +6,7 @@ Then, for each family, print the unique identifiers and names of the husbands an
 from prettytable import PrettyTable
 from collections import defaultdict
 import datetime
-#from dateutil.relativedelta import *
+from dateutil.relativedelta import *
 import sys
 
 class Read_GEDCOM:
@@ -30,8 +30,8 @@ class Read_GEDCOM:
         self.noMarriagesToChildren()
         self.listMultipleBirths()
         self.listRecentSurvivors()
-        # self.marriageAfter14()
-        # self.birthBeforeMarriageOfParents()
+        self.marriageAfter14()
+        self.birthBeforeMarriageOfParents()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -236,17 +236,17 @@ class Read_GEDCOM:
                     print(f"WARNING: FAMILY: US10: {famID}: One or both spouses were less than 14 years old at the time of marriage.", file = f)
             return idList
 
-    # def birthBeforeMarriageOfParents(self):
-    #     with open("SprintOutput.txt", "a") as f:
-    #         idList = []
-    #         for famID, fam in self.family.items():
-    #             for child in fam.children:
-    #                 childBirth = self.individuals[child].birth
-    #                 totalDivorceChildDiff = relativedelta.relativedelta(childBirth, fam.divorce).month if fam.divorce != "NA" else sys.maxsize
-    #                 if childBirth < fam.marriage and fam.divorce == "NA" or childBirth > fam.divorce or childBirth < fam.divorce and totalDivorceChildDiff.month + (12 * totalDivorceChildDiff.years) > 9:
-    #                     idList.append((famID, child))
-    #                     print(f"WARNING: FAMILY: US08: {famID}: Child {child} is born before the marriage of their parents.", file = f)
-    #         return idList
+    def birthBeforeMarriageOfParents(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for famID, fam in self.family.items():
+                dateOf9MonthsAfterDivorce = fam.divorce + relativedelta(months=9) if fam.divorce != "NA" else "NA"
+                for child in fam.children:
+                    childBirth = self.individuals[child].birth
+                    if childBirth < fam.marriage or dateOf9MonthsAfterDivorce != "NA" and childBirth > dateOf9MonthsAfterDivorce:
+                        idList.append(child)
+                        print(f"WARNING: FAMILY: US08: {famID}: Child {child} is born before the marriage of their parents (or born 9 months after their family's divorce).", file = f)
+            return idList
              
     def listRecentSurvivors(self):
         with open("SprintOutput.txt", "a") as f:

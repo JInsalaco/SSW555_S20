@@ -2,8 +2,8 @@ Individuals
 +-----+----------------------+--------+------------+-------+-------+------------+-------+--------------+
 |  ID |         Name         | Gender |  Birthday  |  Age  | Alive |   Death    | Child |    Spouse    |
 +-----+----------------------+--------+------------+-------+-------+------------+-------+--------------+
-|  I1 |      Jon /Snow/      |   M    | 0283-03-07 |  1736 |  True |    None    |   F1  |      NA      |
-|  I2 | Rhaegar /Targaryen/  |   M    | 0284-05-04 |  1735 |  True |    None    |   F3  | {'F2', 'F1'} |
+|  I1 |      Jon /Snow/      |   M    | 0283-03-07 |  1737 |  True |    None    |   F1  |      NA      |
+|  I2 | Rhaegar /Targaryen/  |   M    | 0284-05-04 |  1735 |  True |    None    |   F3  | {'F1', 'F2'} |
 |  I3 |    Lyanna /Stark/    |   F    | 0266-04-03 |  1753 | False | 2020-03-03 |   NA  |    {'F1'}    |
 |  I4 |    Elia /Martell/    |   F    | 0256-05-06 |   25  | False | 0281-10-12 |   NA  |    {'F2'}    |
 |  I5 | Rhaenys /Targaryen/  |   F    | 0280-08-10 |   3   | False | 0283-10-03 |   F2  |      NA      |
@@ -21,7 +21,7 @@ Individuals
 | I17 |   Klod /Targaryen/   |   M    | 0283-01-03 |   7   | False | 0290-11-13 |   F3  |      NA      |
 | I18 |    Uy /Targaryen/    |   M    | 0285-05-02 |   22  | False | 0307-11-09 |   F3  |      NA      |
 | I19 |   Apo /Targaryen/    |   M    | 0288-10-03 |   11  | False | 0300-05-07 |   F3  |      NA      |
-| I20 |    Po /Targaryen/    |   F    | 0283-04-01 |  1736 | False | 2020-02-20 |   F3  |      NA      |
+| I20 |    Po /Targaryen/    |   F    | 2019-12-29 |   0   | False | 2020-02-20 |   F3  |      NA      |
 | I21 |    Yu /Targaryen/    |   F    | 0282-06-06 |  1737 |  True |    None    |   F3  |      NA      |
 | I22 |    Wi /Targaryen/    |   M    | 0282-09-12 |  1737 |  True |    None    |   F3  |      NA      |
 | I23 |   Puq /Targaryen/    |   M    | 0298-08-20 |  1721 |  True |    None    |   F3  |      NA      |
@@ -41,22 +41,23 @@ Individuals
 | I37 |   Blah /Targaryen/   |   F    | 2017-10-08 |   2   |  True |    None    |   F1  |      NA      |
 | I38 |   Yoma /Targaryen/   |   F    | 2000-04-05 |   19  | False | 2020-01-09 |   F1  |      NA      |
 | I39 |   Bro /Targaryen/    |   F    | 2015-10-12 |   4   |  True |    None    |   NA  |    {'F4'}    |
-| I40 |   Upaa /Targaryen/   |   F    | 2019-09-07 |   0   |  True |    None    |   F4  |      NA      |
+| I40 |   Upaa /Targaryen/   |   F    | 2020-12-20 |   -1  |  True |    None    |   F4  |      NA      |
 | I41 |   Yes /Targaryen/    |   M    | 2018-11-07 |   1   |  True |    None    |   F4  |      NA      |
 +-----+----------------------+--------+------------+-------+-------+------------+-------+--------------+
 Families
 +----+------------+------------+------------+---------------------+---------+---------------------+----------------------------------------------------------------------------------------------------------------+
 | ID |  Married   |  Divorced  | Husband ID |     Husband Name    | Wife ID |      Wife Name      |                                                    Children                                                    |
 +----+------------+------------+------------+---------------------+---------+---------------------+----------------------------------------------------------------------------------------------------------------+
-| F1 | 2023-04-08 |     NA     |     I2     | Rhaegar /Targaryen/ |    I3   |    Lyanna /Stark/   |                                              {'I1', 'I38', 'I37'}                                              |
-| F2 | 0281-06-12 |     NA     |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   | {'I26', 'I29', 'I33', 'I30', 'I28', 'I32', 'I24', 'I35', 'I4', 'I6', 'I25', 'I34', 'I27', 'I31', 'I5', 'I36'}  |
-| F3 | 0260-06-06 | 0260-06-01 |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I21', 'I20', 'I18', 'I9', 'I13', 'I22', 'I14', 'I11', 'I2', 'I19', 'I10', 'I15', 'I16', 'I17', 'I12', 'I23'} |
-| F4 | 2017-06-06 |     NA     |     I6     |  Aegon /Targaryen/  |   I39   |   Bro /Targaryen/   |                                                 {'I40', 'I41'}                                                 |
+| F1 | 2023-04-08 |     NA     |     I2     | Rhaegar /Targaryen/ |    I3   |    Lyanna /Stark/   |                                              {'I38', 'I1', 'I37'}                                              |
+| F2 | 0281-06-12 |     NA     |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   | {'I34', 'I26', 'I35', 'I30', 'I36', 'I32', 'I4', 'I31', 'I25', 'I33', 'I27', 'I6', 'I24', 'I28', 'I29', 'I5'}  |
+| F3 | 0260-06-06 | 0260-06-01 |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I11', 'I17', 'I12', 'I2', 'I14', 'I23', 'I15', 'I16', 'I19', 'I21', 'I13', 'I20', 'I10', 'I22', 'I18', 'I9'} |
+| F4 | 2017-06-06 | 2020-01-15 |     I6     |  Aegon /Targaryen/  |   I39   |   Bro /Targaryen/   |                                                 {'I41', 'I40'}                                                 |
 +----+------------+------------+------------+---------------------+---------+---------------------+----------------------------------------------------------------------------------------------------------------+
 WARNING: FAMILY: US15: F2: More than 15 siblings are in this family
 WARNING: FAMILY: US15: F3: More than 15 siblings are in this family
 ERROR: INDIVIDUAL: I9 US01: Birthday 2021-09-06 occurs in the future
 ERROR: INDIVIDUAL: I10 US01: Death 3000-06-14 occurs in the future
+ERROR: INDIVIDUAL: I40 US01: Birthday 2020-12-20 occurs in the future
 ERROR: FAMILY: F1 US01: Marriage 2023-04-08 occurs in the future
 ERROR: FAMILY: F2 US02: Husband's (I2) birthday 0284-05-04 occurs after marriage 0281-06-12
 ERROR: FAMILY: F3 US02: Wife's (I8) birthday 0261-05-22 occurs after marriage 0260-06-06
@@ -79,8 +80,34 @@ LIST: US37: Recent Survivors:
 |        I3        |   Lyanna /Stark/   |      I1     |      Jon /Snow/     |  Child   |
 |        I3        |   Lyanna /Stark/   |     I37     |   Blah /Targaryen/  |  Child   |
 |        I6        | Aegon /Targaryen/  |     I39     |   Bro /Targaryen/   |  Spouse  |
-|        I6        | Aegon /Targaryen/  |     I40     |   Upaa /Targaryen/  |  Child   |
 |        I6        | Aegon /Targaryen/  |     I41     |   Yes /Targaryen/   |  Child   |
+|        I6        | Aegon /Targaryen/  |     I40     |   Upaa /Targaryen/  |  Child   |
 +------------------+--------------------+-------------+---------------------+----------+
+WARNING: FAMILY: US10: F2: One or both spouses were less than 14 years old at the time of marriage.
+WARNING: FAMILY: US10: F3: One or both spouses were less than 14 years old at the time of marriage.
+WARNING: FAMILY: US10: F4: One or both spouses were less than 14 years old at the time of marriage.
+WARNING: FAMILY: US08: F1: Child I38 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F1: Child I1 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F1: Child I37 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F2: Child I4 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F2: Child I5 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I18 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I11 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I12 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I2 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I17 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I14 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I23 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I16 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I19 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I21 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I13 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I20 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I10 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I22 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I15 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F3: Child I9 is born before the marriage of their parents (or born 9 months after their family's divorce).
+WARNING: FAMILY: US08: F4: Child I40 is born before the marriage of their parents (or born 9 months after their family's divorce).
 ERROR: FAMILY: US04: Aerys /Targaryen/ and Rhaella /Targaryen/ divorce occurs on 0260-06-01 which is before their marriage on 0260-06-06
 ERROR: INDIVIDUAL: US03: Viserys /Targaryen/'s death occurs on 0298-10-19 which is before their birth on 2021-09-06
+ERROR: INDIVIDUAL: I2. US17: No Marriage to Children; Rhaegar /Targaryen/ has a wife: I4 who is also a child: I4

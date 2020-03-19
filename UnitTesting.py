@@ -32,7 +32,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_dates_after_today2(self): # tests US01: dates cannot be in the future
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['I9','I10', 'F1'], obj.checkDatesAfterToday())
+        self.assertCountEqual(['I9','I10', 'F1', 'I40'], obj.checkDatesAfterToday())
 
     def test_birth_after_marriage2(self): # tests US02: birth cannot occur after marriage
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -65,6 +65,14 @@ class TestUserStories(unittest.TestCase):
     def test_listRecentSurvivors(self): # tests US15: There should be fewer than 15 siblings in a family
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(['I2', 'I1', 'I37', 'I39', 'I40', 'I41'], obj.listRecentSurvivors())
+
+    def test_marriageAfter14(self):
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['F2', 'F3', 'F4'], obj.marriageAfter14())
+
+    def test_birthBeforeMarriage(self):
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(['I38', 'I37', 'I1', 'I4', 'I5', 'I22', 'I23', 'I9', 'I12', 'I15', 'I16', 'I17', 'I20', 'I14', 'I21', 'I10', 'I11', 'I18', 'I2', 'I13', 'I19', 'I40'], obj.birthBeforeMarriageOfParents())
 
 
 if __name__ == '__main__':

@@ -88,7 +88,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_correctGenderForRole(self):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['I7', 'I39'], obj.correctGenderForRole())
+        self.assertEqual(['I7', 'I39', 'I20', 'I24'], obj.correctGenderForRole())
 
     def test_maleLastNames(self): # tests US16: Males in family must have the same last name
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")

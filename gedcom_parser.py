@@ -207,7 +207,7 @@ class Read_GEDCOM:
                             birthday_list.append(self.individuals[ind].birth)
                         count_dict = dict((i, birthday_list.count(i)) for i in birthday_list)
                         list_birthdays = count_dict.values()
-                        if max(list_birthdays) <= 5:
+                        if len(list_birthdays) == 0 or max(list_birthdays) <= 5:
                             continue
                         else:
                             print(f"ERROR: FAMILY: {fam}. US14: Number of children born in a single birth should not be greater than 5", file=f)

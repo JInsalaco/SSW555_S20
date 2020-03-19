@@ -425,6 +425,8 @@ class UserStories:
         self.add_errors = error_list
         self.birth_before_death()
         self.marriage_before_divorce()
+        self.marriage_before_death()
+        self.divorce_before_death()
         if print_all_errors == True:
             self.print_user_story_errors()
 
@@ -450,8 +452,14 @@ class UserStories:
             if husband_death == None and wife_death == None: #If the wife and husband are still alive there is no further analysis needed
                 break
             if husband_death != None: #Checks if the husband was dead before he and wife married and then checks if wife was dead before she and husband married
-                if (husband_death - marriage_date).days < 0:
-                    self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
+                if wife_death != None:
+                    if (wife_death - marriage_date).days < 0:
+                        self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]                        
+                    elif (husband_death - marriage_date).days < 0:
+                        self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
+                else:
+                    if (husband_death - marriage_date).days < 0:
+                        self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
             else:
                 if (wife_death - marriage_date).days < 0:
                     self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
@@ -464,10 +472,16 @@ class UserStories:
             divorce_date = families.divorce
             if husband_death == None and wife_death == None: #If the wife and husband are still alive there is no further analysis needed
                 break
-            elif divorce_date != None: #Checks if the husband was dead before he and wife divorced and then checks if wife was dead before she and husband divorced
+            elif divorce_date != "NA": #Checks if the husband was dead before he and wife divorced and then checks if wife was dead before she and husband divorced
                 if husband_death != None:
-                    if (husband_death - divorce_date).days < 0:
-                        self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
+                    if wife_death != None:
+                        if (wife_death - divorce_date).days < 0:
+                            self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
+                        elif (husband_death - divorce_date).days < 0:
+                            self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
+                    else:
+                        if (husband_death - divorce_date).days < 0:
+                            self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
                 else:
                     if (wife_death - divorce_date).days < 0:
                         self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]

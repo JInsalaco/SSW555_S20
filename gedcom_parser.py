@@ -32,6 +32,13 @@ class Read_GEDCOM:
         self.listRecentSurvivors()
         self.marriageAfter14()
         self.birthBeforeMarriageOfParents()
+        self.marriageAfter14()
+        self.birthBeforeMarriageOfParents()
+        self.birthsLessThanFive()
+        self.uniqueFirstNameInFamily()
+        self.correctGenderForRole()
+        self.maleLastNames()
+        self.siblingSpacing()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -183,7 +190,44 @@ class Read_GEDCOM:
                     if self.individuals[ind].famc == self.individuals[ind2].famc and self.individuals[ind].name != self.individuals[ind2].name:
                         if self.individuals[ind].birth == self.individuals[ind2].birth:
                             print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US32: List all multiple Births; {self.individuals[ind].name} has the same birthday as: {self.individuals[ind2].name}", file=f)
-                            idList.append(ind)
+                            if (ind in idList):
+                                continue
+                            else:
+                                idList.append(ind)
+        return idList
+    
+    #Function for US14's unittest. No more than five siblings should be born at the same time
+    def birthsLessThanFive(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for ind in self.individuals:
+                famSet = self.individuals[ind].fams
+                if famSet != "NA":
+                    for fam in famSet:
+                        birthday_list = list()
+                        childrenSet = self.family[fam].children
+                        for child in childrenSet:
+                            birthday_list.append(self.individuals[ind].birth)
+                        count_dict = dict((i, birthday_list.count(i)) for i in birthday_list)
+                        list_birthdays = count_dict.values()
+                        if len(list_birthdays) == 0 or max(list_birthdays) <= 5:
+                            continue
+                        else:
+                            print(f"ERROR: FAMILY: {fam}. US14: Number of children born in a single birth should not be greater than 5", file=f)
+                            idList.append(fam)
+        return idList
+
+    #Function for US25's unittest. Unique first names in families
+    def uniqueFirstNameInFamily(self):
+        idList = []
+        with open("SprintOutput.txt", "a") as f:
+            for ind in self.individuals:
+                for ind2 in self.individuals:
+                    if ind != ind2:
+                        if self.individuals[ind].name == self.individuals[ind2].name:
+                            if self.individuals[ind].birth == self.individuals[ind2].birth and self.individuals[ind].famc == self.individuals[ind2].famc:
+                                print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US25: No more than one child with the same name and birth date should appear in a family", file=f)
+                                idList.append(ind)
         return idList
 
     # Function for US15's unittest. No more than five siblings should be born at the same time
@@ -199,6 +243,58 @@ class Read_GEDCOM:
                     idList.append(fam)
                     print(f"WARNING: FAMILY: US15: {fam}: More than 15 siblings are in this family", file = f)
         return idList
+
+    # Function for US21's unittest. Husbands must be males and wives must be females.
+    def correctGenderForRole(self):
+        with open("Sprintoutput.txt", "a") as f:
+            indIDList = [] #return id's of individuals who do not have the correct role gender
+            individualsDict = self.individuals
+            familyDict = self.family
+            for famID in familyDict:
+                husbandID = familyDict[famID].husband
+                wifeID = familyDict[famID].wife
+                if individualsDict[husbandID].sex != "M":
+                    print(f"ERROR: FAMILY: {famID} US21: Husband ({husbandID}) does not have the correct gender for role", file=f)
+                    indIDList.append(husbandID)
+                elif individualsDict[wifeID].sex != "F":
+                    print(f"ERROR: FAMILY: {famID} US21: Wife ({wifeID}) does not have the correct gender for role", file=f)
+                    indIDList.append(wifeID)
+        return indIDList
+
+    #function for US16's unittest. Males in the same family should have the same last name.
+    def maleLastNames(self):  # us16
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for fam in self.family:
+                family = self.family[fam]
+                father_name = self.individuals[family.husband].name.split('/')
+                for child in family.children:
+                    if self.individuals[child].sex == "M":
+                        child_name = self.individuals[child].name.split('/')
+                        if child_name[1] != father_name[1]:
+                            idList.append(child)
+                            print(f"WARNING: US16: {self.individuals[family.husband].name} and {self.individuals[child].name} have different last names.",file=f)
+            return idList
+
+    #Function for US13's unittest. Birth dates of siblings should be more than 8 months apart or less than 2 days apart
+    def siblingSpacing(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for fam in self.family:
+                family = self.family[fam]
+                for child in family.children:
+                    currBirthday = self.individuals[child].birth #first child's birthday
+                    for children in family.children:
+                        sibBirthday = self.individuals[children].birth #one siblings birthday
+                        diff = abs(currBirthday - sibBirthday)
+                        if(diff > datetime.timedelta(days=2) and diff < datetime.timedelta(days=243)):
+                            idList.append(child)
+                            idList.append(children)
+                            print(f"ERROR: US13: {self.individuals[child].name } and {self.individuals[children].name} have birthdays too close together", file=f)
+            idList = list(dict.fromkeys(idList))
+            print(idList)
+            return idList
+
 
     def file_reading_gen(self, path, sep = "\t"):
         '''This is a file reading generator that reads the GEDCOM function line by line. The function will first check for bad inputs and raise an error if it detects any.'''
@@ -332,22 +428,66 @@ class UserStories:
         self.add_errors = error_list
         self.birth_before_death()
         self.marriage_before_divorce()
+        self.marriage_before_death()
+        self.divorce_before_death()
         if print_all_errors == True:
             self.print_user_story_errors()
 
 
     def birth_before_death(self):
-        "US03 Birth Before Death: Birth should occur before death of an individual"
+        '''US03 Birth Before Death: Birth should occur before death of an individual'''
         for individual in self.individuals.values():
             if individual.death != None and (individual.death - individual.birth).days < 0:
                 self.add_errors += [f"ERROR: INDIVIDUAL: US03: {individual.name}'s death occurs on {individual.death} which is before their birth on {individual.birth}"]
     
     def marriage_before_divorce(self):
-        "US04 Marriage Before Divorce: Marriage should occur before divorce of spouses, and divorce can only occur after marriage"
+        '''US04 Marriage Before Divorce: Marriage should occur before divorce of spouses, and divorce can only occur after marriage'''
         for families in self.family.values():
             if families.divorce != "NA" and (families.divorce - families.marriage).days < 0:
                 self.add_errors += [f"ERROR: FAMILY: US04: {self.individuals[families.husband].name} and {self.individuals[families.wife].name} divorce occurs on {families.divorce} which is before their marriage on {families.marriage}"]
-
+    
+    def marriage_before_death(self):
+        '''US05 Marriage should occur before death of either spouse'''
+        for families in self.family.values():
+            husband_death = self.individuals[families.husband].death
+            wife_death = self.individuals[families.wife].death
+            marriage_date = families.marriage
+            if husband_death == None and wife_death == None: #If the wife and husband are still alive there is no further analysis needed
+                break
+            if husband_death != None: #Checks if the husband was dead before he and wife married and then checks if wife was dead before she and husband married
+                if wife_death != None:
+                    if (wife_death - marriage_date).days < 0:
+                        self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]                        
+                    elif (husband_death - marriage_date).days < 0:
+                        self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
+                else:
+                    if (husband_death - marriage_date).days < 0:
+                        self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
+            else:
+                if (wife_death - marriage_date).days < 0:
+                    self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
+              
+    def divorce_before_death(self):
+        '''US06 Divorce can only occur before death of both spouses'''
+        for families in self.family.values():
+            husband_death = self.individuals[families.husband].death
+            wife_death = self.individuals[families.wife].death
+            divorce_date = families.divorce
+            if husband_death == None and wife_death == None: #If the wife and husband are still alive there is no further analysis needed
+                break
+            elif divorce_date != "NA": #Checks if the husband was dead before he and wife divorced and then checks if wife was dead before she and husband divorced
+                if husband_death != None:
+                    if wife_death != None:
+                        if (wife_death - divorce_date).days < 0:
+                            self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
+                        elif (husband_death - divorce_date).days < 0:
+                            self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
+                    else:
+                        if (husband_death - divorce_date).days < 0:
+                            self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
+                else:
+                    if (wife_death - divorce_date).days < 0:
+                        self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
     def print_user_story_errors(self):
         '''This function will print all the errors that have been compiled into the list of errors'''
         for GEDCOM_error in sorted(self.add_errors):

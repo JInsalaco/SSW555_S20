@@ -106,5 +106,9 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(['I33', 'I36', 'I31', 'I34', 'I32', 'I35', 'I30', 'I17', 'I22', 'I21', 'I15', 'I18', 'I2', 'I10', 'I12', 'I11', 'I13'], obj.siblingSpacing())
 
+    def test_illegitimateDates(self): # tests US42: Reject illegitimate dates
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["35 NOV 0290"], obj.getIllegitimateDates())
+
 if __name__ == '__main__':
     unittest.main()

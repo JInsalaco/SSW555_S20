@@ -20,6 +20,8 @@ class Read_GEDCOM:
         self.individuals_ptable = PrettyTable(field_names = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
         self.recentDeathTable = PrettyTable(field_names=["ID", "Name", "Death"])  # create a ptable for recent deaths
         self.recentSurvivorTable = PrettyTable(field_names=["Dead Relative ID", "Dead Relative Name", "Survivor ID", "Survivor Name", "Relation"])
+        self.illegitimateDatesList = []
+        self.illegitimateDatesErrorList = []
         self.analyze_GEDCOM()
         if ptables: #Makes pretty tables for the data
             self.create_indi_ptable()
@@ -37,6 +39,7 @@ class Read_GEDCOM:
         self.correctGenderForRole()
         self.maleLastNames()
         self.siblingSpacing()
+        self.printIllegitimateDateErrors()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -88,17 +91,34 @@ class Read_GEDCOM:
                         self.family[fam].children.add(arguments)
             elif level == "2" and tag == "DATE" and date_identifier_line[1] in ["BIRT", "DEAT", "MARR", "DIV"]: #Makes sure that only valid lines are read in the GEDCOM file that correspond to level 2 information with the specific tag DATE. The date_identifier line should also be one of the indicated tags
                 date_identifier_level, date_identifier_tag = date_identifier_line[0], date_identifier_line[1] #As previously mentioned, the date_identifier line will be divided into its level and tag to evaluate what the specific date corresponds to
-                arguments = datetime.datetime.strptime(arguments, "%d %b %Y").date() 
+                try:
+                    arguments = datetime.datetime.strptime(arguments, "%d %b %Y").date() 
+                except ValueError:
+                    self.illegitimateDatesList.append(arguments)
+                    illegitimateDate = arguments
+                    arguments = "ILLEGITIMATE"
                 if date_identifier_level == "1" and date_identifier_tag in ["BIRT", "DEAT", "MARR", "DIV"]:
                     if indiv_or_fam == "individual": #Parses birthday and death day information for an individual
                         if date_identifier_tag == "BIRT":
+                            if arguments == "ILLEGITIMATE":
+                                error = f"ERROR: US42: Individual {ind} had an illegitimate birth date of {illegitimateDate}"
+                                self.illegitimateDatesErrorList.append(error)
                             self.individuals[ind].birth = arguments
                         elif date_identifier_tag == "DEAT":
+                            if arguments == "ILLEGITIMATE":
+                                error = f"ERROR: US42: Individual {ind} had an illegitimate death date of {illegitimateDate}"
+                                self.illegitimateDatesErrorList.append(error)
                             self.individuals[ind].death = arguments
                     elif indiv_or_fam == "family": #Parses marriage date and divorce date information for a family
                         if date_identifier_tag == "MARR":
+                            if arguments == "ILLEGITIMATE":
+                                error = f"ERROR: US42: Family {fam} had an illegitimate marriage date of {illegitimateDate}"
+                                self.illegitimateDatesErrorList.append(error)
                             self.family[fam].marriage = arguments
                         elif date_identifier_tag == "DIV":
+                            if arguments == "ILLEGITIMATE":
+                                error = f"ERROR: US42: Family {fam} had an illegitimate divorce date of {illegitimateDate}"
+                                self.illegitimateDatesErrorList.append(error)
                             self.family[fam].divorce = arguments
 
     #Function for US01's unittest: Returns a list of id's (ind or fam) that
@@ -108,17 +128,17 @@ class Read_GEDCOM:
             currentDate  = datetime.date.today()
             idList = []
             for ind in self.individuals:
-                if self.individuals[ind].birth > currentDate:
+                if self.individuals[ind].birth != "ILLEGITIMATE" and  self.individuals[ind].birth > currentDate:
                     print(f"ERROR: INDIVIDUAL: {ind} US01: Birthday {self.individuals[ind].birth} occurs in the future", file=f)
                     idList.append(ind)
-                if self.individuals[ind].death != None and self.individuals[ind].death > currentDate:
+                if self.individuals[ind].death != None and self.individuals[ind].death != "ILLEGITIMATE" and self.individuals[ind].death > currentDate:
                     print(f"ERROR: INDIVIDUAL: {ind} US01: Death {self.individuals[ind].death} occurs in the future", file=f)
                     idList.append(ind)
             for fam in self.family:
-                if self.family[fam].marriage > currentDate:
+                if self.family[fam].marriage != "ILLEGITIMATE" and self.family[fam].marriage > currentDate:
                     print(f"ERROR: FAMILY: {fam} US01: Marriage {self.family[fam].marriage} occurs in the future", file=f)
                     idList.append(fam)
-                if self.family[fam].divorce != "NA" and self.family[fam].divorce > currentDate:
+                if self.family[fam].divorce != "NA" and self.family[fam].divorce != "ILLEGITIMATE" and self.family[fam].divorce > currentDate:
                     print(f"ERROR: FAMILY: {fam} US01: Divorce {self.family[fam].divorce} occurs in the future", file=f)
                     idList.append(fam)
         return idList
@@ -131,7 +151,7 @@ class Read_GEDCOM:
             today = datetime.date.today()
             dateFrom30DaysAgo = datetime.date.today() - datetime.timedelta(30)
             for ind in self.individuals:
-                if self.individuals[ind].death is not None and self.individuals[ind].death >= dateFrom30DaysAgo and self.individuals[ind].death < today:
+                if self.individuals[ind].death is not None and self.individuals[ind].death != "ILLEGITIMATE" and self.individuals[ind].death >= dateFrom30DaysAgo and self.individuals[ind].death < today:
                     self.recentDeathTable.add_row([ind, self.individuals[ind].name, self.individuals[ind].death])
                     idList.append(ind)
             print("LIST: US36: Recent Deaths:", file=f)
@@ -149,7 +169,7 @@ class Read_GEDCOM:
                 if famSet != "NA":
                     for fam in famSet:
                         marriageDate = self.family[fam].marriage
-                        if birthDate > marriageDate:
+                        if birthDate != "ILLEGITIMATE" and marriageDate != "ILLEGITIMATE" and birthDate > marriageDate:
                             if self.individuals[ind].sex == "M":
                                 sex = "Husband's"
                             else:
@@ -186,7 +206,7 @@ class Read_GEDCOM:
             for ind in self.individuals:
                 for ind2 in self.individuals:
                     if self.individuals[ind].famc == self.individuals[ind2].famc and self.individuals[ind].name != self.individuals[ind2].name:
-                        if self.individuals[ind].birth == self.individuals[ind2].birth:
+                        if self.individuals[ind].birth != "ILLEGITIMATE" and self.individuals[ind2].birth != "ILLEGITIMATE" and self.individuals[ind].birth == self.individuals[ind2].birth:
                             print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US32: List all multiple Births; {self.individuals[ind].name} has the same birthday as: {self.individuals[ind2].name}", file=f)
                             if (ind in idList):
                                 continue
@@ -205,7 +225,8 @@ class Read_GEDCOM:
                         birthday_list = list()
                         childrenSet = self.family[fam].children
                         for child in childrenSet:
-                            birthday_list.append(self.individuals[ind].birth)
+                            if self.individuals[ind].birth != "ILLEGITIMATE":
+                                birthday_list.append(self.individuals[ind].birth)
                         count_dict = dict((i, birthday_list.count(i)) for i in birthday_list)
                         list_birthdays = count_dict.values()
                         if len(list_birthdays) == 0 or max(list_birthdays) <= 5:
@@ -223,9 +244,10 @@ class Read_GEDCOM:
                 for ind2 in self.individuals:
                     if ind != ind2:
                         if self.individuals[ind].name == self.individuals[ind2].name:
-                            if self.individuals[ind].birth == self.individuals[ind2].birth and self.individuals[ind].famc == self.individuals[ind2].famc:
-                                print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US25: No more than one child with the same name and birth date should appear in a family", file=f)
-                                idList.append(ind)
+                            if self.individuals[ind].birth != "ILLEGITIMATE" and self.individuals[ind2].birth != "ILLEGITIMATE":
+                                if self.individuals[ind].birth == self.individuals[ind2].birth and self.individuals[ind].famc == self.individuals[ind2].famc:
+                                    print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US25: No more than one child with the same name and birth date should appear in a family", file=f)
+                                    idList.append(ind)
         return idList
 
     # Function for US15's unittest. No more than five siblings should be born at the same time
@@ -284,7 +306,8 @@ class Read_GEDCOM:
                     currBirthday = self.individuals[child].birth #first child's birthday
                     for children in family.children:
                         sibBirthday = self.individuals[children].birth #one siblings birthday
-                        diff = abs(currBirthday - sibBirthday)
+                        if currBirthday != "ILLEGITIMATE" and sibBirthday != "ILLEGITIMATE":
+                            diff = abs(currBirthday - sibBirthday)
                         if(diff > datetime.timedelta(days=2) and diff < datetime.timedelta(days=243)):
                             idList.append(child)
                             idList.append(children)
@@ -293,6 +316,15 @@ class Read_GEDCOM:
             print(idList)
             return idList
 
+    # Function for US42's unittest. Return the list of illegitimate dates that were accumulated
+    # throughout the parser.
+    def getIllegitimateDates(self):
+        return self.illegitimateDatesList
+
+    def printIllegitimateDateErrors(self):
+        with open("Sprintoutput.txt", "a") as f:
+            for error in self.illegitimateDatesErrorList:
+                print(error, file=f)
 
     def file_reading_gen(self, path, sep = "\t"):
         '''This is a file reading generator that reads the GEDCOM function line by line. The function will first check for bad inputs and raise an error if it detects any.'''
@@ -325,21 +357,23 @@ class Read_GEDCOM:
         with open("SprintOutput.txt", "a") as f:
             idList = []
             for famID, fam in self.family.items():
-                if self.individuals[fam.husband].calculateAge(fam.marriage) < 14 or self.individuals[fam.wife].calculateAge(fam.marriage) < 14:
-                    idList.append(famID)
-                    print(f"WARNING: FAMILY: US10: {famID}: One or both spouses were less than 14 years old at the time of marriage.", file = f)
+                if fam.marriage != "ILLEGITIMATE":
+                    if self.individuals[fam.husband].calculateAge(fam.marriage) < 14 or self.individuals[fam.wife].calculateAge(fam.marriage) < 14:
+                        idList.append(famID)
+                        print(f"WARNING: FAMILY: US10: {famID}: One or both spouses were less than 14 years old at the time of marriage.", file = f)
             return idList
 
     def birthBeforeMarriageOfParents(self):
         with open("SprintOutput.txt", "a") as f:
             idList = []
             for famID, fam in self.family.items():
-                dateOf9MonthsAfterDivorce = fam.divorce + relativedelta(months=9) if fam.divorce != "NA" else "NA"
+                dateOf9MonthsAfterDivorce = fam.divorce + relativedelta(months=9) if fam.divorce != "NA" and fam.divorce != "ILLEGITIMATE" else "NA"
                 for child in fam.children:
                     childBirth = self.individuals[child].birth
-                    if childBirth < fam.marriage or dateOf9MonthsAfterDivorce != "NA" and childBirth > dateOf9MonthsAfterDivorce:
-                        idList.append(child)
-                        print(f"WARNING: FAMILY: US08: {famID}: Child {child} is born before the marriage of their parents (or born 9 months after their family's divorce).", file = f)
+                    if childBirth != "ILLEGITIMATE" and fam.marriage != "ILLEGITIMATE":
+                        if childBirth < fam.marriage or dateOf9MonthsAfterDivorce != "NA" and childBirth > dateOf9MonthsAfterDivorce:
+                            idList.append(child)
+                            print(f"WARNING: FAMILY: US08: {famID}: Child {child} is born before the marriage of their parents (or born 9 months after their family's divorce).", file = f)
             return idList
              
     def listRecentSurvivors(self):
@@ -392,6 +426,8 @@ class Individual:
     def check_alive(self):
         '''The purpose of this function is to check whether a person is alive or not and sets the individuals age based on calling the calculateAge function'''
         self.alive = (self.death == None) #Returns true if self.death == None because that means the person is not dead.
+        if self.birth == "ILLEGITIMATE":
+            self.alive = False
         try:
             self.calculateAge()
         except:
@@ -406,7 +442,11 @@ class Individual:
             lastDate = datetime.datetime.today()
         else:
             lastDate = self.death
-        self.age = lastDate.year - self.birth.year - int((lastDate.month, lastDate.day) < (self.birth.month, self.birth.day)) # Tuple comparison to check if today's date is before or after current/death date
+
+        if lastDate != "ILLEGITIMATE" and self.birth != "ILLEGITIMATE":
+            self.age = lastDate.year - self.birth.year - int((lastDate.month, lastDate.day) < (self.birth.month, self.birth.day)) # Tuple comparison to check if today's date is before or after current/death date
+        else:
+            self.age = "NA"
         return self.age
 
 class Family:
@@ -435,13 +475,13 @@ class UserStories:
     def birth_before_death(self):
         '''US03 Birth Before Death: Birth should occur before death of an individual'''
         for individual in self.individuals.values():
-            if individual.death != None and (individual.death - individual.birth).days < 0:
+            if individual.death != None and individual.death != "ILLEGITIMATE" and individual.birth != "ILLEGITIMATE" and (individual.death - individual.birth).days < 0:
                 self.add_errors += [f"ERROR: INDIVIDUAL: US03: {individual.name}'s death occurs on {individual.death} which is before their birth on {individual.birth}"]
     
     def marriage_before_divorce(self):
         '''US04 Marriage Before Divorce: Marriage should occur before divorce of spouses, and divorce can only occur after marriage'''
         for families in self.family.values():
-            if families.divorce != "NA" and (families.divorce - families.marriage).days < 0:
+            if families.divorce != "NA" and families.divorce != "ILLEGITIMATE" and families.marriage != "ILLEGITIMATE" and (families.divorce - families.marriage).days < 0:
                 self.add_errors += [f"ERROR: FAMILY: US04: {self.individuals[families.husband].name} and {self.individuals[families.wife].name} divorce occurs on {families.divorce} which is before their marriage on {families.marriage}"]
     
     def marriage_before_death(self):
@@ -454,15 +494,15 @@ class UserStories:
                 break
             if husband_death != None: #Checks if the husband was dead before he and wife married and then checks if wife was dead before she and husband married
                 if wife_death != None:
-                    if (wife_death - marriage_date).days < 0:
+                    if wife_death != "ILLEGITIMATE" and marriage_date != "ILLEGITIMATE" and (wife_death - marriage_date).days < 0:
                         self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]                        
-                    elif (husband_death - marriage_date).days < 0:
+                    elif husband_death != "ILLEGITIMATE" and marriage_date != "ILLEGITIMATE" and (husband_death - marriage_date).days < 0:
                         self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
                 else:
-                    if (husband_death - marriage_date).days < 0:
+                    if husband_death != "ILLEGITIMATE" and marriage_date != "ILLEGITIMATE" and (husband_death - marriage_date).days < 0:
                         self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
             else:
-                if (wife_death - marriage_date).days < 0:
+                if wife_death != "ILLEGITIMATE" and marriage_date != "ILLEGITIMATE" and (wife_death - marriage_date).days < 0:
                     self.add_errors += [f"ERROR: FAMILY: US05: Married on {marriage_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
               
     def divorce_before_death(self):
@@ -476,22 +516,24 @@ class UserStories:
             elif divorce_date != "NA": #Checks if the husband was dead before he and wife divorced and then checks if wife was dead before she and husband divorced
                 if husband_death != None:
                     if wife_death != None:
-                        if (wife_death - divorce_date).days < 0:
+                        if wife_death != "ILLEGITIMATE" and divorce_date != "ILLEGITIMATE" and (wife_death - divorce_date).days < 0:
                             self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
-                        elif (husband_death - divorce_date).days < 0:
+                        elif husband_death != "ILLEGITIMATE" and divorce_date != "ILLEGITIMATE" and (husband_death - divorce_date).days < 0:
                             self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
                     else:
-                        if (husband_death - divorce_date).days < 0:
+                        if husband_death != "ILLEGITIMATE" and divorce_date != "ILLEGITIMATE" and (husband_death - divorce_date).days < 0:
                             self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.husband].name}'s death on {husband_death}"]
                 else:
-                    if (wife_death - divorce_date).days < 0:
+                    if wife_death != "ILLEGITIMATE" and divorce_date != "ILLEGITIMATE" and (wife_death - divorce_date).days < 0:
                         self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
+
     def print_user_story_errors(self):
         '''This function will print all the errors that have been compiled into the list of errors'''
         for GEDCOM_error in sorted(self.add_errors):
             with open("Sprintoutput.txt", "a") as f:
                 print(GEDCOM_error, file=f)
             print(GEDCOM_error)
+
 def main():
     '''This runs the program.'''
     path = input("Insert path of GEDCOM file (if in the same directory, enter name of GEDCOM file):")

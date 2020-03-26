@@ -20,6 +20,7 @@ class Read_GEDCOM:
         self.individuals_ptable = PrettyTable(field_names = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
         self.recentDeathTable = PrettyTable(field_names=["ID", "Name", "Death"])  # create a ptable for recent deaths
         self.recentSurvivorTable = PrettyTable(field_names=["Dead Relative ID", "Dead Relative Name", "Survivor ID", "Survivor Name", "Relation"])
+        self.upcomingAnniversariesTable = PrettyTable(field_names=["Family ID", "Marriage Date", "Husband", "Wife"])
         self.illegitimateDatesList = []
         self.illegitimateDatesErrorList = []
         self.analyze_GEDCOM()
@@ -40,6 +41,8 @@ class Read_GEDCOM:
         self.maleLastNames()
         self.siblingSpacing()
         self.printIllegitimateDateErrors()
+        self.parentsNotTooOld()
+        self.upcomingAnniversaries()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -326,6 +329,44 @@ class Read_GEDCOM:
             for error in self.illegitimateDatesErrorList:
                 print(error, file=f)
 
+    # Function for US12's unittest: Mother should be less than 60 years older than her children 
+    # and father should be less than 80 years older than his children.
+    def parentsNotTooOld(self):
+        with open("Sprintoutput.txt", "a") as f:
+            idList = []
+            families = self.family
+            individuals = self.individuals
+            for famID in families:
+                motherAge = individuals[families[famID].wife].age
+                fatherAge = individuals[families[famID].husband].age
+                for childID in families[famID].children:
+                    if individuals[childID].alive != False and motherAge != "NA" and individuals[childID].age != "NA" and int(motherAge) - int(individuals[childID].age) >= 60 and individuals[families[famID].wife].alive != False:
+                        print(f"WARNING: US12: In family {famID}, Mother {families[famID].wife} is 60 or more years older than child {childID}", file=f)
+                        idList.append(families[famID].wife)
+                    if individuals[childID].alive != False and fatherAge != "NA" and individuals[childID].age != "NA" and int(fatherAge) - int(individuals[childID].age) >= 80 and individuals[families[famID].husband].alive != False:
+                        print(f"WARNING: US12: In family {famID}, Father {families[famID].husband} is 80 or more years older than child {childID}", file=f)
+                        idList.append(families[famID].husband)
+        return idList
+
+    # Function for US39's unittest: List all living couples in a GEDCOM file whose 
+    # marriage anniversaries occur in the next 30 days.
+    def upcomingAnniversaries(self):
+        with open("Sprintoutput.txt", "a") as f:
+            idList = []
+            todaysDate = datetime.date.today()
+            dateIn30Days = datetime.date.today() + datetime.timedelta(30)
+            for famID in self.family:
+                if self.individuals[self.family[famID].husband].death != "ILLEGITIMATE" and self.individuals[self.family[famID].wife].death != "ILLEGITIMATE":
+                    if self.family[famID].marriage < todaysDate:
+                        updatedMarriageDate = (self.family[famID].marriage).replace(year=todaysDate.year)
+                        if (updatedMarriageDate + datetime.timedelta(30)) >= dateIn30Days:
+                            if updatedMarriageDate <= dateIn30Days:
+                                self.upcomingAnniversariesTable.add_row([famID, self.family[famID].marriage, self.family[famID].husband, self.family[famID].wife])
+                                idList.append(famID)
+            print("LIST: US39: Upcoming Anniversaries:", file=f)
+            print(self.upcomingAnniversariesTable, file=f)
+        return idList
+
     def file_reading_gen(self, path, sep = "\t"):
         '''This is a file reading generator that reads the GEDCOM function line by line. The function will first check for bad inputs and raise an error if it detects any.'''
         try: #This tries to open the file and returns an error if it can not open the file. The code continues if opening the file is successful
@@ -358,7 +399,7 @@ class Read_GEDCOM:
             idList = []
             for famID, fam in self.family.items():
                 if fam.marriage != "ILLEGITIMATE":
-                    if self.individuals[fam.husband].calculateAge(fam.marriage) < 14 or self.individuals[fam.wife].calculateAge(fam.marriage) < 14:
+                    if self.individuals[fam.husband].calculateAge2(fam.marriage) < 14 or self.individuals[fam.wife].calculateAge2(fam.marriage) < 14:
                         idList.append(famID)
                         print(f"WARNING: FAMILY: US10: {famID}: One or both spouses were less than 14 years old at the time of marriage.", file = f)
             return idList
@@ -448,6 +489,22 @@ class Individual:
         else:
             self.age = "NA"
         return self.age
+
+    # Function to calculate age without updating an individual's age
+    def calculateAge2(self, customDate = "NA"):
+        '''Calculates the age of an individual'''
+        if (customDate != "NA"):
+            lastDate = customDate
+        elif (self.alive): # Check if alive to see whether to use today's date or death date for age calculation
+            lastDate = datetime.datetime.today()
+        else:
+            lastDate = self.death
+
+        if lastDate != "ILLEGITIMATE" and self.birth != "ILLEGITIMATE":
+            age = lastDate.year - self.birth.year - int((lastDate.month, lastDate.day) < (self.birth.month, self.birth.day)) # Tuple comparison to check if today's date is before or after current/death date
+        else:
+            age = "NA"
+        return age
 
 class Family:
     '''This class will hold all of the information for each family according to their FamID. This includes the marriage date, divorce date, husband ID, wife ID, and a set of the children.'''

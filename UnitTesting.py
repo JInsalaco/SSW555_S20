@@ -48,7 +48,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_listRecentDeaths(self): # tests US15: There should be fewer than 15 siblings in a family
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['I3', 'I6', 'I20'], obj.listRecentDeaths())
+        self.assertEqual(['I3'], obj.listRecentDeaths())
     
     def test_birth_before_death(self):
         '''US03: Unit Test: This is a test to see if the parser will catch instances of a persons death occuring before their birth.'''
@@ -76,7 +76,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_listRecentSurvivors(self): # tests US15: There should be fewer than 15 siblings in a family
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(['I2', 'I1', 'I37', 'I39', 'I40', 'I41'], obj.listRecentSurvivors())
+        self.assertCountEqual(['I2', 'I1', 'I37'], obj.listRecentSurvivors())
 
     def test_marriageAfter14(self): # tests US10: Marriage should be at least 14 years after birth of both spouses (parents must be at least 14 years old) 
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -109,6 +109,14 @@ class TestUserStories(unittest.TestCase):
     def test_illegitimateDates(self): # tests US42: Reject illegitimate dates
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(["35 NOV 0290"], obj.getIllegitimateDates())
+
+    def test_parentsNotTooOld(self): # tests US12: Parents not too old
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["I2"], obj.parentsNotTooOld())
+
+    def test_upcomingAnniversaries(self): # tests US39: List all upcoming wedding anniversaries
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["F4"], obj.upcomingAnniversaries())
 
 if __name__ == '__main__':
     unittest.main()

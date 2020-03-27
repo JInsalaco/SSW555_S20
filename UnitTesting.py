@@ -84,7 +84,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_birthBeforeMarriage(self): # tests US08: Children should be born after marriage of parents (and not more than 9 months after their divorce)
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(['I38', 'I37', 'I1', 'I4', 'I5', 'I22', 'I20', 'I23', 'I9', 'I12', 'I15', 'I16', 'I17', 'I14', 'I21', 'I10', 'I11', 'I18', 'I2', 'I13', 'I19', 'I40'], obj.birthBeforeMarriageOfParents())
+        self.assertCountEqual(['I38', 'I37', 'I1', 'I4', 'I5', 'I22', 'I20', 'I23', 'I9', 'I12', 'I15', 'I16', 'I17', 'I14', 'I21', 'I10', 'I11', 'I18', 'I2', 'I13', 'I19', 'I40', 'I46'], obj.birthBeforeMarriageOfParents())
 
     def test_birthsLessThanFive(self): # tests US17: No more than five siblings should be born at the same time
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -104,7 +104,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_siblingSpacing(self):  # tests US13: Siblings must be more than 8 months or less than a day apart
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(['I33', 'I36', 'I31', 'I34', 'I32', 'I35', 'I30', 'I17', 'I22', 'I21', 'I15', 'I18', 'I2', 'I10', 'I12', 'I11', 'I13'], obj.siblingSpacing())
+        self.assertCountEqual(['I33', 'I36', 'I31', 'I34', 'I32', 'I35', 'I20', 'I46', 'I30', 'I17', 'I22', 'I21', 'I15', 'I18', 'I2', 'I10', 'I12', 'I11', 'I13'], obj.siblingSpacing())
 
     def test_illegitimateDates(self): # tests US42: Reject illegitimate dates
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -112,11 +112,15 @@ class TestUserStories(unittest.TestCase):
 
     def test_parentsNotTooOld(self): # tests US12: Parents not too old
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(["I2"], obj.parentsNotTooOld())
+        self.assertCountEqual(["I2", "I2"], obj.parentsNotTooOld())
 
     def test_upcomingAnniversaries(self): # tests US39: List all upcoming wedding anniversaries
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(["F4"], obj.upcomingAnniversaries())
+    
+    def test_recentBirths(self): # tests US39: List all upcoming wedding anniversaries
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(['I44', 'I45', 'I46'], obj.recentBirths())
 
 if __name__ == '__main__':
     unittest.main()

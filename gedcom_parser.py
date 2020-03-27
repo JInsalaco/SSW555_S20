@@ -21,6 +21,7 @@ class Read_GEDCOM:
         self.recentDeathTable = PrettyTable(field_names=["ID", "Name", "Death"])  # create a ptable for recent deaths
         self.recentSurvivorTable = PrettyTable(field_names=["Dead Relative ID", "Dead Relative Name", "Survivor ID", "Survivor Name", "Relation"])
         self.upcomingAnniversariesTable = PrettyTable(field_names=["Family ID", "Marriage Date", "Husband", "Wife"])
+        self.recentBirthsTable = PrettyTable(field_names=["ID", "Name", "Birthday"])
         self.illegitimateDatesList = []
         self.illegitimateDatesErrorList = []
         self.analyze_GEDCOM()
@@ -43,6 +44,7 @@ class Read_GEDCOM:
         self.printIllegitimateDateErrors()
         self.parentsNotTooOld()
         self.upcomingAnniversaries()
+        self.recentBirths()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -366,6 +368,21 @@ class Read_GEDCOM:
             print("LIST: US39: Upcoming Anniversaries:", file=f)
             print(self.upcomingAnniversariesTable, file=f)
         return idList
+
+    # Function for US35's unittest: List all people in a GEDCOM file who were born in the last 30 days
+    def recentBirths(self):
+        with open ("Sprintoutput.txt", "a") as f:
+            idList = []
+            today = datetime.date.today()
+            dateFrom30DaysAgo = today - relativedelta(months=1)
+            for indID in self.individuals:
+                if self.individuals[indID].birth != "ILLEGITIMATE":
+                    if self.individuals[indID].birth > dateFrom30DaysAgo and self.individuals[indID].birth < today:
+                        self.recentBirthsTable.add_row([indID, self.individuals[indID].name, self.individuals[indID].birth])
+                        idList.append(indID)
+            print("LIST: US35: Recent Births:", file = f)
+            print(self.recentBirthsTable, file = f)
+            return idList
 
     def file_reading_gen(self, path, sep = "\t"):
         '''This is a file reading generator that reads the GEDCOM function line by line. The function will first check for bad inputs and raise an error if it detects any.'''

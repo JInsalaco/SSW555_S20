@@ -118,9 +118,13 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(["F4"], obj.upcomingAnniversaries())
     
-    def test_recentBirths(self): # tests US39: List all upcoming wedding anniversaries
+    def test_recentBirths(self): # tests US35: List all recent births in last 30 days
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(['I44', 'I45', 'I46'], obj.recentBirths())
+
+    def test_birthBeforeDeathOfParents(self): # tests US09: Children should be born before death of mother and before 9 months after the death of their father
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(['I25', 'I31', 'I29', 'I33', 'I27', 'I30', 'I6', 'I36', 'I28', 'I35', 'I32', 'I45', 'I24', 'I34', 'I26', 'I46', 'I12', 'I9', 'I10', 'I20', 'I2', 'I23', 'I19', 'I11', 'I14', 'I13', 'I40'], obj.birthBeforeDeathOfParents())
 
 if __name__ == '__main__':
     unittest.main()

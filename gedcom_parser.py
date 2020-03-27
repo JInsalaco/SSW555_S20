@@ -45,6 +45,7 @@ class Read_GEDCOM:
         self.parentsNotTooOld()
         self.upcomingAnniversaries()
         self.recentBirths()
+        self.birthBeforeDeathOfParents()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -371,7 +372,7 @@ class Read_GEDCOM:
 
     # Function for US35's unittest: List all people in a GEDCOM file who were born in the last 30 days
     def recentBirths(self):
-        with open ("Sprintoutput.txt", "a") as f:
+        with open("Sprintoutput.txt", "a") as f:
             idList = []
             today = datetime.date.today()
             dateFrom30DaysAgo = today - relativedelta(months=1)
@@ -382,6 +383,22 @@ class Read_GEDCOM:
                         idList.append(indID)
             print("LIST: US35: Recent Births:", file = f)
             print(self.recentBirthsTable, file = f)
+            return idList
+
+    # Function for US09's unittest: Child should be born before death of mother and before 9 months after death of father
+    def birthBeforeDeathOfParents(self):
+        with open("Sprintoutput.txt", "a") as f:
+            idList = []
+            for famID in self.family:
+                fam = self.family[famID]
+                mother_death = self.individuals[fam.wife].death if self.individuals[fam.wife].death != None else "NA"
+                father_death = self.individuals[fam.husband].death if self.individuals[fam.husband].death != None else "NA"
+                father_death_after_9_months = father_death + relativedelta(months=9) if father_death != "NA" else "NA"
+                for childID in fam.children:
+                    child_bday = self.individuals[childID].birth
+                    if mother_death != "NA" and child_bday > mother_death or father_death_after_9_months != "NA" and child_bday > father_death_after_9_months:
+                        print(f"ERROR: US09: FAMILY: Child {childID} of Family {famID} is not born before death of their mother or before 9 months after the death of their father.", file = f)
+                        idList.append(childID)
             return idList
 
     def file_reading_gen(self, path, sep = "\t"):

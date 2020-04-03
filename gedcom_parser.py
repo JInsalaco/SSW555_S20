@@ -22,6 +22,7 @@ class Read_GEDCOM:
         self.recentSurvivorTable = PrettyTable(field_names=["Dead Relative ID", "Dead Relative Name", "Survivor ID", "Survivor Name", "Relation"])
         self.upcomingAnniversariesTable = PrettyTable(field_names=["Family ID", "Marriage Date", "Husband", "Wife"])
         self.recentBirthsTable = PrettyTable(field_names=["ID", "Name", "Birthday"])
+        self.deceased_table = PrettyTable(field_names=["ID", "Name", "Death Day"])
         self.illegitimateDatesList = []
         self.illegitimateDatesErrorList = []
         self.analyze_GEDCOM()
@@ -46,6 +47,7 @@ class Read_GEDCOM:
         self.upcomingAnniversaries()
         self.recentBirths()
         self.birthBeforeDeathOfParents()
+        self.list_deceased()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -474,6 +476,19 @@ class Read_GEDCOM:
             print("LIST: US37: Recent Survivors:", file=f)
             print(self.recentSurvivorTable, file = f)
             return idList
+    
+    def list_deceased(self):
+        '''US29: List all deceased individuals in a GEDCOM file'''
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for indID in self.individuals:
+                if self.individuals[indID].death != None:
+                    idList.append(indID)
+                    self.deceased_table.add_row([indID, self.individuals[indID].name, self.individuals[indID].death])
+            print("LIST: US29: List Deceased: ", file = f)
+            print(self.deceased_table, file = f)
+            return idList
+
 
     def create_fam_ptable(self):
         '''This creates a Pretty Table that is a Family summary of each family's ID, when they were married, when they got divorced, the Husband ID, the Husband Name, the Wife ID, the Wife Name, and their children.'''
@@ -559,6 +574,7 @@ class UserStories:
         self.marriage_before_divorce()
         self.marriage_before_death()
         self.divorce_before_death()
+        self.less_than_150_years_old()
         if print_all_errors == True:
             self.print_user_story_errors()
 
@@ -617,6 +633,14 @@ class UserStories:
                 else:
                     if wife_death != "ILLEGITIMATE" and divorce_date != "ILLEGITIMATE" and (wife_death - divorce_date).days < 0:
                         self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
+    
+    def less_than_150_years_old(self):
+        ''' US07 Death should be less than 150 years after birth for dead people, and current date should be less than 150 years after birth for all living people'''
+        for individual in self.individuals.values():
+            if individual.age == "NA":
+                pass
+            elif individual.age >= 150:
+                self.add_errors += [f"ERROR: INDIVIDUAL: US07 {individual.name} age is {individual.age} which is older than 150 years old."]
 
     def print_user_story_errors(self):
         '''This function will print all the errors that have been compiled into the list of errors'''

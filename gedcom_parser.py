@@ -19,6 +19,10 @@ class Read_GEDCOM:
         self.individuals_ptable = PrettyTable(field_names = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
         self.recentDeathTable = PrettyTable(field_names=["ID", "Name", "Death"])  # create a ptable for recent deaths
         self.recentSurvivorTable = PrettyTable(field_names=["Dead Relative ID", "Dead Relative Name", "Survivor ID", "Survivor Name", "Relation"])
+<<<<<<< Updated upstream
+=======
+        self.childrenInOrderTable = PrettyTable(field_names=["ID", "Children"])  # create a ptable for recent deaths
+>>>>>>> Stashed changes
         self.analyze_GEDCOM()
         if ptables: #Makes pretty tables for the data
             self.create_indi_ptable()
@@ -30,9 +34,14 @@ class Read_GEDCOM:
         self.listMultipleBirths()
         self.listRecentSurvivors()
         self.marriageAfter14()
-        self.birthBeforeMarriageOfParents()
         self.birthsLessThanFive()
         self.uniqueFirstNameInFamily()
+<<<<<<< Updated upstream
+=======
+        # self.birthBeforeMarriageOfParents()
+        self.orderSiblingsByAge()
+        self.correspondingEntries()
+>>>>>>> Stashed changes
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -183,10 +192,14 @@ class Read_GEDCOM:
                 for ind2 in self.individuals:
                     if self.individuals[ind].famc == self.individuals[ind2].famc and self.individuals[ind].name != self.individuals[ind2].name:
                         if self.individuals[ind].birth == self.individuals[ind2].birth:
+<<<<<<< Updated upstream
                             print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US32: List all multiple Births; {self.individuals[ind].name} has the same birthday as: {self.individuals[ind2].name}", file=f)
+=======
+>>>>>>> Stashed changes
                             if (ind in idList):
                                 continue
                             else:
+                                print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US32: List all multiple Births; {self.individuals[ind].name} has the same birthday as: {self.individuals[ind2].name}", file=f)
                                 idList.append(ind)
         return idList
     
@@ -206,7 +219,7 @@ class Read_GEDCOM:
                         list_birthdays = count_dict.values()
                         if max(list_birthdays) <= 5:
                             continue
-                        else:
+                        elif(fam not in idList):
                             print(f"ERROR: FAMILY: {fam}. US14: Number of children born in a single birth should not be greater than 5", file=f)
                             idList.append(fam)
         return idList
@@ -238,6 +251,53 @@ class Read_GEDCOM:
                     print(f"WARNING: FAMILY: US15: {fam}: More than 15 siblings are in this family", file = f)
         return idList
 
+<<<<<<< Updated upstream
+=======
+    #Function for US26's unittest: All family roles (spouse, child) specified in an individual record should have
+    #corresponding entries in the corresponding family records. Likewise, all individual roles (spouse, child)
+    # specified in family records should have corresponding entries in the corresponding  individual's records.
+    # I.e. the information in the individual and family records should be consistent.
+    def correspondingEntries(self):
+        idList = []
+        with open("Sprintoutput.txt", "a") as f:
+            for ind in self.individuals:
+                if self.individuals[ind].famc == "NA" and self.individuals[ind].fams == "NA":
+                    continue
+                else:
+                    # Checks if individual has a spouse and corresponding entree
+                    if self.individuals[ind].fams != "NA":
+                        fam = self.individuals[ind].fams
+                        for fa in fam:
+                            if ind != self.family[fa].husband and ind != self.family[fa].wife:
+                                print(f"WARNING: INDIVIDUAL: US26: {ind}: does not have corresponding entree as a spouse in family {fa}", file = f)
+                                idList.append(ind)
+                    # Checks if individual has a child and corresponding entree
+                    if self.individuals[ind].famc != "NA":
+                        fam = self.individuals[ind].famc
+                        if ind not in self.family[fam].children:
+                            print(f"WARNING: INDIVIDUAL: US26: {ind}: does not have corresponding entree as a child in family {fam}", file = f)
+                            idList.append(ind)
+        return idList
+        
+
+    # Function for US28: List siblings in families by decreasing age, i.e. oldest siblings first
+    def orderSiblingsByAge(self):
+        idList = []
+        with open("Sprintoutput.txt", "a") as f:
+            for fam in self.family:
+                if(self.family[fam].children != 'NA' and len(self.family[fam].children) > 1):
+                    chil = dict()
+                    for c in self.family[fam].children:
+                        age = self.individuals[c].age
+                        chil[c] = age
+                    sortedChil = sorted(chil.items(), key=lambda item: item[1], reverse = True)
+                # self.childrenInOrderTable.add_row([fam, sortedChil])
+                # idList.append(sortedChil)
+            # print("LIST: US28: Order Siblings by Age:", file=f)
+            # print(self.childrenInOrderTable, file=f)
+        return idList
+
+>>>>>>> Stashed changes
     def file_reading_gen(self, path, sep = "\t"):
         '''This is a file reading generator that reads the GEDCOM function line by line. The function will first check for bad inputs and raise an error if it detects any.'''
         try: #This tries to open the file and returns an error if it can not open the file. The code continues if opening the file is successful
@@ -259,7 +319,7 @@ class Read_GEDCOM:
                 individual.fams = "NA"
             self.individuals_ptable.add_row([ID, individual.name, individual.sex, individual.birth, individual.age, individual.alive, individual.death, individual.famc, individual.fams])
         print(self.individuals_ptable)
-        #write individuals table to output file
+        #write individuals table to output
         with open("Sprintoutput.txt", "w") as f:
             print("Individuals", file=f)
             print(self.individuals_ptable, file=f)
@@ -314,7 +374,8 @@ class Read_GEDCOM:
         '''This creates a Pretty Table that is a Family summary of each family's ID, when they were married, when they got divorced, the Husband ID, the Husband Name, the Wife ID, the Wife Name, and their children.'''
         print("Family Table")
         for ID, fam in self.family.items():
-            self.family_ptable.add_row([ID, fam.marriage, fam.divorce, fam.husband, self.individuals[fam.husband].name, fam.wife, self.individuals[fam.wife].name, fam.children])   
+            self.family_ptable.add_row([ID, fam.marriage, fam.divorce, fam.husband, self.individuals[fam.husband].name, fam.wife, self.individuals[fam.wife].name, fam.children]) 
+        # self.orderSiblingsByAge()  
         print(self.family_ptable)
         #append families table to output file
         with open("Sprintoutput.txt", "a") as f:

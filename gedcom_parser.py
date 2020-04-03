@@ -39,6 +39,11 @@ class Read_GEDCOM:
         self.birthBeforeMarriageOfParents()
         self.birthsLessThanFive()
         self.uniqueFirstNameInFamily()
+<<<<<<< Updated upstream
+=======
+        self.orderSiblingsByAge()
+        self.correspondingEntries()
+>>>>>>> Stashed changes
         self.correctGenderForRole()
         self.maleLastNames()
         self.siblingSpacing()

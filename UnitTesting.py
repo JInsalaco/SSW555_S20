@@ -99,6 +99,17 @@ class TestUserStories(unittest.TestCase):
     def test_uniqueFirstNameInFamily(self): # tests US25: Unique first names in families
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertEqual(['I17', 'I18'],obj.uniqueFirstNameInFamily())
+<<<<<<< Updated upstream
+=======
+        
+    def test_correspondingEntries(self): # tests US26's unittest: Corresponding Entries
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['I19', 'I23'], obj.correspondingEntries())
+    
+    def test_orderSiblingsByAge(self): # tests US 28: Order Children By Age
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['F1', 'F2', 'F3', 'F4', 'F5', 'F6'],obj.orderSiblingsByAge())
+>>>>>>> Stashed changes
 
     def test_correctGenderForRole(self):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")

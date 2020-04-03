@@ -19,10 +19,6 @@ class Read_GEDCOM:
         self.individuals_ptable = PrettyTable(field_names = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
         self.recentDeathTable = PrettyTable(field_names=["ID", "Name", "Death"])  # create a ptable for recent deaths
         self.recentSurvivorTable = PrettyTable(field_names=["Dead Relative ID", "Dead Relative Name", "Survivor ID", "Survivor Name", "Relation"])
-<<<<<<< Updated upstream
-=======
-        self.childrenInOrderTable = PrettyTable(field_names=["ID", "Children"])  # create a ptable for recent deaths
->>>>>>> Stashed changes
         self.analyze_GEDCOM()
         if ptables: #Makes pretty tables for the data
             self.create_indi_ptable()
@@ -36,12 +32,6 @@ class Read_GEDCOM:
         self.marriageAfter14()
         self.birthsLessThanFive()
         self.uniqueFirstNameInFamily()
-<<<<<<< Updated upstream
-=======
-        # self.birthBeforeMarriageOfParents()
-        self.orderSiblingsByAge()
-        self.correspondingEntries()
->>>>>>> Stashed changes
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -192,14 +182,10 @@ class Read_GEDCOM:
                 for ind2 in self.individuals:
                     if self.individuals[ind].famc == self.individuals[ind2].famc and self.individuals[ind].name != self.individuals[ind2].name:
                         if self.individuals[ind].birth == self.individuals[ind2].birth:
-<<<<<<< Updated upstream
                             print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US32: List all multiple Births; {self.individuals[ind].name} has the same birthday as: {self.individuals[ind2].name}", file=f)
-=======
->>>>>>> Stashed changes
                             if (ind in idList):
                                 continue
                             else:
-                                print(f"ERROR: INDIVIDUALS: {ind} and {ind2}. US32: List all multiple Births; {self.individuals[ind].name} has the same birthday as: {self.individuals[ind2].name}", file=f)
                                 idList.append(ind)
         return idList
     
@@ -251,8 +237,6 @@ class Read_GEDCOM:
                     print(f"WARNING: FAMILY: US15: {fam}: More than 15 siblings are in this family", file = f)
         return idList
 
-<<<<<<< Updated upstream
-=======
     #Function for US26's unittest: All family roles (spouse, child) specified in an individual record should have
     #corresponding entries in the corresponding family records. Likewise, all individual roles (spouse, child)
     # specified in family records should have corresponding entries in the corresponding  individual's records.
@@ -297,7 +281,6 @@ class Read_GEDCOM:
             # print(self.childrenInOrderTable, file=f)
         return idList
 
->>>>>>> Stashed changes
     def file_reading_gen(self, path, sep = "\t"):
         '''This is a file reading generator that reads the GEDCOM function line by line. The function will first check for bad inputs and raise an error if it detects any.'''
         try: #This tries to open the file and returns an error if it can not open the file. The code continues if opening the file is successful

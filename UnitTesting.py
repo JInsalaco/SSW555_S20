@@ -46,7 +46,7 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertEqual(['I30', 'I31', 'I32', 'I33', 'I34', 'I35'],obj.listMultipleBirths())
 
-    def test_listRecentDeaths(self): # tests US15: There should be fewer than 15 siblings in a family
+    def test_listRecentDeaths(self): # tests US36: ListRecentDeaths
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertEqual(['I3', 'I6', 'I20'], obj.listRecentDeaths())
     
@@ -62,18 +62,25 @@ class TestUserStories(unittest.TestCase):
         for error in GEDCOM_file_errors:
             self.assertIn(error, gedcom_parser.Read_GEDCOM('TargaryenFamily15Siblings.ged', False, False).user_story_errors)
 
-    def test_listRecentSurvivors(self): # tests US15: There should be fewer than 15 siblings in a family
+    def test_listRecentSurvivors(self): # tests US37: List Recent Survivors
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(['I2', 'I1', 'I37', 'I39', 'I40', 'I41'], obj.listRecentSurvivors())
 
     def test_birthsLessThanFive(self): # tests US17: No more than five siblings should be born at the same time
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['F2', 'F2', 'F3', 'F3'],obj.birthsLessThanFive())
+        self.assertEqual(['F2', 'F3'],obj.birthsLessThanFive())
         
     def test_uniqueFirstNameInFamily(self): # tests US25: Unique first names in families
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertEqual(['I17', 'I18'],obj.uniqueFirstNameInFamily())
-
+        
+    def test_correspondingEntries(self): # tests US26's unittest: Corresponding Entries
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['I42'],obj.correspondingEntries())
+    
+    # def test_orderSiblingsByAge(self): # tests US 28: Order Children By Age
+    #     obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+    #     self.assertEqual([],obj.orderSiblingsByAge())
 
 if __name__ == '__main__':
     unittest.main()

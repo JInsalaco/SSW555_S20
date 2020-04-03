@@ -275,10 +275,10 @@ class Read_GEDCOM:
                         age = self.individuals[c].age
                         chil[c] = age
                     sortedChil = sorted(chil.items(), key=lambda item: item[1], reverse = True)
-                # self.childrenInOrderTable.add_row([fam, sortedChil])
-                # idList.append(sortedChil)
-            # print("LIST: US28: Order Siblings by Age:", file=f)
-            # print(self.childrenInOrderTable, file=f)
+                self.childrenInOrderTable.add_row([fam, sortedChil])
+                idList.append(sortedChil)
+            print("LIST: US28: Order Siblings by Age:", file=f)
+            print(self.childrenInOrderTable, file=f)
         return idList
 
     def file_reading_gen(self, path, sep = "\t"):

@@ -76,11 +76,11 @@ class TestUserStories(unittest.TestCase):
         
     def test_correspondingEntries(self): # tests US26's unittest: Corresponding Entries
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['I42'],obj.correspondingEntries())
+        self.assertEqual(['I42'], obj.correspondingEntries())
     
-    # def test_orderSiblingsByAge(self): # tests US 28: Order Children By Age
-    #     obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-    #     self.assertEqual([],obj.orderSiblingsByAge())
+    def test_orderSiblingsByAge(self): # tests US 28: Order Children By Age
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertEqual(['F1', 'F2', 'F3', 'F4'],obj.orderSiblingsByAge())
 
 if __name__ == '__main__':
     unittest.main()

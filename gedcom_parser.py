@@ -19,6 +19,7 @@ class Read_GEDCOM:
         self.individuals_ptable = PrettyTable(field_names = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
         self.recentDeathTable = PrettyTable(field_names=["ID", "Name", "Death"])  # create a ptable for recent deaths
         self.recentSurvivorTable = PrettyTable(field_names=["Dead Relative ID", "Dead Relative Name", "Survivor ID", "Survivor Name", "Relation"])
+        self.childrenInOrderTable = PrettyTable(field_names=["ID", "Children"])
         self.analyze_GEDCOM()
         if ptables: #Makes pretty tables for the data
             self.create_indi_ptable()
@@ -32,6 +33,7 @@ class Read_GEDCOM:
         self.marriageAfter14()
         self.birthsLessThanFive()
         self.uniqueFirstNameInFamily()
+        self.orderSiblingsByAge()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -275,8 +277,8 @@ class Read_GEDCOM:
                         age = self.individuals[c].age
                         chil[c] = age
                     sortedChil = sorted(chil.items(), key=lambda item: item[1], reverse = True)
-                self.childrenInOrderTable.add_row([fam, sortedChil])
-                idList.append(sortedChil)
+                    self.childrenInOrderTable.add_row([fam, sortedChil])
+                idList.append(fam)
             print("LIST: US28: Order Siblings by Age:", file=f)
             print(self.childrenInOrderTable, file=f)
         return idList

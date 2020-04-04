@@ -39,11 +39,13 @@ class Read_GEDCOM:
         self.birthBeforeMarriageOfParents()
         self.birthsLessThanFive()
         self.uniqueFirstNameInFamily()
-        self.orderSiblingsByAge()
-        self.correspondingEntries()
+        # self.orderSiblingsByAge()
+        # self.correspondingEntries()
         self.correctGenderForRole()
         self.maleLastNames()
         self.siblingSpacing()
+        self.uniqueFamiliesBySpouses()
+        self.listLargeAgeDifferences()
         self.printIllegitimateDateErrors()
         self.parentsNotTooOld()
         self.upcomingAnniversaries()
@@ -207,7 +209,6 @@ class Read_GEDCOM:
                                 idList.append(ind)
         return idList
     
-    
     #Function for US32's unittest. List all multiple births in a GEDCOM file.
     #Finding twins, triplets, etc.
     def listMultipleBirths(self):
@@ -273,7 +274,7 @@ class Read_GEDCOM:
                     idList.append(fam)
                     print(f"WARNING: FAMILY: US15: {fam}: More than 15 siblings are in this family", file = f)
         return idList
-    
+
      #Function for US26's unittest: All family roles (spouse, child) specified in an individual record should have
     #corresponding entries in the corresponding family records. Likewise, all individual roles (spouse, child)
     # specified in family records should have corresponding entries in the corresponding  individual's records.
@@ -366,7 +367,37 @@ class Read_GEDCOM:
                             idList.append(children)
                             print(f"ERROR: US13: {self.individuals[child].name } and {self.individuals[children].name} have birthdays too close together", file=f)
             idList = list(dict.fromkeys(idList))
-            print(idList)
+            return idList
+
+    # Function for US24. No more than one family with the same spouses by name and the same marriage date should appear in a GEDCOM file
+    def uniqueFamiliesBySpouses(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for fam in self.family:
+                family = self.family[fam]
+                h_name = self.individuals[family.husband].name
+                w_name = self.individuals[family.wife].name
+                marriage_date = family.marriage
+                for famo in self.family:
+                    if(fam != famo and self.individuals[self.family[famo].husband].name == h_name and self.individuals[self.family[famo].wife].name == w_name and self.family[famo].marriage == marriage_date):
+                        print(f"ERROR: US 24: {fam} and {famo} is an identical families", file=f)
+                        idList.append(fam)
+            return idList
+
+    # Function for US34. List all couples who were married when the older spouse was more than twice as old as the younger spouse.
+    def listLargeAgeDifferences(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for fam in self.family:
+                family = self.family[fam]
+                years_married = datetime.date.today().year - family.marriage.year
+                if years_married >= 0 and self.individuals[family.wife].age != "NA" and self.individuals[family.husband].age != "NA":
+                    husband_married_age = int(self.individuals[family.husband].age) - years_married
+                    wife_married_age = int(self.individuals[family.wife].age) - years_married
+                    if husband_married_age > 2*wife_married_age or wife_married_age > 2*husband_married_age:
+                        idList.append(family.husband)
+                        idList.append(family.wife)
+                        print(f"ERROR: US34: {family.husband} and {family.wife} have a large age difference", file=f)
             return idList
 
     # Function for US42's unittest. Return the list of illegitimate dates that were accumulated

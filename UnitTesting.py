@@ -32,7 +32,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_dates_after_today2(self): # tests US01: dates cannot be in the future
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(['I9','I10', 'F1', 'I40'], obj.checkDatesAfterToday())
+        self.assertCountEqual(['I9','I10', 'F1', 'I40', 'F7'], obj.checkDatesAfterToday())
 
     def test_birth_after_marriage2(self): # tests US02: birth cannot occur after marriage
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -86,7 +86,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_marriageAfter14(self): # tests US10: Marriage should be at least 14 years after birth of both spouses (parents must be at least 14 years old) 
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['F2', 'F3', 'F4', 'F5', 'F6'], obj.marriageAfter14())
+        self.assertEqual(['F2', 'F3', 'F4', 'F5', 'F6', 'F7'], obj.marriageAfter14())
 
     def test_birthBeforeMarriage(self): # tests US08: Children should be born after marriage of parents (and not more than 9 months after their divorce)
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -99,17 +99,14 @@ class TestUserStories(unittest.TestCase):
     def test_uniqueFirstNameInFamily(self): # tests US25: Unique first names in families
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertEqual(['I17', 'I18'],obj.uniqueFirstNameInFamily())
-<<<<<<< Updated upstream
-=======
         
-    def test_correspondingEntries(self): # tests US26's unittest: Corresponding Entries
-        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['I19', 'I23'], obj.correspondingEntries())
+    #def test_correspondingEntries(self): # tests US26's unittest: Corresponding Entries
+    #    obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+    #    self.assertEqual(['I19', 'I23'], obj.correspondingEntries())
     
-    def test_orderSiblingsByAge(self): # tests US 28: Order Children By Age
-        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['F1', 'F2', 'F3', 'F4', 'F5', 'F6'],obj.orderSiblingsByAge())
->>>>>>> Stashed changes
+    #def test_orderSiblingsByAge(self): # tests US 28: Order Children By Age
+    #    obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+    #    self.assertEqual(['F1', 'F2', 'F3', 'F4', 'F5', 'F6'],obj.orderSiblingsByAge())
 
     def test_correctGenderForRole(self):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -133,7 +130,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_upcomingAnniversaries(self): # tests US39: List all upcoming wedding anniversaries
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(["F4"], obj.upcomingAnniversaries())
+        self.assertCountEqual(["F4", "F5"], obj.upcomingAnniversaries())
     
     def test_recentBirths(self): # tests US35: List all recent births in last 30 days
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -146,5 +143,14 @@ class TestUserStories(unittest.TestCase):
     def test_list_deceased(self): # tests US09: Children should be born before death of mother and before 9 months after the death of their father
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(['I3', 'I4', 'I5', 'I6', 'I7', 'I8', 'I9', 'I10', 'I11', 'I12', 'I13', 'I14', 'I15', 'I16', 'I17', 'I18', 'I19', 'I20', 'I29', 'I36', 'I38', 'I42', 'I43'], obj.list_deceased())
+
+    def test_uniqueFamiliesBySpouses(self): # tests US24: 
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(['F1', 'F7'], obj.uniqueFamiliesBySpouses())
+
+    def test_listLargeAgeDifferences(self): # tests US34: 
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(['I2', 'I4', 'I7', 'I8', 'I6', 'I39', 'I24', 'I42'], obj.listLargeAgeDifferences())
+
 if __name__ == '__main__':
     unittest.main()

@@ -64,7 +64,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_marriage_before_death(self):
         '''US05 Unit Test: This is a test to see if the parser will catch instances of the death of an individual occuring before their marriage'''
-        GEDCOM_file_errors = ["ERROR: FAMILY: US05: Married on 2023-04-08 which is after Lyanna /Stark/'s death on 2020-03-03", "ERROR: FAMILY: US05: Married on 0305-04-29 which is after Maggy /Tyrell/'s death on 0304-07-23"]
+        GEDCOM_file_errors = ["ERROR: FAMILY: US05: Married on 2023-04-08 which is after Lyanna /Stark/'s death on 2020-03-31", "ERROR: FAMILY: US05: Married on 0305-04-29 which is after Maggy /Tyrell/'s death on 0304-07-23"]
         for error in GEDCOM_file_errors:
             self.assertIn(error, gedcom_parser.Read_GEDCOM('TargaryenFamily15Siblings.ged', False, False).user_story_errors)
 
@@ -76,9 +76,8 @@ class TestUserStories(unittest.TestCase):
     
     def test_less_than_150_years_old(self):
         '''US07 Unit Test: This is a test to see if the parser will catch instances of an individual living to be older than 150 years old.'''
-        GEDCOM_file_errors = ["ERROR: INDIVIDUAL: US07 Aegon /Targaryen/ age is 1737 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Bobby /Targaryen/ age is 1686 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Daenerys /Targaryen/ age is 2715 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Donaldo /Targaryen/ age is 1704 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Johnny /Targaryen/ age is 1686 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Jon /Snow/ age is 1737 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Jon /Targaryen/ age is 1686 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Lyanna /Stark/ age is 1753 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Lyanna /Targaryen/ age is 1697 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Pomp /Targaryen/ age is 1679 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Puq /Targaryen/ age is 1721 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Rhaegar /Targaryen/ age is 1735 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Rob /Targaryen/ age is 1686 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Siobhan /Targaryen/ age is 1686 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Tut /Targaryen/ age is 1709 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Wi /Targaryen/ age is 1737 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Ya /Targaryen/ age is 1699 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Yo /Targaryen/ age is 1686 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Yu /Targaryen/ age is 1737 which is older than 150 years old."]
-        for error in GEDCOM_file_errors:
-            self.assertIn(error, gedcom_parser.Read_GEDCOM('TargaryenFamily15Siblings.ged', False, False).user_story_errors)
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(['I1', 'I2', 'I3', 'I6', 'I10', 'I21', 'I22', 'I23', 'I24', 'I25', 'I26', 'I27', 'I28', 'I30', 'I31', 'I32', 'I33', 'I34', 'I35'], obj.less_than_150_years_old())
 
     def test_listRecentSurvivors(self): # tests US15: There should be fewer than 15 siblings in a family
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")

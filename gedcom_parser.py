@@ -52,6 +52,7 @@ class Read_GEDCOM:
         self.recentBirths()
         self.birthBeforeDeathOfParents()
         self.list_deceased()
+        self.less_than_150_years_old()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -552,6 +553,18 @@ class Read_GEDCOM:
             print("LIST: US37: Recent Survivors:", file=f)
             print(self.recentSurvivorTable, file = f)
             return idList
+
+    def less_than_150_years_old(self):
+        ''' US07 Death should be less than 150 years after birth for dead people, and current date should be less than 150 years after birth for all living people'''
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for indID in self.individuals:
+                if self.individuals[indID].age == "NA":
+                    pass
+                elif self.individuals[indID].age >= 150:
+                    idList.append(indID)
+                    print(f"ERROR: INDIVIDUAL: US07 {self.individuals[indID].name} age is {self.individuals[indID].age} which is older than 150 years old.", file=f)
+            return idList
     
     def list_deceased(self):
         '''US29: List all deceased individuals in a GEDCOM file'''
@@ -650,7 +663,7 @@ class UserStories:
         self.marriage_before_divorce()
         self.marriage_before_death()
         self.divorce_before_death()
-        self.less_than_150_years_old()
+
         if print_all_errors == True:
             self.print_user_story_errors()
 
@@ -710,13 +723,7 @@ class UserStories:
                     if wife_death != "ILLEGITIMATE" and divorce_date != "ILLEGITIMATE" and (wife_death - divorce_date).days < 0:
                         self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
     
-    def less_than_150_years_old(self):
-        ''' US07 Death should be less than 150 years after birth for dead people, and current date should be less than 150 years after birth for all living people'''
-        for individual in self.individuals.values():
-            if individual.age == "NA":
-                pass
-            elif individual.age >= 150:
-                self.add_errors += [f"ERROR: INDIVIDUAL: US07 {individual.name} age is {individual.age} which is older than 150 years old."]
+
 
     def print_user_story_errors(self):
         '''This function will print all the errors that have been compiled into the list of errors'''

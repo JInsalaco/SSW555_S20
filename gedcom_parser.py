@@ -23,6 +23,7 @@ class Read_GEDCOM:
         self.upcomingAnniversariesTable = PrettyTable(field_names=["Family ID", "Marriage Date", "Husband", "Wife"])
         self.recentBirthsTable = PrettyTable(field_names=["ID", "Name", "Birthday"])
         self.deceased_table = PrettyTable(field_names=["ID", "Name", "Death Day"])
+        self.childrenInOrderTable = PrettyTable(field_names=["Family ID", "Children"])
         self.illegitimateDatesList = []
         self.illegitimateDatesErrorList = []
         self.analyze_GEDCOM()
@@ -39,8 +40,8 @@ class Read_GEDCOM:
         self.birthBeforeMarriageOfParents()
         self.birthsLessThanFive()
         self.uniqueFirstNameInFamily()
-        # self.orderSiblingsByAge()
-        # self.correspondingEntries()
+        self.orderSiblingsByAge()
+        self.correspondingEntries()
         self.correctGenderForRole()
         self.maleLastNames()
         self.siblingSpacing()
@@ -313,10 +314,10 @@ class Read_GEDCOM:
                         age = self.individuals[c].age
                         chil[c] = age
                     sortedChil = sorted(chil.items(), key=lambda item: item[1], reverse = True)
-                # self.childrenInOrderTable.add_row([fam, sortedChil])
-                # idList.append(sortedChil)
-            # print("LIST: US28: Order Siblings by Age:", file=f)
-            # print(self.childrenInOrderTable, file=f)
+                    self.childrenInOrderTable.add_row([fam, sortedChil])
+                idList.append(fam)
+            print("LIST: US28: Order Siblings by Age:", file=f)
+            print(self.childrenInOrderTable, file=f)
         return idList
 
     # Function for US21's unittest. Husbands must be males and wives must be females.

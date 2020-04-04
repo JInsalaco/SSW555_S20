@@ -273,6 +273,49 @@ class Read_GEDCOM:
                     idList.append(fam)
                     print(f"WARNING: FAMILY: US15: {fam}: More than 15 siblings are in this family", file = f)
         return idList
+    
+     #Function for US26's unittest: All family roles (spouse, child) specified in an individual record should have
+    #corresponding entries in the corresponding family records. Likewise, all individual roles (spouse, child)
+    # specified in family records should have corresponding entries in the corresponding  individual's records.
+    # I.e. the information in the individual and family records should be consistent.
+    def correspondingEntries(self):
+        idList = []
+        with open("Sprintoutput.txt", "a") as f:
+            for ind in self.individuals:
+                if self.individuals[ind].famc == "NA" and self.individuals[ind].fams == "NA":
+                    continue
+                else:
+                    # Checks if individual has a spouse and corresponding entree
+                    if self.individuals[ind].fams != "NA":
+                        fam = self.individuals[ind].fams
+                        for fa in fam:
+                            if ind != self.family[fa].husband and ind != self.family[fa].wife:
+                                print(f"WARNING: INDIVIDUAL: US26: {ind}: does not have corresponding entree as a spouse in family {fa}", file = f)
+                                idList.append(ind)
+                    # Checks if individual has a child and corresponding entree
+                    if self.individuals[ind].famc != "NA":
+                        fam = self.individuals[ind].famc
+                        if ind not in self.family[fam].children:
+                            print(f"WARNING: INDIVIDUAL: US26: {ind}: does not have corresponding entree as a child in family {fam}", file = f)
+                            idList.append(ind)
+        return idList      
+
+    # Function for US28: List siblings in families by decreasing age, i.e. oldest siblings first
+    def orderSiblingsByAge(self):
+        idList = []
+        with open("Sprintoutput.txt", "a") as f:
+            for fam in self.family:
+                if(self.family[fam].children != 'NA' and len(self.family[fam].children) > 1):
+                    chil = dict()
+                    for c in self.family[fam].children:
+                        age = self.individuals[c].age
+                        chil[c] = age
+                    sortedChil = sorted(chil.items(), key=lambda item: item[1], reverse = True)
+                # self.childrenInOrderTable.add_row([fam, sortedChil])
+                # idList.append(sortedChil)
+            # print("LIST: US28: Order Siblings by Age:", file=f)
+            # print(self.childrenInOrderTable, file=f)
+        return idList
 
     # Function for US21's unittest. Husbands must be males and wives must be females.
     def correctGenderForRole(self):

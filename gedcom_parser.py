@@ -558,9 +558,9 @@ class Read_GEDCOM:
     def less_than_150_years_old(self):
         ''' US07 Death should be less than 150 years after birth for dead people, and current date should be less than 150 years after birth for all living people'''
         with open("SprintOutput.txt", "a") as f:
-            idList = []
+            idList = [] #Stores the ID of the people who are older than 150 years old in a list for testing purposes
             for indID in self.individuals:
-                if self.individuals[indID].age == "NA":
+                if self.individuals[indID].age == "NA": #Skips the person if they apparantly do not have an age attributed to them
                     pass
                 elif self.individuals[indID].age >= 150:
                     idList.append(indID)
@@ -575,7 +575,7 @@ class Read_GEDCOM:
                 if self.individuals[indID].death != None:
                     idList.append(indID)
                     self.deceased_table.add_row([indID, self.individuals[indID].name, self.individuals[indID].death])
-            print("LIST: US29: List Deceased: ", file = f)
+            print("LIST: US29: List Deceased: ", file = f) #Creates and adds individuals who have died to a new pretty table
             print(self.deceased_table, file = f)
             return idList
 

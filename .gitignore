@@ -2,6 +2,6 @@
 SprintOutput.txt
 __pycache__/gedcom_parser.cpython-38.pyc
 __pycache__/gedcom_parser.cpython-38.pyc
-.idea
-.vscode
-__pycache__
+.idea/
+.vscode/
+__pycache__/

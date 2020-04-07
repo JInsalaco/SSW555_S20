@@ -24,6 +24,7 @@ class Read_GEDCOM:
         self.recentBirthsTable = PrettyTable(field_names=["ID", "Name", "Birthday"])
         self.deceased_table = PrettyTable(field_names=["ID", "Name", "Death Day"])
         self.childrenInOrderTable = PrettyTable(field_names=["Family ID", "Children"])
+        self.upcomingBirthdaysTable = PrettyTable(field_names=["ID", "Name", "Birthday"])
         self.illegitimateDatesList = []
         self.illegitimateDatesErrorList = []
         self.analyze_GEDCOM()
@@ -54,6 +55,7 @@ class Read_GEDCOM:
         self.birthBeforeDeathOfParents()
         self.list_deceased()
         self.less_than_150_years_old()
+        self.listUpcomingBirthdays()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -579,6 +581,20 @@ class Read_GEDCOM:
             print(self.deceased_table, file = f)
             return idList
 
+    def listUpcomingBirthdays(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for indID in self.individuals:
+                if self.individuals[indID].alive:
+                    curr_bday = self.individuals[indID].birth
+                    today = datetime.date.today()
+                    date_30days_from_today = today + relativedelta(days=30)
+                    if curr_bday > today and curr_bday <= date_30days_from_today:
+                        idList.append(indID)
+                        self.upcomingBirthdaysTable.add_row([indID, self.individuals[indID].name, self.individuald[indID].birth])
+            print(f"LIST: US38: Upcoming Birthdays:", file=f)
+            print(self.upcomingBirthdaysTable, file=f)
+            return idList
 
     def create_fam_ptable(self):
         '''This creates a Pretty Table that is a Family summary of each family's ID, when they were married, when they got divorced, the Husband ID, the Husband Name, the Wife ID, the Wife Name, and their children.'''

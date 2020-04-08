@@ -89,7 +89,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_birthBeforeMarriage(self): # tests US08: Children should be born after marriage of parents (and not more than 9 months after their divorce)
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(['I38', 'I37', 'I1', 'I4', 'I5', 'I22', 'I20', 'I23', 'I9', 'I12', 'I15', 'I16', 'I17', 'I14', 'I21', 'I10', 'I11', 'I18', 'I2', 'I13', 'I19', 'I40', 'I46'], obj.birthBeforeMarriageOfParents())
+        self.assertCountEqual(['I38', 'I37', 'I37', 'I1', 'I4', 'I5', 'I22', 'I20', 'I23', 'I9', 'I12', 'I15', 'I16', 'I17', 'I14', 'I21', 'I10', 'I11', 'I18', 'I2', 'I13', 'I19', 'I40', 'I46', 'I39'], obj.birthBeforeMarriageOfParents())
 
     def test_birthsLessThanFive(self): # tests US17: No more than five siblings should be born at the same time
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -137,7 +137,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_birthBeforeDeathOfParents(self): # tests US09: Children should be born before death of mother and before 9 months after the death of their father
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(['I25', 'I31', 'I29', 'I33', 'I27', 'I30', 'I6', 'I36', 'I28', 'I35', 'I32', 'I45', 'I24', 'I34', 'I26', 'I46', 'I12', 'I9', 'I10', 'I20', 'I2', 'I23', 'I19', 'I11', 'I14', 'I13', 'I40'], obj.birthBeforeDeathOfParents())
+        self.assertCountEqual(['I25', 'I37', 'I31', 'I29', 'I33', 'I27', 'I30', 'I6', 'I36', 'I28', 'I35', 'I32', 'I45', 'I24', 'I34', 'I26', 'I46', 'I12', 'I9', 'I10', 'I20', 'I2', 'I23', 'I19', 'I11', 'I14', 'I13', 'I40', 'I39'], obj.birthBeforeDeathOfParents())
     
     def test_list_deceased(self): # tests US29: List all deceased individuals in a GEDCOM file
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -150,6 +150,14 @@ class TestUserStories(unittest.TestCase):
     def test_listLargeAgeDifferences(self): # tests US34: 
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(['I2', 'I4', 'I7', 'I8', 'I6', 'I39', 'I24', 'I42'], obj.listLargeAgeDifferences())
+
+    def test_listOrphans(self): # tests US33: List orphans
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["I39", "I37"], obj.listOrphans())
+
+    def test_uniqueIDs(self): # tests US22: Reject non-unique IDs
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["I47"], obj.getNonUniqueIDsList())
 
 if __name__ == '__main__':
     unittest.main()

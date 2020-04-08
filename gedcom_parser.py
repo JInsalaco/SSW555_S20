@@ -21,12 +21,15 @@ class Read_GEDCOM:
         self.recentDeathTable = PrettyTable(field_names=["ID", "Name", "Death"])  # create a ptable for recent deaths
         self.recentSurvivorTable = PrettyTable(field_names=["Dead Relative ID", "Dead Relative Name", "Survivor ID", "Survivor Name", "Relation"])
         self.upcomingAnniversariesTable = PrettyTable(field_names=["Family ID", "Marriage Date", "Husband", "Wife"])
+        self.orphansTable = PrettyTable(field_names=["Child ID", "Child Name", "Family ID"])
         self.recentBirthsTable = PrettyTable(field_names=["ID", "Name", "Birthday"])
         self.deceased_table = PrettyTable(field_names=["ID", "Name", "Death Day"])
         self.childrenInOrderTable = PrettyTable(field_names=["Family ID", "Children"])
         self.upcomingBirthdaysTable = PrettyTable(field_names=["ID", "Name", "Birthday"])
         self.illegitimateDatesList = []
         self.illegitimateDatesErrorList = []
+        self.nonUniqueIDsList = []
+        self.nonUniqueIDsErrors = []
         self.analyze_GEDCOM()
         if ptables: #Makes pretty tables for the data
             self.create_indi_ptable()
@@ -56,6 +59,8 @@ class Read_GEDCOM:
         self.list_deceased()
         self.less_than_150_years_old()
         self.listUpcomingBirthdays()
+        self.listOrphans()
+        self.printNonUniqueIDsErrors()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -69,12 +74,18 @@ class Read_GEDCOM:
             elif len(tokens) == 3 and tokens[0] == '0' and tokens[2] == "INDI":
                 indiv_or_fam = "individual" #Marks the line as individual so that the parse_info function can identify it accordingly
                 ind = tokens[1].replace("@", "") #The GEDCOM file has unnecessary @ symbols and this will get rid of them
-                self.individuals[ind] = Individual() #The instance of the Individual class object is created for this specific IndiID
+                if self.checkUniqueID(ind, indiv_or_fam) ==  True: #Makes sure the ind ID is unique
+                    self.individuals[ind] = Individual() #The instance of the Individual class object is created for this specific IndiID
+                else:
+                    indiv_or_fam = "NA" # alerts parser to not parse any more lines
                 continue
             elif len(tokens) == 3 and tokens[0] == '0' and tokens[2] == "FAM":
                 indiv_or_fam = "family" #Marks the line as family so that the parse_info function can identify it accordingly
                 fam = tokens[1].replace("@", "")
-                self.family[fam] = Family() #The instance of the Family class object is created for this specific FamID
+                if self.checkUniqueID(fam, indiv_or_fam) == True: #Makes sure the fam ID is unique
+                    self.family[fam] = Family() #The instance of the Family class object is created for this specific FamID
+                else:
+                    indiv_or_fam = "NA" # alerts parser to not parse any more lines
                 continue
             if indiv_or_fam in ["family", "individual"]: #This will detect that no new individual or family was created but this line will still be parsed for specific information
                 self.parse_info(tokens, date_identifier_line, ind, fam, indiv_or_fam)
@@ -451,6 +462,51 @@ class Read_GEDCOM:
             print("LIST: US39: Upcoming Anniversaries:", file=f)
             print(self.upcomingAnniversariesTable, file=f)
         return idList
+
+    # Function for US33's unittest: List all orphaned children (both parents dead 
+    # and child < 18 years old) in a GEDCOM file
+    def listOrphans(self):
+        with open("Sprintoutput.txt", "a") as f:
+            idList = []
+            for famID, fam in self.family.items():
+                if self.individuals[fam.husband].alive == False and self.individuals[fam.wife].alive == False:
+                    for childID in fam.children:
+                        if self.individuals[childID].age < 18 and self.individuals[childID].age > 0 and self.individuals[childID].alive == True:
+                            self.orphansTable.add_row([childID, self.individuals[childID].name, famID])
+                            idList.append(childID)
+            print("LIST: US33: Orphaned Children:", file=f)
+            print(self.orphansTable, file=f)
+        return idList
+
+    # Function for US22's unittest. Returns the list of non-unique ID's
+    def getNonUniqueIDsList(self):
+        return self.nonUniqueIDsList
+
+    # Prints non-unique error messages to the output file
+    def printNonUniqueIDsErrors(self):
+        with open("Sprintoutput.txt", "a") as f:
+            for error in self.nonUniqueIDsErrors:
+                print(error, file=f)
+
+    # Function for US22: All individual IDs should be unique 
+    # and all family IDs should be unique. This function gets called in 
+    # the parser to detect repeated IDs.
+    def checkUniqueID(self, id, indiv_or_fam):
+        with open("Sprintoutput.txt", "a") as f:
+            isUnique = True
+            if indiv_or_fam == "individual":
+                if id in list(self.individuals.keys()):
+                    self.nonUniqueIDsList.append(id)
+                    error = f"ERROR: US22: Individual {id} from the GEDCOM file was not added to the individuals table because {id} is not a unique id"
+                    self.nonUniqueIDsErrors.append(error)
+                    isUnique = False
+            elif indiv_or_fam == "family":
+                if id in list(self.family.keys()):
+                    self.nonUniqueIDsList.append(id)
+                    error = f"ERROR: US22: Family {id} was not added to the families table because {id} is not a unique id"
+                    self.nonUniqueIDsErrors.append(error)
+                    isUnique = False
+        return isUnique
 
     # Function for US35's unittest: List all people in a GEDCOM file who were born in the last 30 days
     def recentBirths(self):

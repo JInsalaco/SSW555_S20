@@ -77,7 +77,7 @@ class TestUserStories(unittest.TestCase):
     def test_less_than_150_years_old(self):
         '''US07 Unit Test: This is a test to see if the parser will catch instances of an individual living to be older than 150 years old.'''
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(['I1', 'I2', 'I3', 'I6', 'I10', 'I21', 'I22', 'I23', 'I24', 'I25', 'I26', 'I27', 'I28', 'I30', 'I31', 'I32', 'I33', 'I34', 'I35'], obj.less_than_150_years_old())
+        self.assertCountEqual(['I1', 'I2', 'I3', 'I6', 'I10', 'I21', 'I22', 'I23', 'I24', 'I25', 'I26', 'I27', 'I28', 'I30', 'I31', 'I32', 'I33', 'I34', 'I35', 'I48'], obj.less_than_150_years_old())
 
     def test_listRecentSurvivors(self): # tests US15: There should be fewer than 15 siblings in a family
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -101,7 +101,7 @@ class TestUserStories(unittest.TestCase):
         
     def test_correspondingEntries(self): # tests US26's unittest: Corresponding Entries
        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-       self.assertEqual(['I19', 'I23'], obj.correspondingEntries())
+       self.assertEqual(['I19', 'I23', 'I48'], obj.correspondingEntries())
     
     def test_orderSiblingsByAge(self): # tests US 28: Order Children By Age
        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -161,7 +161,11 @@ class TestUserStories(unittest.TestCase):
 
     def test_listUpcomingBirthdays(self): # tests US38: List upcoming birthdays
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(["I1", "I2", "I27"], obj.listUpcomingBirthdays())
+        self.assertCountEqual(["I1", "I2", "I27", "I48"], obj.listUpcomingBirthdays())
+
+    def test_uniqueNameAndBirthDate(self): # tests US23: all individuals should have unique names and birthdates
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["I18", "I48"], obj.uniqueNameAndBirthDate())
 
 if __name__ == '__main__':
     unittest.main()

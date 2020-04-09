@@ -61,6 +61,7 @@ class Read_GEDCOM:
         self.listUpcomingBirthdays()
         self.listOrphans()
         self.printNonUniqueIDsErrors()
+        self.uniqueNameAndBirthDate()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -650,6 +651,19 @@ class Read_GEDCOM:
                         self.upcomingBirthdaysTable.add_row([indID, self.individuals[indID].name, self.individuals[indID].birth])
             print(f"LIST: US38: Upcoming Birthdays:", file=f)
             print(self.upcomingBirthdaysTable, file=f)
+            return idList
+
+    def uniqueNameAndBirthDate(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            uniqueInds = set()
+            for indID in self.individuals:
+                ind = (self.individuals[indID].name, self.individuals[indID].birth)
+                if ind in uniqueInds:
+                    print(f"ERROR: INDIVIDUAL: US23: {indID}: Individual {indID} has the same name and birth date as an earlier (lower ID numbered) individual", file=f)
+                    idList.append(indID)
+                else:
+                    uniqueInds.add(ind)
             return idList
 
     def create_fam_ptable(self):

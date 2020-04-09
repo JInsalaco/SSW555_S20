@@ -17,7 +17,7 @@
 2 SURN Snow
 1 SEX M
 1 BIRT
-2 DATE 7 MAR 0283
+2 DATE 25 APR 0283
 1 FAMC @F1@
 0 @I2@ INDI
 1 NAME Rhaegar /Targaryen/
@@ -290,7 +290,7 @@
 2 _MARNM Targaryen
 1 SEX M
 1 BIRT
-2 DATE 19 NOV 0315
+2 DATE 16 APR 0315
 1 FAMC @F2@
 0 @I28@ INDI
 1 NAME Lyanna /Targaryen/
@@ -464,7 +464,7 @@
 2 _MARNM Targaryen
 1 SEX F
 1 BIRT
-2 DATE 7 MAR 2020
+2 DATE 30 MAR 2020
 1 FAMC @F2@
 0 @I46@ INDI
 1 NAME Rhaegar /Targaryen/

@@ -159,5 +159,9 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(["I47"], obj.getNonUniqueIDsList())
 
+    def test_listUpcomingBirthdays(self): # tests US38: List upcoming birthdays
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["I1", "I2", "I27"], obj.listUpcomingBirthdays())
+
 if __name__ == '__main__':
     unittest.main()

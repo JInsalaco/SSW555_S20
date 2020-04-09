@@ -645,9 +645,9 @@ class Read_GEDCOM:
                     curr_bday = self.individuals[indID].birth
                     today = datetime.date.today()
                     date_30days_from_today = today + relativedelta(days=30)
-                    if curr_bday > today and curr_bday <= date_30days_from_today:
+                    if curr_bday != "ILLEGITIMATE" and (today.month, today.day) < (curr_bday.month, curr_bday.day) <= (date_30days_from_today.month, date_30days_from_today.day):
                         idList.append(indID)
-                        self.upcomingBirthdaysTable.add_row([indID, self.individuals[indID].name, self.individuald[indID].birth])
+                        self.upcomingBirthdaysTable.add_row([indID, self.individuals[indID].name, self.individuals[indID].birth])
             print(f"LIST: US38: Upcoming Birthdays:", file=f)
             print(self.upcomingBirthdaysTable, file=f)
             return idList

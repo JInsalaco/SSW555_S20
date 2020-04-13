@@ -32,7 +32,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_dates_after_today2(self): # tests US01: dates cannot be in the future
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(['I9','I10', 'F1', 'I40'], obj.checkDatesAfterToday())
+        self.assertCountEqual(['I9','I10', 'F1', 'I40', 'F7'], obj.checkDatesAfterToday())
 
     def test_birth_after_marriage2(self): # tests US02: birth cannot occur after marriage
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -64,7 +64,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_marriage_before_death(self):
         '''US05 Unit Test: This is a test to see if the parser will catch instances of the death of an individual occuring before their marriage'''
-        GEDCOM_file_errors = ["ERROR: FAMILY: US05: Married on 2023-04-08 which is after Lyanna /Stark/'s death on 2020-03-03", "ERROR: FAMILY: US05: Married on 0305-04-29 which is after Maggy /Tyrell/'s death on 0304-07-23"]
+        GEDCOM_file_errors = ["ERROR: FAMILY: US05: Married on 2023-04-08 which is after Lyanna /Stark/'s death on 2020-03-31", "ERROR: FAMILY: US05: Married on 0305-04-29 which is after Maggy /Tyrell/'s death on 0304-07-23"]
         for error in GEDCOM_file_errors:
             self.assertIn(error, gedcom_parser.Read_GEDCOM('TargaryenFamily15Siblings.ged', False, False).user_story_errors)
 
@@ -76,9 +76,8 @@ class TestUserStories(unittest.TestCase):
     
     def test_less_than_150_years_old(self):
         '''US07 Unit Test: This is a test to see if the parser will catch instances of an individual living to be older than 150 years old.'''
-        GEDCOM_file_errors = ["ERROR: INDIVIDUAL: US07 Aegon /Targaryen/ age is 1737 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Bobby /Targaryen/ age is 1686 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Daenerys /Targaryen/ age is 2715 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Donaldo /Targaryen/ age is 1704 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Johnny /Targaryen/ age is 1686 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Jon /Snow/ age is 1737 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Jon /Targaryen/ age is 1686 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Lyanna /Stark/ age is 1753 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Lyanna /Targaryen/ age is 1697 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Pomp /Targaryen/ age is 1679 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Puq /Targaryen/ age is 1721 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Rhaegar /Targaryen/ age is 1735 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Rob /Targaryen/ age is 1686 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Siobhan /Targaryen/ age is 1686 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Tut /Targaryen/ age is 1709 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Wi /Targaryen/ age is 1737 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Ya /Targaryen/ age is 1699 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Yo /Targaryen/ age is 1686 which is older than 150 years old.","ERROR: INDIVIDUAL: US07 Yu /Targaryen/ age is 1737 which is older than 150 years old."]
-        for error in GEDCOM_file_errors:
-            self.assertIn(error, gedcom_parser.Read_GEDCOM('TargaryenFamily15Siblings.ged', False, False).user_story_errors)
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(['I1', 'I2', 'I3', 'I6', 'I10', 'I21', 'I22', 'I23', 'I24', 'I25', 'I26', 'I27', 'I28', 'I30', 'I31', 'I32', 'I33', 'I34', 'I35', 'I48'], obj.less_than_150_years_old())
 
     def test_listRecentSurvivors(self): # tests US15: There should be fewer than 15 siblings in a family
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -86,11 +85,11 @@ class TestUserStories(unittest.TestCase):
 
     def test_marriageAfter14(self): # tests US10: Marriage should be at least 14 years after birth of both spouses (parents must be at least 14 years old) 
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['F2', 'F3', 'F4', 'F5', 'F6'], obj.marriageAfter14())
+        self.assertEqual(['F2', 'F3', 'F4', 'F5', 'F6', 'F7'], obj.marriageAfter14())
 
     def test_birthBeforeMarriage(self): # tests US08: Children should be born after marriage of parents (and not more than 9 months after their divorce)
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(['I38', 'I37', 'I1', 'I4', 'I5', 'I22', 'I20', 'I23', 'I9', 'I12', 'I15', 'I16', 'I17', 'I14', 'I21', 'I10', 'I11', 'I18', 'I2', 'I13', 'I19', 'I40', 'I46'], obj.birthBeforeMarriageOfParents())
+        self.assertCountEqual(['I38', 'I37', 'I37', 'I1', 'I4', 'I5', 'I22', 'I20', 'I23', 'I9', 'I12', 'I15', 'I16', 'I17', 'I14', 'I21', 'I10', 'I11', 'I18', 'I2', 'I13', 'I19', 'I40', 'I46', 'I39'], obj.birthBeforeMarriageOfParents())
 
     def test_birthsLessThanFive(self): # tests US17: No more than five siblings should be born at the same time
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -101,12 +100,12 @@ class TestUserStories(unittest.TestCase):
         self.assertEqual(['I17', 'I18'],obj.uniqueFirstNameInFamily())
         
     def test_correspondingEntries(self): # tests US26's unittest: Corresponding Entries
-        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['I42'], obj.correspondingEntries())
+       obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+       self.assertEqual(['I19', 'I23', 'I48'], obj.correspondingEntries())
     
     def test_orderSiblingsByAge(self): # tests US 28: Order Children By Age
-        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertEqual(['F1', 'F2', 'F3', 'F4'],obj.orderSiblingsByAge())
+       obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+       self.assertEqual(['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7'],obj.orderSiblingsByAge())
 
     def test_correctGenderForRole(self):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -130,7 +129,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_upcomingAnniversaries(self): # tests US39: List all upcoming wedding anniversaries
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(["F4"], obj.upcomingAnniversaries())
+        self.assertCountEqual(["F4", "F5"], obj.upcomingAnniversaries())
     
     def test_recentBirths(self): # tests US35: List all recent births in last 30 days
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -138,10 +137,35 @@ class TestUserStories(unittest.TestCase):
 
     def test_birthBeforeDeathOfParents(self): # tests US09: Children should be born before death of mother and before 9 months after the death of their father
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(['I25', 'I31', 'I29', 'I33', 'I27', 'I30', 'I6', 'I36', 'I28', 'I35', 'I32', 'I45', 'I24', 'I34', 'I26', 'I46', 'I12', 'I9', 'I10', 'I20', 'I2', 'I23', 'I19', 'I11', 'I14', 'I13', 'I40'], obj.birthBeforeDeathOfParents())
+        self.assertCountEqual(['I25', 'I37', 'I31', 'I29', 'I33', 'I27', 'I30', 'I6', 'I36', 'I28', 'I35', 'I32', 'I45', 'I24', 'I34', 'I26', 'I46', 'I12', 'I9', 'I10', 'I20', 'I2', 'I23', 'I19', 'I11', 'I14', 'I13', 'I40', 'I39'], obj.birthBeforeDeathOfParents())
     
-    def test_list_deceased(self): # tests US09: Children should be born before death of mother and before 9 months after the death of their father
+    def test_list_deceased(self): # tests US29: List all deceased individuals in a GEDCOM file
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(['I3', 'I4', 'I5', 'I6', 'I7', 'I8', 'I9', 'I10', 'I11', 'I12', 'I13', 'I14', 'I15', 'I16', 'I17', 'I18', 'I19', 'I20', 'I29', 'I36', 'I38', 'I42', 'I43'], obj.list_deceased())
+
+    def test_uniqueFamiliesBySpouses(self): # tests US24: 
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(['F1', 'F7'], obj.uniqueFamiliesBySpouses())
+
+    def test_listLargeAgeDifferences(self): # tests US34: 
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(['I2', 'I4', 'I7', 'I8', 'I6', 'I39', 'I24', 'I42'], obj.listLargeAgeDifferences())
+
+    def test_listOrphans(self): # tests US33: List orphans
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["I39", "I37"], obj.listOrphans())
+
+    def test_uniqueIDs(self): # tests US22: Reject non-unique IDs
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["I47"], obj.getNonUniqueIDsList())
+
+    def test_listUpcomingBirthdays(self): # tests US38: List upcoming birthdays
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["I1", "I2", "I27", "I48"], obj.listUpcomingBirthdays())
+
+    def test_uniqueNameAndBirthDate(self): # tests US23: all individuals should have unique names and birthdates
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["I18", "I48"], obj.uniqueNameAndBirthDate())
+
 if __name__ == '__main__':
     unittest.main()

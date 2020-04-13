@@ -22,10 +22,15 @@ class Read_GEDCOM:
         self.recentSurvivorTable = PrettyTable(field_names=["Dead Relative ID", "Dead Relative Name", "Survivor ID", "Survivor Name", "Relation"])
         self.childrenInOrderTable = PrettyTable(field_names=["ID", "Children"])
         self.upcomingAnniversariesTable = PrettyTable(field_names=["Family ID", "Marriage Date", "Husband", "Wife"])
+        self.orphansTable = PrettyTable(field_names=["Child ID", "Child Name", "Family ID"])
         self.recentBirthsTable = PrettyTable(field_names=["ID", "Name", "Birthday"])
         self.deceased_table = PrettyTable(field_names=["ID", "Name", "Death Day"])
+        self.childrenInOrderTable = PrettyTable(field_names=["Family ID", "Children"])
+        self.upcomingBirthdaysTable = PrettyTable(field_names=["ID", "Name", "Birthday"])
         self.illegitimateDatesList = []
         self.illegitimateDatesErrorList = []
+        self.nonUniqueIDsList = []
+        self.nonUniqueIDsErrors = []
         self.analyze_GEDCOM()
         if ptables: #Makes pretty tables for the data
             self.create_indi_ptable()
@@ -40,15 +45,23 @@ class Read_GEDCOM:
         self.birthsLessThanFive()
         self.uniqueFirstNameInFamily()
         self.orderSiblingsByAge()
+        self.correspondingEntries()
         self.correctGenderForRole()
         self.maleLastNames()
         self.siblingSpacing()
+        self.uniqueFamiliesBySpouses()
+        self.listLargeAgeDifferences()
         self.printIllegitimateDateErrors()
         self.parentsNotTooOld()
         self.upcomingAnniversaries()
         self.recentBirths()
         self.birthBeforeDeathOfParents()
         self.list_deceased()
+        self.less_than_150_years_old()
+        self.listUpcomingBirthdays()
+        self.listOrphans()
+        self.printNonUniqueIDsErrors()
+        self.uniqueNameAndBirthDate()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -62,12 +75,18 @@ class Read_GEDCOM:
             elif len(tokens) == 3 and tokens[0] == '0' and tokens[2] == "INDI":
                 indiv_or_fam = "individual" #Marks the line as individual so that the parse_info function can identify it accordingly
                 ind = tokens[1].replace("@", "") #The GEDCOM file has unnecessary @ symbols and this will get rid of them
-                self.individuals[ind] = Individual() #The instance of the Individual class object is created for this specific IndiID
+                if self.checkUniqueID(ind, indiv_or_fam) ==  True: #Makes sure the ind ID is unique
+                    self.individuals[ind] = Individual() #The instance of the Individual class object is created for this specific IndiID
+                else:
+                    indiv_or_fam = "NA" # alerts parser to not parse any more lines
                 continue
             elif len(tokens) == 3 and tokens[0] == '0' and tokens[2] == "FAM":
                 indiv_or_fam = "family" #Marks the line as family so that the parse_info function can identify it accordingly
                 fam = tokens[1].replace("@", "")
-                self.family[fam] = Family() #The instance of the Family class object is created for this specific FamID
+                if self.checkUniqueID(fam, indiv_or_fam) == True: #Makes sure the fam ID is unique
+                    self.family[fam] = Family() #The instance of the Family class object is created for this specific FamID
+                else:
+                    indiv_or_fam = "NA" # alerts parser to not parse any more lines
                 continue
             if indiv_or_fam in ["family", "individual"]: #This will detect that no new individual or family was created but this line will still be parsed for specific information
                 self.parse_info(tokens, date_identifier_line, ind, fam, indiv_or_fam)
@@ -206,7 +225,6 @@ class Read_GEDCOM:
                                 idList.append(ind)
         return idList
     
-    
     #Function for US32's unittest. List all multiple births in a GEDCOM file.
     #Finding twins, triplets, etc.
     def listMultipleBirths(self):
@@ -273,7 +291,7 @@ class Read_GEDCOM:
                     print(f"WARNING: FAMILY: US15: {fam}: More than 15 siblings are in this family", file = f)
         return idList
 
-    #Function for US26's unittest: All family roles (spouse, child) specified in an individual record should have
+     #Function for US26's unittest: All family roles (spouse, child) specified in an individual record should have
     #corresponding entries in the corresponding family records. Likewise, all individual roles (spouse, child)
     # specified in family records should have corresponding entries in the corresponding  individual's records.
     # I.e. the information in the individual and family records should be consistent.
@@ -297,8 +315,7 @@ class Read_GEDCOM:
                         if ind not in self.family[fam].children:
                             print(f"WARNING: INDIVIDUAL: US26: {ind}: does not have corresponding entree as a child in family {fam}", file = f)
                             idList.append(ind)
-        return idList
-        
+        return idList      
 
     # Function for US28: List siblings in families by decreasing age, i.e. oldest siblings first
     def orderSiblingsByAge(self):
@@ -366,7 +383,37 @@ class Read_GEDCOM:
                             idList.append(children)
                             print(f"ERROR: US13: {self.individuals[child].name } and {self.individuals[children].name} have birthdays too close together", file=f)
             idList = list(dict.fromkeys(idList))
-            print(idList)
+            return idList
+
+    # Function for US24. No more than one family with the same spouses by name and the same marriage date should appear in a GEDCOM file
+    def uniqueFamiliesBySpouses(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for fam in self.family:
+                family = self.family[fam]
+                h_name = self.individuals[family.husband].name
+                w_name = self.individuals[family.wife].name
+                marriage_date = family.marriage
+                for famo in self.family:
+                    if(fam != famo and self.individuals[self.family[famo].husband].name == h_name and self.individuals[self.family[famo].wife].name == w_name and self.family[famo].marriage == marriage_date):
+                        print(f"ERROR: US 24: {fam} and {famo} is an identical families", file=f)
+                        idList.append(fam)
+            return idList
+
+    # Function for US34. List all couples who were married when the older spouse was more than twice as old as the younger spouse.
+    def listLargeAgeDifferences(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for fam in self.family:
+                family = self.family[fam]
+                years_married = datetime.date.today().year - family.marriage.year
+                if years_married >= 0 and self.individuals[family.wife].age != "NA" and self.individuals[family.husband].age != "NA":
+                    husband_married_age = int(self.individuals[family.husband].age) - years_married
+                    wife_married_age = int(self.individuals[family.wife].age) - years_married
+                    if husband_married_age > 2*wife_married_age or wife_married_age > 2*husband_married_age:
+                        idList.append(family.husband)
+                        idList.append(family.wife)
+                        print(f"ERROR: US34: {family.husband} and {family.wife} have a large age difference", file=f)
             return idList
 
     # Function for US42's unittest. Return the list of illegitimate dates that were accumulated
@@ -416,6 +463,51 @@ class Read_GEDCOM:
             print("LIST: US39: Upcoming Anniversaries:", file=f)
             print(self.upcomingAnniversariesTable, file=f)
         return idList
+
+    # Function for US33's unittest: List all orphaned children (both parents dead 
+    # and child < 18 years old) in a GEDCOM file
+    def listOrphans(self):
+        with open("Sprintoutput.txt", "a") as f:
+            idList = []
+            for famID, fam in self.family.items():
+                if self.individuals[fam.husband].alive == False and self.individuals[fam.wife].alive == False:
+                    for childID in fam.children:
+                        if self.individuals[childID].age < 18 and self.individuals[childID].age > 0 and self.individuals[childID].alive == True:
+                            self.orphansTable.add_row([childID, self.individuals[childID].name, famID])
+                            idList.append(childID)
+            print("LIST: US33: Orphaned Children:", file=f)
+            print(self.orphansTable, file=f)
+        return idList
+
+    # Function for US22's unittest. Returns the list of non-unique ID's
+    def getNonUniqueIDsList(self):
+        return self.nonUniqueIDsList
+
+    # Prints non-unique error messages to the output file
+    def printNonUniqueIDsErrors(self):
+        with open("Sprintoutput.txt", "a") as f:
+            for error in self.nonUniqueIDsErrors:
+                print(error, file=f)
+
+    # Function for US22: All individual IDs should be unique 
+    # and all family IDs should be unique. This function gets called in 
+    # the parser to detect repeated IDs.
+    def checkUniqueID(self, id, indiv_or_fam):
+        with open("Sprintoutput.txt", "a") as f:
+            isUnique = True
+            if indiv_or_fam == "individual":
+                if id in list(self.individuals.keys()):
+                    self.nonUniqueIDsList.append(id)
+                    error = f"ERROR: US22: Individual {id} from the GEDCOM file was not added to the individuals table because {id} is not a unique id"
+                    self.nonUniqueIDsErrors.append(error)
+                    isUnique = False
+            elif indiv_or_fam == "family":
+                if id in list(self.family.keys()):
+                    self.nonUniqueIDsList.append(id)
+                    error = f"ERROR: US22: Family {id} was not added to the families table because {id} is not a unique id"
+                    self.nonUniqueIDsErrors.append(error)
+                    isUnique = False
+        return isUnique
 
     # Function for US35's unittest: List all people in a GEDCOM file who were born in the last 30 days
     def recentBirths(self):
@@ -521,6 +613,18 @@ class Read_GEDCOM:
             print("LIST: US37: Recent Survivors:", file=f)
             print(self.recentSurvivorTable, file = f)
             return idList
+
+    def less_than_150_years_old(self):
+        ''' US07 Death should be less than 150 years after birth for dead people, and current date should be less than 150 years after birth for all living people'''
+        with open("SprintOutput.txt", "a") as f:
+            idList = [] #Stores the ID of the people who are older than 150 years old in a list for testing purposes
+            for indID in self.individuals:
+                if self.individuals[indID].age == "NA": #Skips the person if they apparantly do not have an age attributed to them
+                    pass
+                elif self.individuals[indID].age >= 150:
+                    idList.append(indID)
+                    print(f"ERROR: INDIVIDUAL: US07 {self.individuals[indID].name} age is {self.individuals[indID].age} which is older than 150 years old.", file=f)
+            return idList
     
     def list_deceased(self):
         '''US29: List all deceased individuals in a GEDCOM file'''
@@ -530,10 +634,37 @@ class Read_GEDCOM:
                 if self.individuals[indID].death != None:
                     idList.append(indID)
                     self.deceased_table.add_row([indID, self.individuals[indID].name, self.individuals[indID].death])
-            print("LIST: US29: List Deceased: ", file = f)
+            print("LIST: US29: List Deceased: ", file = f) #Creates and adds individuals who have died to a new pretty table
             print(self.deceased_table, file = f)
             return idList
 
+    def listUpcomingBirthdays(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for indID in self.individuals:
+                if self.individuals[indID].alive:
+                    curr_bday = self.individuals[indID].birth
+                    today = datetime.date.today()
+                    date_30days_from_today = today + relativedelta(days=30)
+                    if curr_bday != "ILLEGITIMATE" and (today.month, today.day) < (curr_bday.month, curr_bday.day) <= (date_30days_from_today.month, date_30days_from_today.day):
+                        idList.append(indID)
+                        self.upcomingBirthdaysTable.add_row([indID, self.individuals[indID].name, self.individuals[indID].birth])
+            print(f"LIST: US38: Upcoming Birthdays:", file=f)
+            print(self.upcomingBirthdaysTable, file=f)
+            return idList
+
+    def uniqueNameAndBirthDate(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            uniqueInds = set()
+            for indID in self.individuals:
+                ind = (self.individuals[indID].name, self.individuals[indID].birth)
+                if ind in uniqueInds:
+                    print(f"ERROR: INDIVIDUAL: US23: {indID}: Individual {indID} has the same name and birth date as an earlier (lower ID numbered) individual", file=f)
+                    idList.append(indID)
+                else:
+                    uniqueInds.add(ind)
+            return idList
 
     def create_fam_ptable(self):
         '''This creates a Pretty Table that is a Family summary of each family's ID, when they were married, when they got divorced, the Husband ID, the Husband Name, the Wife ID, the Wife Name, and their children.'''
@@ -620,7 +751,7 @@ class UserStories:
         self.marriage_before_divorce()
         self.marriage_before_death()
         self.divorce_before_death()
-        self.less_than_150_years_old()
+
         if print_all_errors == True:
             self.print_user_story_errors()
 
@@ -680,13 +811,7 @@ class UserStories:
                     if wife_death != "ILLEGITIMATE" and divorce_date != "ILLEGITIMATE" and (wife_death - divorce_date).days < 0:
                         self.add_errors += [f"ERROR: FAMILY: US06: Divorced on {divorce_date} which is after {self.individuals[families.wife].name}'s death on {wife_death}"]
     
-    def less_than_150_years_old(self):
-        ''' US07 Death should be less than 150 years after birth for dead people, and current date should be less than 150 years after birth for all living people'''
-        for individual in self.individuals.values():
-            if individual.age == "NA":
-                pass
-            elif individual.age >= 150:
-                self.add_errors += [f"ERROR: INDIVIDUAL: US07 {individual.name} age is {individual.age} which is older than 150 years old."]
+
 
     def print_user_story_errors(self):
         '''This function will print all the errors that have been compiled into the list of errors'''

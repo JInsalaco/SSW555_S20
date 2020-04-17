@@ -336,7 +336,7 @@ class Read_GEDCOM:
             print(self.childrenInOrderTable, file=f)
         return idList
 
-    # Function for US18: Siblings should not marry
+    # Function for US18: Siblings should not marry.
     def noSiblingMarriage(self):
         idList = []
         with open("Sprintoutput.txt", "a") as f:

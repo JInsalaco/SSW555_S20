@@ -171,5 +171,9 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(["I2"], obj.noBigamy())
 
+    def test_noSiblingMarriage(self):
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["I7", "I8"], obj.noSiblingMarriage())
+
 if __name__ == '__main__':
     unittest.main()

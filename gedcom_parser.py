@@ -62,6 +62,8 @@ class Read_GEDCOM:
         self.listOrphans()
         self.printNonUniqueIDsErrors()
         self.uniqueNameAndBirthDate()
+        self.noBigamy()
+        self.noSiblingMarriage()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -332,6 +334,40 @@ class Read_GEDCOM:
                 idList.append(fam)
             print("LIST: US28: Order Siblings by Age:", file=f)
             print(self.childrenInOrderTable, file=f)
+        return idList
+
+    # Function for US18: Siblings should not marry
+    def noSiblingMarriage(self):
+        idList = []
+        with open("Sprintoutput.txt", "a") as f:
+            for ind1 in self.individuals:
+                fam1chil = self.individuals[ind1].famc
+                for ind2 in self.individuals:
+                    fam2chil = self.individuals[ind2].famc
+                    if ind1 != ind2 and fam1chil == fam2chil:
+                        fam1spouse = self.individuals[ind1].fams
+                        fam2spouse = self.individuals[ind2].fams
+                        if fam1spouse == fam2spouse and fam1spouse != "NA" and fam2spouse != "NA":
+                            if(ind1 not in idList):
+                                print(f"WARNING: INDIVIDUAL: US18: {ind1} and {ind2}: siblings should not marry", file = f)
+                                idList.append(ind1)
+        return idList
+    
+    # Function for US11: No Bigamy
+    def noBigamy(self):
+        idList = []
+        with open("Sprintoutput.txt", "a") as f:
+            for ind in self.individuals:
+                marriageCount = 0
+                if len(self.individuals[ind].fams) > 1:
+                    for fam in self.individuals[ind].fams:
+                        if fam != "N":
+                            if fam != "A":
+                                if self.family[fam].divorce == "NA":
+                                    marriageCount += 1
+                                if marriageCount > 1:
+                                    print(f"WARNING: INDIVIDUAL: US11: {ind}: No Bigamy", file = f)
+                                    idList.append(ind)
         return idList
 
     # Function for US21's unittest. Husbands must be males and wives must be females.

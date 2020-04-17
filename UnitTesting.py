@@ -101,7 +101,7 @@ class TestUserStories(unittest.TestCase):
         
     def test_correspondingEntries(self): # tests US26's unittest: Corresponding Entries
        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-       self.assertEqual(['I19', 'I23', 'I48'], obj.correspondingEntries())
+       self.assertEqual(['I19', 'I23', 'I45', 'I48'], obj.correspondingEntries())
     
     def test_orderSiblingsByAge(self): # tests US 28: Order Children By Age
        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
@@ -166,6 +166,10 @@ class TestUserStories(unittest.TestCase):
     def test_uniqueNameAndBirthDate(self): # tests US23: all individuals should have unique names and birthdates
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(["I18", "I48"], obj.uniqueNameAndBirthDate())
+
+    def test_noBigamy(self): # tests US11: no Bigamy
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(["I2"], obj.noBigamy())
 
 if __name__ == '__main__':
     unittest.main()

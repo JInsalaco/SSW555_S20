@@ -157,7 +157,7 @@ class TestUserStories(unittest.TestCase):
 
     def test_uniqueIDs(self): # tests US22: Reject non-unique IDs
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
-        self.assertCountEqual(["I47"], obj.getNonUniqueIDsList())
+        self.assertCountEqual(["I47", "I45"], obj.getNonUniqueIDsList())
 
     def test_listUpcomingBirthdays(self): # tests US38: List upcoming birthdays
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")

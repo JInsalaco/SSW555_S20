@@ -3,7 +3,7 @@ Individuals
 |  ID |         Name         | Gender |   Birthday   |  Age  | Alive |   Death    | Child |    Spouse    |
 +-----+----------------------+--------+--------------+-------+-------+------------+-------+--------------+
 |  I1 |      Jon /Snow/      |   M    |  0283-04-25  |  1736 |  True |    None    |   F1  |      NA      |
-|  I2 | Rhaegar /Targaryen/  |   M    |  0284-05-04  |  1735 |  True |    None    |   F3  | {'F2', 'F1'} |
+|  I2 | Rhaegar /Targaryen/  |   M    |  0284-05-04  |  1735 |  True |    None    |   F3  | {'F1', 'F2'} |
 |  I3 |    Lyanna /Stark/    |   F    |  0266-04-03  |  1753 | False | 2020-03-31 |   NA  |    {'F1'}    |
 |  I4 |    Elia /Martell/    |   F    |  0256-05-06  |   25  | False | 0281-10-12 |   NA  |    {'F2'}    |
 |  I5 | Rhaenys /Targaryen/  |   F    |  0280-08-10  |   3   | False | 0283-10-03 |   F2  |      NA      |
@@ -36,32 +36,33 @@ Individuals
 | I32 |  Bobby /Targaryen/   |   M    |  0333-06-10  |  1686 |  True |    None    |   F2  |      NA      |
 | I33 |    Yo /Targaryen/    |   M    |  0333-06-10  |  1686 |  True |    None    |   F2  |      NA      |
 | I34 |   Rob /Targaryen/    |   M    |  0333-06-10  |  1686 |  True |    None    |   F2  |      NA      |
-| I35 |   Jon /Targaryen/    |   M    |  0333-06-10  |  1686 |  True |    None    |   F2  |      NA      |
+| I35 |   Jon /Targaryen/    |   M    |  0333-06-10  |  1686 |  True |    None    |   F2  |    {'F8'}    |
 | I36 |   Bra /Targaryen/    |   F    |  0333-12-12  |   36  | False | 0370-12-11 |   F2  |      NA      |
 | I37 |   Blah /Targaryen/   |   F    |  2017-10-08  |   2   |  True |    None    |   F3  |      NA      |
 | I38 |   Yoma /Targaryen/   |   F    |  2000-04-05  |   19  | False | 2020-01-09 |   F1  |      NA      |
 | I39 |   Bro /Targaryen/    |   M    |  2015-10-12  |   4   |  True |    None    |   F3  |    {'F4'}    |
-| I40 |   Upaa /Targaryen/   |   F    |  2020-12-20  |   -1  |  True |    None    |   F4  |      NA      |
+| I40 |   Upaa /Targaryen/   |   F    |  2020-12-20  |   -1  |  True |    None    |   F4  |    {'F8'}    |
 | I41 |   Yes /Targaryen/    |   M    |  2018-11-07  |   1   |  True |    None    |   F4  |      NA      |
 | I42 |   Olenna /Tyrell/    |   F    |  0298-08-22  |   25  | False | 0324-08-08 |   NA  |    {'F6'}    |
 | I43 |    Maggy /Tyrell/    |   F    | ILLEGITIMATE |   NA  | False | 0304-07-23 |   NA  |    {'F5'}    |
 | I44 |   Haha /Targaryen/   |   M    |  2020-03-20  |   0   |  True |    None    |   F4  |      NA      |
 | I45 |  BooBah /Targaryen/  |   M    |  2019-03-22  |   1   |  True |    None    |   F4  |      NA      |
-| I46 | Rhaegar /Targaryen/  |   M    |  2020-03-15  |   0   |  True |    None    |   F3  |      NA      |
-| I47 |    Lyanna /Stark/    |   F    |  1900-04-01  |  120  |  True |    None    |   NA  |      NA      |
+| I46 | Rhaegar /Targaryen/  |   M    |  2020-03-15  |   0   |  True |    None    |   F3  |    {'F7'}    |
+| I47 |    Lyanna /Stark/    |   F    |  1900-04-01  |  120  |  True |    None    |   NA  |    {'F7'}    |
 | I48 |      Jon /Snow/      |   M    |  0283-04-25  |  1736 |  True |    None    |   F3  |      NA      |
 +-----+----------------------+--------+--------------+-------+-------+------------+-------+--------------+
 Families
 +----+------------+------------+------------+---------------------+---------+---------------------+-------------------------------------------------------------------------------------------------------------------------------------+
 | ID |  Married   |  Divorced  | Husband ID |     Husband Name    | Wife ID |      Wife Name      |                                                               Children                                                              |
 +----+------------+------------+------------+---------------------+---------+---------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-| F1 | 2023-04-08 |     NA     |     I2     | Rhaegar /Targaryen/ |    I3   |    Lyanna /Stark/   |                                                         {'I1', 'I38', 'I37'}                                                        |
-| F2 | 0281-06-12 |     NA     |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   |         {'I5', 'I6', 'I36', 'I45', 'I33', 'I4', 'I25', 'I31', 'I30', 'I32', 'I24', 'I27', 'I28', 'I35', 'I29', 'I34', 'I26'}        |
-| F3 | 0260-06-06 | 0260-06-01 |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I12', 'I16', 'I37', 'I11', 'I18', 'I19', 'I20', 'I2', 'I15', 'I13', 'I22', 'I10', 'I21', 'I46', 'I14', 'I17', 'I23', 'I39', 'I9'} |
+| F1 | 2023-04-08 |     NA     |     I2     | Rhaegar /Targaryen/ |    I3   |    Lyanna /Stark/   |                                                         {'I37', 'I1', 'I38'}                                                        |
+| F2 | 0281-06-12 |     NA     |     I2     | Rhaegar /Targaryen/ |    I4   |    Elia /Martell/   |         {'I6', 'I35', 'I45', 'I28', 'I4', 'I30', 'I33', 'I5', 'I27', 'I31', 'I32', 'I36', 'I26', 'I34', 'I25', 'I29', 'I24'}        |
+| F3 | 0260-06-06 | 0260-06-01 |     I7     |  Aerys /Targaryen/  |    I8   | Rhaella /Targaryen/ | {'I9', 'I11', 'I19', 'I46', 'I39', 'I12', 'I10', 'I21', 'I17', 'I37', 'I20', 'I14', 'I2', 'I23', 'I22', 'I16', 'I13', 'I15', 'I18'} |
 | F4 | 2017-04-10 | 2020-01-15 |     I6     |  Aegon /Targaryen/  |   I39   |   Bro /Targaryen/   |                                                        {'I41', 'I40', 'I44'}                                                        |
 | F5 | 0305-04-29 |     NA     |    I20     |    Po /Targaryen/   |   I43   |    Maggy /Tyrell/   |                                                                set()                                                                |
 | F6 | 0320-06-03 | 0325-09-06 |    I24     |   Pomp /Targaryen/  |   I42   |   Olenna /Tyrell/   |                                                                set()                                                                |
 | F7 | 2023-04-08 |     NA     |    I46     | Rhaegar /Targaryen/ |   I47   |    Lyanna /Stark/   |                                                                set()                                                                |
+| F8 | 2020-06-08 |     NA     |    I35     |   Jon /Targaryen/   |   I40   |   Upaa /Targaryen/  |                                                                set()                                                                |
 +----+------------+------------+------------+---------------------+---------+---------------------+-------------------------------------------------------------------------------------------------------------------------------------+
 WARNING: FAMILY: US15: F2: More than 15 siblings are in this family
 WARNING: FAMILY: US15: F3: More than 15 siblings are in this family
@@ -70,8 +71,10 @@ ERROR: INDIVIDUAL: I10 US01: Death 3000-06-14 occurs in the future
 ERROR: INDIVIDUAL: I40 US01: Birthday 2020-12-20 occurs in the future
 ERROR: FAMILY: F1 US01: Marriage 2023-04-08 occurs in the future
 ERROR: FAMILY: F7 US01: Marriage 2023-04-08 occurs in the future
+ERROR: FAMILY: F8 US01: Marriage 2020-06-08 occurs in the future
 ERROR: FAMILY: F2 US02: Husband's (I2) birthday 0284-05-04 occurs after marriage 0281-06-12
 ERROR: FAMILY: F3 US02: Wife's (I8) birthday 0261-05-22 occurs after marriage 0260-06-06
+ERROR: FAMILY: F8 US02: Wife's (I40) birthday 2020-12-20 occurs after marriage 2020-06-08
 ERROR: INDIVIDUAL: I2. US17: No Marriage to Children; Rhaegar /Targaryen/ has a wife: I4 who is also a child: I4
 ERROR: INDIVIDUALS: I30 and I31. US32: List all multiple Births; Siobhan /Targaryen/ has the same birthday as: Johnny /Targaryen/
 ERROR: INDIVIDUALS: I30 and I32. US32: List all multiple Births; Siobhan /Targaryen/ has the same birthday as: Bobby /Targaryen/
@@ -114,8 +117,8 @@ LIST: US37: Recent Survivors:
 | Dead Relative ID | Dead Relative Name | Survivor ID |    Survivor Name    | Relation |
 +------------------+--------------------+-------------+---------------------+----------+
 |        I3        |   Lyanna /Stark/   |      I2     | Rhaegar /Targaryen/ |  Spouse  |
-|        I3        |   Lyanna /Stark/   |      I1     |      Jon /Snow/     |  Child   |
 |        I3        |   Lyanna /Stark/   |     I37     |   Blah /Targaryen/  |  Child   |
+|        I3        |   Lyanna /Stark/   |      I1     |      Jon /Snow/     |  Child   |
 +------------------+--------------------+-------------+---------------------+----------+
 WARNING: FAMILY: US10: F2: One or both spouses were less than 14 years old at the time of marriage.
 WARNING: FAMILY: US10: F3: One or both spouses were less than 14 years old at the time of marriage.
@@ -123,6 +126,7 @@ WARNING: FAMILY: US10: F4: One or both spouses were less than 14 years old at th
 WARNING: FAMILY: US10: F5: One or both spouses were less than 14 years old at the time of marriage.
 WARNING: FAMILY: US10: F6: One or both spouses were less than 14 years old at the time of marriage.
 WARNING: FAMILY: US10: F7: One or both spouses were less than 14 years old at the time of marriage.
+WARNING: FAMILY: US10: F8: One or both spouses were less than 14 years old at the time of marriage.
 ERROR: FAMILY: F2. US14: Number of children born in a single birth should not be greater than 5
 ERROR: FAMILY: F3. US14: Number of children born in a single birth should not be greater than 5
 ERROR: INDIVIDUALS: I17 and I18. US25: No more than one child with the same name and birth date should appear in a family
@@ -132,8 +136,8 @@ LIST: US28: Order Siblings by Age:
 | Family ID |                                                                                                                          Children                                                                                                                          |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 |     F1    |                                                                                                          [('I1', 1736), ('I38', 19), ('I37', 2)]                                                                                                           |
-|     F2    |      [('I6', 1737), ('I26', 1709), ('I27', 1705), ('I25', 1699), ('I28', 1697), ('I34', 1686), ('I31', 1686), ('I30', 1686), ('I32', 1686), ('I35', 1686), ('I33', 1686), ('I24', 1679), ('I36', 36), ('I4', 25), ('I29', 9), ('I5', 3), ('I45', 1)]       |
-|     F3    | [('I10', 2715), ('I22', 1737), ('I21', 1737), ('I2', 1735), ('I23', 1721), ('I16', 62), ('I15', 38), ('I18', 24), ('I14', 19), ('I19', 11), ('I13', 9), ('I17', 7), ('I39', 4), ('I37', 2), ('I12', 0), ('I11', 0), ('I20', 0), ('I46', 0), ('I9', -1723)] |
+|     F2    |      [('I6', 1737), ('I26', 1709), ('I27', 1705), ('I25', 1699), ('I28', 1697), ('I35', 1686), ('I30', 1686), ('I33', 1686), ('I31', 1686), ('I32', 1686), ('I34', 1686), ('I24', 1679), ('I36', 36), ('I4', 25), ('I29', 9), ('I5', 3), ('I45', 1)]       |
+|     F3    | [('I10', 2715), ('I21', 1737), ('I22', 1737), ('I2', 1735), ('I23', 1721), ('I16', 62), ('I15', 38), ('I18', 24), ('I14', 19), ('I19', 11), ('I13', 9), ('I17', 7), ('I39', 4), ('I37', 2), ('I11', 0), ('I46', 0), ('I12', 0), ('I20', 0), ('I9', -1723)] |
 |     F4    |                                                                                                           [('I41', 1), ('I44', 0), ('I40', -1)]                                                                                                            |
 +-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 WARNING: INDIVIDUAL: US26: I19: does not have corresponding entree as a spouse in family F5
@@ -145,52 +149,56 @@ ERROR: FAMILY: F4 US21: Wife (I39) does not have the correct gender for role
 ERROR: FAMILY: F5 US21: Husband (I20) does not have the correct gender for role
 ERROR: FAMILY: F6 US21: Husband (I24) does not have the correct gender for role
 WARNING: US16: Rhaegar /Targaryen/ and Jon /Snow/ have different last names.
-ERROR: US13: Rob /Targaryen/ and Bra /Targaryen/ have birthdays too close together
-ERROR: US13: Bra /Targaryen/ and Rob /Targaryen/ have birthdays too close together
-ERROR: US13: Bra /Targaryen/ and Johnny /Targaryen/ have birthdays too close together
-ERROR: US13: Bra /Targaryen/ and Siobhan /Targaryen/ have birthdays too close together
-ERROR: US13: Bra /Targaryen/ and Bobby /Targaryen/ have birthdays too close together
-ERROR: US13: Bra /Targaryen/ and Jon /Targaryen/ have birthdays too close together
-ERROR: US13: Bra /Targaryen/ and Yo /Targaryen/ have birthdays too close together
-ERROR: US13: Johnny /Targaryen/ and Bra /Targaryen/ have birthdays too close together
-ERROR: US13: Siobhan /Targaryen/ and Bra /Targaryen/ have birthdays too close together
-ERROR: US13: Bobby /Targaryen/ and Bra /Targaryen/ have birthdays too close together
 ERROR: US13: Jon /Targaryen/ and Bra /Targaryen/ have birthdays too close together
+ERROR: US13: Siobhan /Targaryen/ and Bra /Targaryen/ have birthdays too close together
 ERROR: US13: Yo /Targaryen/ and Bra /Targaryen/ have birthdays too close together
-ERROR: US13: Lopa /Targaryen/ and Rhaegar /Targaryen/ have birthdays too close together
-ERROR: US13: Lopa /Targaryen/ and Daenerys /Targaryen/ have birthdays too close together
+ERROR: US13: Johnny /Targaryen/ and Bra /Targaryen/ have birthdays too close together
+ERROR: US13: Bobby /Targaryen/ and Bra /Targaryen/ have birthdays too close together
+ERROR: US13: Rob /Targaryen/ and Bra /Targaryen/ have birthdays too close together
+ERROR: US13: Bra /Targaryen/ and Jon /Targaryen/ have birthdays too close together
+ERROR: US13: Bra /Targaryen/ and Siobhan /Targaryen/ have birthdays too close together
+ERROR: US13: Bra /Targaryen/ and Yo /Targaryen/ have birthdays too close together
+ERROR: US13: Bra /Targaryen/ and Johnny /Targaryen/ have birthdays too close together
+ERROR: US13: Bra /Targaryen/ and Bobby /Targaryen/ have birthdays too close together
+ERROR: US13: Bra /Targaryen/ and Rob /Targaryen/ have birthdays too close together
 ERROR: US13: Fling /Targaryen/ and Porpa /Targaryen/ have birthdays too close together
-ERROR: US13: Klod /Targaryen/ and Tot /Targaryen/ have birthdays too close together
-ERROR: US13: Klod /Targaryen/ and Wi /Targaryen/ have birthdays too close together
+ERROR: US13: Rhaegar /Targaryen/ and Po /Targaryen/ have birthdays too close together
+ERROR: US13: Lopa /Targaryen/ and Daenerys /Targaryen/ have birthdays too close together
+ERROR: US13: Lopa /Targaryen/ and Rhaegar /Targaryen/ have birthdays too close together
+ERROR: US13: Yu /Targaryen/ and Klod /Targaryen/ have birthdays too close together
+ERROR: US13: Yu /Targaryen/ and Wi /Targaryen/ have birthdays too close together
+ERROR: US13: Yu /Targaryen/ and Tot /Targaryen/ have birthdays too close together
+ERROR: US13: Yu /Targaryen/ and Klod /Targaryen/ have birthdays too close together
+ERROR: US13: Daenerys /Targaryen/ and Lopa /Targaryen/ have birthdays too close together
+ERROR: US13: Daenerys /Targaryen/ and Rhaegar /Targaryen/ have birthdays too close together
 ERROR: US13: Klod /Targaryen/ and Yu /Targaryen/ have birthdays too close together
+ERROR: US13: Klod /Targaryen/ and Wi /Targaryen/ have birthdays too close together
+ERROR: US13: Klod /Targaryen/ and Tot /Targaryen/ have birthdays too close together
 ERROR: US13: Po /Targaryen/ and Rhaegar /Targaryen/ have birthdays too close together
 ERROR: US13: Rhaegar /Targaryen/ and Lopa /Targaryen/ have birthdays too close together
 ERROR: US13: Rhaegar /Targaryen/ and Daenerys /Targaryen/ have birthdays too close together
-ERROR: US13: Tot /Targaryen/ and Klod /Targaryen/ have birthdays too close together
-ERROR: US13: Tot /Targaryen/ and Wi /Targaryen/ have birthdays too close together
-ERROR: US13: Tot /Targaryen/ and Yu /Targaryen/ have birthdays too close together
-ERROR: US13: Tot /Targaryen/ and Klod /Targaryen/ have birthdays too close together
-ERROR: US13: Porpa /Targaryen/ and Fling /Targaryen/ have birthdays too close together
-ERROR: US13: Wi /Targaryen/ and Klod /Targaryen/ have birthdays too close together
-ERROR: US13: Wi /Targaryen/ and Tot /Targaryen/ have birthdays too close together
 ERROR: US13: Wi /Targaryen/ and Yu /Targaryen/ have birthdays too close together
 ERROR: US13: Wi /Targaryen/ and Klod /Targaryen/ have birthdays too close together
-ERROR: US13: Daenerys /Targaryen/ and Lopa /Targaryen/ have birthdays too close together
-ERROR: US13: Daenerys /Targaryen/ and Rhaegar /Targaryen/ have birthdays too close together
-ERROR: US13: Yu /Targaryen/ and Klod /Targaryen/ have birthdays too close together
-ERROR: US13: Yu /Targaryen/ and Tot /Targaryen/ have birthdays too close together
-ERROR: US13: Yu /Targaryen/ and Wi /Targaryen/ have birthdays too close together
-ERROR: US13: Yu /Targaryen/ and Klod /Targaryen/ have birthdays too close together
-ERROR: US13: Rhaegar /Targaryen/ and Po /Targaryen/ have birthdays too close together
-ERROR: US13: Klod /Targaryen/ and Tot /Targaryen/ have birthdays too close together
-ERROR: US13: Klod /Targaryen/ and Wi /Targaryen/ have birthdays too close together
+ERROR: US13: Wi /Targaryen/ and Tot /Targaryen/ have birthdays too close together
+ERROR: US13: Wi /Targaryen/ and Klod /Targaryen/ have birthdays too close together
+ERROR: US13: Porpa /Targaryen/ and Fling /Targaryen/ have birthdays too close together
+ERROR: US13: Tot /Targaryen/ and Yu /Targaryen/ have birthdays too close together
+ERROR: US13: Tot /Targaryen/ and Klod /Targaryen/ have birthdays too close together
+ERROR: US13: Tot /Targaryen/ and Wi /Targaryen/ have birthdays too close together
+ERROR: US13: Tot /Targaryen/ and Klod /Targaryen/ have birthdays too close together
 ERROR: US13: Klod /Targaryen/ and Yu /Targaryen/ have birthdays too close together
+ERROR: US13: Klod /Targaryen/ and Wi /Targaryen/ have birthdays too close together
+ERROR: US13: Klod /Targaryen/ and Tot /Targaryen/ have birthdays too close together
 ERROR: US 24: F1 and F7 is an identical families
 ERROR: US 24: F7 and F1 is an identical families
 ERROR: US34: I2 and I4 have a large age difference
 ERROR: US34: I7 and I8 have a large age difference
 ERROR: US34: I6 and I39 have a large age difference
 ERROR: US34: I24 and I42 have a large age difference
+ERROR: US34: I35 and I40 have a large age difference
+ERROR: US19: I40 and I35 are first cousins
+ERROR: US20: AUNTS AND UNCLES I39 and I6 are related
+ERROR: US20: AUNTS AND UNCLES I40 and I35 are related
 ERROR: US42: Individual I43 had an illegitimate birth date of 35 NOV 0290
 WARNING: US12: In family F1, Father I2 is 80 or more years older than child I37
 WARNING: US12: In family F2, Father I2 is 80 or more years older than child I45
@@ -206,34 +214,34 @@ LIST: US35: Recent Births:
 +-----+------------------+------------+
 | I44 | Haha /Targaryen/ | 2020-03-20 |
 +-----+------------------+------------+
-ERROR: US09: FAMILY: Child I34 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
 ERROR: US09: FAMILY: Child I6 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I36 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I45 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I25 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I31 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I30 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I32 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I24 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I27 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I28 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
 ERROR: US09: FAMILY: Child I35 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I29 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I45 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I28 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I30 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
 ERROR: US09: FAMILY: Child I33 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I27 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I31 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I32 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I34 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I36 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
 ERROR: US09: FAMILY: Child I26 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I12 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I37 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I25 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I29 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I24 of Family F2 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I9 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
 ERROR: US09: FAMILY: Child I11 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
 ERROR: US09: FAMILY: Child I19 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I20 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I2 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I13 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I10 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
 ERROR: US09: FAMILY: Child I46 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I14 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I23 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
 ERROR: US09: FAMILY: Child I39 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
-ERROR: US09: FAMILY: Child I9 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I12 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I10 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I37 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I20 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I14 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I2 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I23 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
+ERROR: US09: FAMILY: Child I13 of Family F3 is not born before death of their mother or before 9 months after the death of their father.
 ERROR: US09: FAMILY: Child I40 of Family F4 is not born before death of their mother or before 9 months after the death of their father.
 LIST: US29: List Deceased: 
 +-----+----------------------+------------+
@@ -295,8 +303,8 @@ LIST: US33: Orphaned Children:
 +----------+------------------+-----------+
 | Child ID |    Child Name    | Family ID |
 +----------+------------------+-----------+
-|   I37    | Blah /Targaryen/ |     F3    |
 |   I39    | Bro /Targaryen/  |     F3    |
+|   I37    | Blah /Targaryen/ |     F3    |
 +----------+------------------+-----------+
 ERROR: US22: Individual I45 from the GEDCOM file was not added to the individuals table because I45 is not a unique id
 ERROR: US22: Individual I47 from the GEDCOM file was not added to the individuals table because I47 is not a unique id

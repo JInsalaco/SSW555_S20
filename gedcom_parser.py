@@ -51,6 +51,8 @@ class Read_GEDCOM:
         self.siblingSpacing()
         self.uniqueFamiliesBySpouses()
         self.listLargeAgeDifferences()
+        self.firstCousinsShouldNotMarry()
+        self.auntsAndUncles()
         self.printIllegitimateDateErrors()
         self.parentsNotTooOld()
         self.upcomingAnniversaries()
@@ -450,6 +452,83 @@ class Read_GEDCOM:
                         idList.append(family.husband)
                         idList.append(family.wife)
                         print(f"ERROR: US34: {family.husband} and {family.wife} have a large age difference", file=f)
+            return idList
+
+    #Function for US19. First cousins should not marry one another
+    def firstCousinsShouldNotMarry(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for fam in self.family:
+                wife = self.family[fam].wife
+                husband = self.family[fam].husband
+                waifu = self.individuals[self.family[fam].wife].famc #wife's family
+                husbando = self.individuals[self.family[fam].husband].famc #husbands family
+                if waifu != "NA" and husbando != "NA":
+                    wife_mom =  self.family[waifu].wife #wife's mom's family
+                    wife_dad =  self.family[waifu].husband #wife's dad
+                    husband_mom = self.family[husbando].wife #husband's mom
+                    husband_dad =  self.family[husbando].husband #husband's dad
+
+                    pat_grandpa = self.individuals[husband_dad].famc
+                    pat_grandma = self.individuals[husband_mom].famc
+                    mat_grandma = self.individuals[wife_mom].famc
+                    mat_grandpa = self.individuals[wife_dad].famc
+
+                    if(mat_grandma == pat_grandma and (mat_grandma != "NA" and pat_grandma != "NA")): #if wife's mom and husband's mom are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US19: {self.family[fam].wife} and {self.family[fam].husband} are first cousins", file=f)
+                    if(mat_grandpa == pat_grandpa and (mat_grandpa != "NA" and pat_grandpa != "NA")): #if wife's dad and husband's dad are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US19: {self.family[fam].wife} and {self.family[fam].husband} are first cousins", file=f)
+                    if(mat_grandpa == pat_grandma and (mat_grandpa != "NA" and pat_grandma != "NA")): #if wife's dad and husband's mom are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US19: {self.family[fam].wife} and {self.family[fam].husband} are first cousins", file=f)
+                    if(mat_grandma == pat_grandpa and (mat_grandma != "NA" and pat_grandpa != "NA")): #if wife's mom and husband's dad are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US19: {self.family[fam].wife} and {self.family[fam].husband} are first cousins", file=f)
+            idList = list(dict.fromkeys(idList))
+            return idList
+
+    #Function for US20. Aunts and uncles should not marry their nieces or nephews
+    def auntsAndUncles(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for fam in self.family:
+                wife = self.family[fam].wife
+                husband = self.family[fam].husband
+                waifu = self.individuals[self.family[fam].wife].famc #wife's family
+                husbando = self.individuals[self.family[fam].husband].famc #husbands family
+                if waifu != "NA" and husbando != "NA":
+                    wife_mom =  self.family[waifu].wife #wife's mom's family
+                    wife_dad =  self.family[waifu].husband #wife's dad
+                    husband_mom = self.family[husbando].wife #husband's mom
+                    husband_dad =  self.family[husbando].husband #husband's dad
+
+                    pat_grandpa = self.individuals[husband_dad].famc
+                    pat_grandma = self.individuals[husband_mom].famc
+                    mat_grandma = self.individuals[wife_mom].famc
+                    mat_grandpa = self.individuals[wife_dad].famc
+
+                    if husbando == mat_grandma: #uncle and wife's mom are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US20: AUNTS AND UNCLES {self.family[fam].wife} and {self.family[fam].husband} are related", file=f)
+                    if husbando == mat_grandpa: #uncle and wife's father are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US20: AUNTS AND UNCLES {self.family[fam].wife} and {self.family[fam].husband} are related", file=f)
+                    if waifu == pat_grandma: #aunt and husband's mom are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US20: AUNTS AND UNCLES {self.family[fam].wife} and {self.family[fam].husband} are related", file=f)
+                    if waifu == pat_grandpa: #aunts and husband's father are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US20: AUNTS AND UNCLES {self.family[fam].wife} and {self.family[fam].husband} are related", file=f)
             return idList
 
     # Function for US42's unittest. Return the list of illegitimate dates that were accumulated

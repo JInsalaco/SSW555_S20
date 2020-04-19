@@ -26,6 +26,8 @@ class Read_GEDCOM:
         self.deceased_table = PrettyTable(field_names=["ID", "Name", "Death Day"])
         self.childrenInOrderTable = PrettyTable(field_names=["Family ID", "Children"])
         self.upcomingBirthdaysTable = PrettyTable(field_names=["ID", "Name", "Birthday"])
+        self.living_married_table = PrettyTable(field_names=["Family ID", "Husband ID", "Husband Name", "Wife ID", "Wife Name"])
+        self.living_single_table = PrettyTable(field_names=["ID", "Name"])
         self.illegitimateDatesList = []
         self.illegitimateDatesErrorList = []
         self.nonUniqueIDsList = []
@@ -57,6 +59,8 @@ class Read_GEDCOM:
         self.recentBirths()
         self.birthBeforeDeathOfParents()
         self.list_deceased()
+        self.list_living_married()
+        self.list_living_single()
         self.less_than_150_years_old()
         self.listUpcomingBirthdays()
         self.listOrphans()
@@ -619,7 +623,7 @@ class Read_GEDCOM:
         with open("SprintOutput.txt", "a") as f:
             idList = [] #Stores the ID of the people who are older than 150 years old in a list for testing purposes
             for indID in self.individuals:
-                if self.individuals[indID].age == "NA": #Skips the person if they apparantly do not have an age attributed to them
+                if self.individuals[indID].age == "NA": #Skips the person if they apparently do not have an age attributed to them
                     pass
                 elif self.individuals[indID].age >= 150:
                     idList.append(indID)
@@ -636,6 +640,32 @@ class Read_GEDCOM:
                     self.deceased_table.add_row([indID, self.individuals[indID].name, self.individuals[indID].death])
             print("LIST: US29: List Deceased: ", file = f) #Creates and adds individuals who have died to a new pretty table
             print(self.deceased_table, file = f)
+            return idList
+        
+    def list_living_married(self):
+        '''US30: List all living married people in a GEDCOM file'''
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for famID, fam in self.family.items():
+                if fam.divorce == "NA" and self.individuals[fam.husband].death == None and self.individuals[fam.wife].death == None:
+                    idList.append(famID)
+                    self.living_married_table.add_row([famID, fam.husband, self.individuals[fam.husband].name, fam.wife, self.individuals[fam.wife].name])
+            print("LIST: US30: List Living Married: ", file = f)
+            print(self.living_married_table, file = f)
+            return idList
+    
+    def list_living_single(self):
+        '''US31: List all living people over 30 who have never been married in a GEDCOM file'''
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for indID in self.individuals:
+                    if self.individuals[indID].age == "NA":
+                        pass
+                    elif self.individuals[indID].age > 30 and self.individuals[indID].fams == "NA" and self.individuals[indID].death == None:
+                        idList.append(indID)
+                        self.living_single_table.add_row([indID, self.individuals[indID].name])
+            print("LIST: US31: List Living Single: ", file = f)
+            print(self.living_single_table, file = f)
             return idList
 
     def listUpcomingBirthdays(self):

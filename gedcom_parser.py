@@ -20,6 +20,7 @@ class Read_GEDCOM:
         self.individuals_ptable = PrettyTable(field_names = ["ID", "Name", "Gender", "Birthday", "Age", "Alive", "Death", "Child", "Spouse"])
         self.recentDeathTable = PrettyTable(field_names=["ID", "Name", "Death"])  # create a ptable for recent deaths
         self.recentSurvivorTable = PrettyTable(field_names=["Dead Relative ID", "Dead Relative Name", "Survivor ID", "Survivor Name", "Relation"])
+        self.childrenInOrderTable = PrettyTable(field_names=["ID", "Children"])
         self.upcomingAnniversariesTable = PrettyTable(field_names=["Family ID", "Marriage Date", "Husband", "Wife"])
         self.orphansTable = PrettyTable(field_names=["Child ID", "Child Name", "Family ID"])
         self.recentBirthsTable = PrettyTable(field_names=["ID", "Name", "Birthday"])
@@ -43,7 +44,6 @@ class Read_GEDCOM:
         self.listMultipleBirths()
         self.listRecentSurvivors()
         self.marriageAfter14()
-        self.birthBeforeMarriageOfParents()
         self.birthsLessThanFive()
         self.uniqueFirstNameInFamily()
         self.orderSiblingsByAge()
@@ -53,6 +53,8 @@ class Read_GEDCOM:
         self.siblingSpacing()
         self.uniqueFamiliesBySpouses()
         self.listLargeAgeDifferences()
+        self.firstCousinsShouldNotMarry()
+        self.auntsAndUncles()
         self.printIllegitimateDateErrors()
         self.parentsNotTooOld()
         self.upcomingAnniversaries()
@@ -66,6 +68,8 @@ class Read_GEDCOM:
         self.listOrphans()
         self.printNonUniqueIDsErrors()
         self.uniqueNameAndBirthDate()
+        self.noBigamy()
+        self.noSiblingMarriage()
         self.user_story_errors = UserStories(self.family, self.individuals, self.error_list, print_all_errors).add_errors #Checks for errors in user stories
 
     
@@ -262,7 +266,7 @@ class Read_GEDCOM:
                         list_birthdays = count_dict.values()
                         if len(list_birthdays) == 0 or max(list_birthdays) <= 5:
                             continue
-                        else:
+                        elif(fam not in idList):
                             print(f"ERROR: FAMILY: {fam}. US14: Number of children born in a single birth should not be greater than 5", file=f)
                             idList.append(fam)
         return idList
@@ -336,6 +340,40 @@ class Read_GEDCOM:
                 idList.append(fam)
             print("LIST: US28: Order Siblings by Age:", file=f)
             print(self.childrenInOrderTable, file=f)
+        return idList
+
+    # Function for US18: Siblings should not marry.
+    def noSiblingMarriage(self):
+        idList = []
+        with open("Sprintoutput.txt", "a") as f:
+            for ind1 in self.individuals:
+                fam1chil = self.individuals[ind1].famc
+                for ind2 in self.individuals:
+                    fam2chil = self.individuals[ind2].famc
+                    if ind1 != ind2 and fam1chil == fam2chil:
+                        fam1spouse = self.individuals[ind1].fams
+                        fam2spouse = self.individuals[ind2].fams
+                        if fam1spouse == fam2spouse and fam1spouse != "NA" and fam2spouse != "NA":
+                            if(ind1 not in idList):
+                                print(f"WARNING: INDIVIDUAL: US18: {ind1} and {ind2}: siblings should not marry", file = f)
+                                idList.append(ind1)
+        return idList
+    
+    # Function for US11: No Bigamy
+    def noBigamy(self):
+        idList = []
+        with open("Sprintoutput.txt", "a") as f:
+            for ind in self.individuals:
+                marriageCount = 0
+                if len(self.individuals[ind].fams) > 1:
+                    for fam in self.individuals[ind].fams:
+                        if fam != "N":
+                            if fam != "A":
+                                if self.family[fam].divorce == "NA":
+                                    marriageCount += 1
+                                if marriageCount > 1:
+                                    print(f"WARNING: INDIVIDUAL: US11: {ind}: No Bigamy", file = f)
+                                    idList.append(ind)
         return idList
 
     # Function for US21's unittest. Husbands must be males and wives must be females.
@@ -418,6 +456,83 @@ class Read_GEDCOM:
                         idList.append(family.husband)
                         idList.append(family.wife)
                         print(f"ERROR: US34: {family.husband} and {family.wife} have a large age difference", file=f)
+            return idList
+
+    #Function for US19. First cousins should not marry one another
+    def firstCousinsShouldNotMarry(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for fam in self.family:
+                wife = self.family[fam].wife
+                husband = self.family[fam].husband
+                waifu = self.individuals[self.family[fam].wife].famc #wife's family
+                husbando = self.individuals[self.family[fam].husband].famc #husbands family
+                if waifu != "NA" and husbando != "NA":
+                    wife_mom =  self.family[waifu].wife #wife's mom's family
+                    wife_dad =  self.family[waifu].husband #wife's dad
+                    husband_mom = self.family[husbando].wife #husband's mom
+                    husband_dad =  self.family[husbando].husband #husband's dad
+
+                    pat_grandpa = self.individuals[husband_dad].famc
+                    pat_grandma = self.individuals[husband_mom].famc
+                    mat_grandma = self.individuals[wife_mom].famc
+                    mat_grandpa = self.individuals[wife_dad].famc
+
+                    if(mat_grandma == pat_grandma and (mat_grandma != "NA" and pat_grandma != "NA")): #if wife's mom and husband's mom are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US19: {self.family[fam].wife} and {self.family[fam].husband} are first cousins", file=f)
+                    if(mat_grandpa == pat_grandpa and (mat_grandpa != "NA" and pat_grandpa != "NA")): #if wife's dad and husband's dad are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US19: {self.family[fam].wife} and {self.family[fam].husband} are first cousins", file=f)
+                    if(mat_grandpa == pat_grandma and (mat_grandpa != "NA" and pat_grandma != "NA")): #if wife's dad and husband's mom are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US19: {self.family[fam].wife} and {self.family[fam].husband} are first cousins", file=f)
+                    if(mat_grandma == pat_grandpa and (mat_grandma != "NA" and pat_grandpa != "NA")): #if wife's mom and husband's dad are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US19: {self.family[fam].wife} and {self.family[fam].husband} are first cousins", file=f)
+            idList = list(dict.fromkeys(idList))
+            return idList
+
+    #Function for US20. Aunts and uncles should not marry their nieces or nephews
+    def auntsAndUncles(self):
+        with open("SprintOutput.txt", "a") as f:
+            idList = []
+            for fam in self.family:
+                wife = self.family[fam].wife
+                husband = self.family[fam].husband
+                waifu = self.individuals[self.family[fam].wife].famc #wife's family
+                husbando = self.individuals[self.family[fam].husband].famc #husbands family
+                if waifu != "NA" and husbando != "NA":
+                    wife_mom =  self.family[waifu].wife #wife's mom's family
+                    wife_dad =  self.family[waifu].husband #wife's dad
+                    husband_mom = self.family[husbando].wife #husband's mom
+                    husband_dad =  self.family[husbando].husband #husband's dad
+
+                    pat_grandpa = self.individuals[husband_dad].famc
+                    pat_grandma = self.individuals[husband_mom].famc
+                    mat_grandma = self.individuals[wife_mom].famc
+                    mat_grandpa = self.individuals[wife_dad].famc
+
+                    if husbando == mat_grandma: #uncle and wife's mom are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US20: AUNTS AND UNCLES {self.family[fam].wife} and {self.family[fam].husband} are related", file=f)
+                    if husbando == mat_grandpa: #uncle and wife's father are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US20: AUNTS AND UNCLES {self.family[fam].wife} and {self.family[fam].husband} are related", file=f)
+                    if waifu == pat_grandma: #aunt and husband's mom are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US20: AUNTS AND UNCLES {self.family[fam].wife} and {self.family[fam].husband} are related", file=f)
+                    if waifu == pat_grandpa: #aunts and husband's father are siblings
+                        idList.append(wife)
+                        idList.append(husband)
+                        print(f"ERROR: US20: AUNTS AND UNCLES {self.family[fam].wife} and {self.family[fam].husband} are related", file=f)
             return idList
 
     # Function for US42's unittest. Return the list of illegitimate dates that were accumulated
@@ -565,7 +680,7 @@ class Read_GEDCOM:
                 individual.fams = "NA"
             self.individuals_ptable.add_row([ID, individual.name, individual.sex, individual.birth, individual.age, individual.alive, individual.death, individual.famc, individual.fams])
         print(self.individuals_ptable)
-        #write individuals table to output file
+        #write individuals table to output
         with open("Sprintoutput.txt", "w") as f:
             print("Individuals", file=f)
             print(self.individuals_ptable, file=f)
@@ -700,7 +815,8 @@ class Read_GEDCOM:
         '''This creates a Pretty Table that is a Family summary of each family's ID, when they were married, when they got divorced, the Husband ID, the Husband Name, the Wife ID, the Wife Name, and their children.'''
         print("Family Table")
         for ID, fam in self.family.items():
-            self.family_ptable.add_row([ID, fam.marriage, fam.divorce, fam.husband, self.individuals[fam.husband].name, fam.wife, self.individuals[fam.wife].name, fam.children])   
+            self.family_ptable.add_row([ID, fam.marriage, fam.divorce, fam.husband, self.individuals[fam.husband].name, fam.wife, self.individuals[fam.wife].name, fam.children]) 
+        # self.orderSiblingsByAge()  
         print(self.family_ptable)
         #append families table to output file
         with open("Sprintoutput.txt", "a") as f:

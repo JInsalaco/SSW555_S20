@@ -762,10 +762,10 @@ class Read_GEDCOM:
         with open("SprintOutput.txt", "a") as f:
             idList = []
             for famID, fam in self.family.items():
-                if fam.divorce == "NA" and self.individuals[fam.husband].death == None and self.individuals[fam.wife].death == None:
+                if fam.divorce == "NA" and self.individuals[fam.husband].death == None and self.individuals[fam.wife].death == None: #The family is not currently divorced and both husband and wife are still alive
                     idList.append(famID)
                     self.living_married_table.add_row([famID, fam.husband, self.individuals[fam.husband].name, fam.wife, self.individuals[fam.wife].name])
-            print("LIST: US30: List Living Married: ", file = f)
+            print("LIST: US30: List Living Married: ", file = f) #Creates and adds individuals who are living and married to a new pretty table
             print(self.living_married_table, file = f)
             return idList
     
@@ -776,10 +776,10 @@ class Read_GEDCOM:
             for indID in self.individuals:
                     if self.individuals[indID].age == "NA":
                         pass
-                    elif self.individuals[indID].age > 30 and self.individuals[indID].fams == "NA" and self.individuals[indID].death == None:
+                    elif self.individuals[indID].age > 30 and self.individuals[indID].fams == "NA" and self.individuals[indID].death == None: #The indivduals need to have an age over 30, have never had a spouse in their life, and be currently living
                         idList.append(indID)
                         self.living_single_table.add_row([indID, self.individuals[indID].name])
-            print("LIST: US31: List Living Single: ", file = f)
+            print("LIST: US31: List Living Single: ", file = f) #Creates and adds individuals who are living and single to a new pretty table
             print(self.living_single_table, file = f)
             return idList
 

@@ -183,5 +183,14 @@ class TestUserStories(unittest.TestCase):
         obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
         self.assertCountEqual(['I39', 'I6', 'I40', 'I35'], obj.auntsAndUncles())
 
+    def test_list_living_married(self): # tests US29: List all living married individuals in a GEDCOM file
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(['F7', 'F8'], obj.list_living_married())
+
+    def test_list_living_single(self): # tests US29: List all living individuals over the age of 30 who have never been married in a GEDCOM file
+        obj = gedcom_parser.Read_GEDCOM("TargaryenFamily15Siblings.ged")
+        self.assertCountEqual(['I1', 'I21', 'I22', 'I24', 'I25', 'I26', 'I27', 'I28', 'I30', 'I31', 'I32', 'I33', 'I34', 'I48'], obj.list_living_single())
+    
+
 if __name__ == '__main__':
     unittest.main()

@@ -66,6 +66,7 @@ class Read_GEDCOM:
         self.less_than_150_years_old()
         self.listUpcomingBirthdays()
         self.listOrphans()
+        self.birthBeforeMarriageOfParents()
         self.printNonUniqueIDsErrors()
         self.uniqueNameAndBirthDate()
         self.noBigamy()
